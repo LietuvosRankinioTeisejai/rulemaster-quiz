@@ -3,82 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rankinio Taisyklių Testai</title>
+    <title>Rankinio Taisyklių Testai • IHF 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body class="bg-slate-50 p-8">
-    <h1 class="text-3xl font-bold mb-8">Rankinio Taisyklių Testai</h1>
+<body class="bg-slate-50">
+    <header class="bg-white border-b">
+        <div class="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <div class="w-11 h-11 bg-blue-700 rounded-2xl flex items-center justify-center">
+                    <i class="fa-solid fa-gavel text-white text-3xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-semibold tracking-tight text-slate-900">Rankinio Taisyklių Testai</h1>
+                    <p class="text-xs text-slate-500 -mt-1">Oficialus IHF klausimynas • 2025</p>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    <div id="selection">
-        <button onclick="startTest()" 
-                class="bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-xl text-lg">
-            Pradėti testą
-        </button>
-    </div>
+    <div class="max-w-5xl mx-auto px-6 py-10">
+        <!-- SELECTION SCREEN -->
+        <div id="selection-screen">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-semibold tracking-tight text-slate-900">Pasirinkite testą</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div onclick="startTest('short')" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
+                    <h3 class="text-3xl font-semibold">Trumpas testas</h3>
+                    <p class="mt-2">15 klausimų • 15 min</p>
+                    <button class="mt-6 w-full bg-blue-700 text-white py-3 rounded-2xl">Pradėti</button>
+                </div>
+                <div onclick="startTest('medium')" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
+                    <h3 class="text-3xl font-semibold">Standartinis testas</h3>
+                    <p class="mt-2">20 klausimų • 20 min</p>
+                    <button class="mt-6 w-full bg-blue-700 text-white py-3 rounded-2xl">Pradėti</button>
+                </div>
+                <div onclick="startTest('long')" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
+                    <h3 class="text-3xl font-semibold">Ilgas testas</h3>
+                    <p class="mt-2">30 klausimų • 30 min</p>
+                    <button class="mt-6 w-full bg-blue-700 text-white py-3 rounded-2xl">Pradėti</button>
+                </div>
+            </div>
+        </div>
 
-    <div id="quiz" class="hidden mt-8">
-        <div id="question-text" class="text-2xl font-semibold mb-6"></div>
-        <div id="options" class="space-y-3 mb-6"></div>
-        <button onclick="nextQuestion()" 
-                class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl">
-            Kitas klausimas
-        </button>
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-screen" class="hidden max-w-3xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-8 py-5 bg-slate-900 text-white flex justify-between items-center">
+                    <div>
+                        <div id="quiz-name" class="font-semibold text-xl"></div>
+                        <div id="quiz-info" class="text-sm text-slate-400"></div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400">LIKĘS LAIKAS</div>
+                        <div id="timer" class="text-4xl font-semibold tabular-nums">15:00</div>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <div class="flex justify-between mb-4 text-sm">
+                        <div id="progress-text" class="font-medium text-slate-600"></div>
+                        <div id="question-counter" class="font-semibold"></div>
+                    </div>
+                    <div class="mb-6">
+                        <div id="question-number" class="inline-flex w-8 h-8 items-center justify-center rounded-2xl bg-blue-100 text-blue-700 font-bold text-sm mb-3"></div>
+                        <h3 id="question-text" class="text-2xl font-semibold leading-tight"></h3>
+                    </div>
+                    <div id="options" class="space-y-3"></div>
+                </div>
+                <div class="px-8 py-5 bg-slate-50 border-t flex justify-between">
+                    <button onclick="cancelQuiz()" class="text-red-600 font-medium">Nutraukti</button>
+                    <div class="flex gap-x-3">
+                        <button onclick="prevQuestion()" class="px-5 py-2.5 border rounded-2xl">← Ankstesnis</button>
+                        <button onclick="nextQuestion()" class="px-5 py-2.5 border rounded-2xl">Kitas →</button>
+                        <button onclick="finishQuiz()" class="px-8 py-2.5 bg-emerald-600 text-white font-semibold rounded-2xl">Baigti testą</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="results-screen" class="hidden max-w-3xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-8 pt-10 pb-8 text-center">
+                    <div id="result-badge" class="inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold mb-6"></div>
+                    <div class="text-7xl font-bold" id="score-text"></div>
+                    <div class="text-2xl text-slate-500 mt-1" id="percentage-text"></div>
+                    <div id="result-message" class="mt-6 text-xl font-medium"></div>
+                </div>
+                <div class="p-8 flex gap-3">
+                    <button onclick="window.print()" class="flex-1 px-6 py-3.5 bg-white border rounded-2xl font-medium">Spausdinti rezultatus</button>
+                    <button onclick="restartApp()" class="flex-1 px-6 py-3.5 bg-blue-700 text-white font-semibold rounded-2xl">Grįžti į testus</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        let questions = [];
+        let questionBank = [];
+        let currentTest = null;
+        let currentQuestions = [];
+        let answers = [];
         let currentIndex = 0;
+        let timerInterval = null;
+        let timeLeft = 0;
 
         async function loadQuestions() {
             const res = await fetch('questions.json');
-            if (!res.ok) {
-                alert("KLAIDA: Nepavyko užkrauti questions.json failo!");
-                return;
-            }
-            questions = await res.json();
-            console.log("Užkrauta klausimų:", questions.length);
+            questionBank = await res.json();
         }
 
-        async function startTest() {
+        function shuffle(array) {
+            return [...array].sort(() => Math.random() - 0.5);
+        }
+
+        async function startTest(type) {
             await loadQuestions();
 
-            if (questions.length === 0) {
-                alert("Klausimai neužsikrovė. Patikrink questions.json failą.");
-                return;
-            }
+            const configs = {
+                short: { name: "Trumpas testas", num: 15, time: 15, pass: 75 },
+                medium: { name: "Standartinis testas", num: 20, time: 20, pass: 75 },
+                long: { name: "Ilgas testas", num: 30, time: 30, pass: 75 }
+            };
 
-            document.getElementById('selection').classList.add('hidden');
-            document.getElementById('quiz').classList.remove('hidden');
-
+            currentTest = configs[type];
+            currentQuestions = shuffle(questionBank).slice(0, currentTest.num);
+            answers = new Array(currentQuestions.length).fill(null);
             currentIndex = 0;
-            showQuestion();
+            timeLeft = currentTest.time * 60;
+
+            document.getElementById('selection-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+
+            document.getElementById('quiz-name').textContent = currentTest.name;
+            document.getElementById('quiz-info').textContent = `${currentQuestions.length} klausimų • ${currentTest.time} min • Išlaikymas ${currentTest.pass}%`;
+
+            startTimer();
+            renderQuestion();
         }
 
-        function showQuestion() {
-            const q = questions[currentIndex];
-            document.getElementById('question-text').innerText = q.text;
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimer();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishQuiz(true);
+                }
+            }, 1000);
+        }
+
+        function updateTimer() {
+            const min = Math.floor(timeLeft / 60);
+            const sec = timeLeft % 60;
+            document.getElementById('timer').textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function renderQuestion() {
+            const q = currentQuestions[currentIndex];
+            document.getElementById('question-number').textContent = currentIndex + 1;
+            document.getElementById('question-text').textContent = q.text;
+            document.getElementById('question-counter').textContent = `Klausimas ${currentIndex + 1} iš ${currentQuestions.length}`;
+
+            const answered = answers.filter(a => a && a.length > 0).length;
+            document.getElementById('progress-text').textContent = `${answered} iš ${currentQuestions.length} atsakyta`;
 
             const container = document.getElementById('options');
             container.innerHTML = '';
 
             q.options.forEach((option, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'block w-full text-left border p-4 rounded-xl hover:bg-blue-50';
-                btn.innerText = option;
-                btn.onclick = () => {
-                    alert("Pasirinkai: " + option);
+                const isSelected = answers[currentIndex] && answers[currentIndex].includes(i);
+                const div = document.createElement('div');
+                div.className = `option border border-slate-200 rounded-2xl px-6 py-4 flex items-center gap-x-4 cursor-pointer ${isSelected ? 'selected' : ''}`;
+                div.innerHTML = `
+                    <input type="checkbox" class="w-5 h-5 accent-blue-700 pointer-events-none" ${isSelected ? 'checked' : ''}>
+                    <div class="flex-1">${option}</div>
+                `;
+                div.onclick = () => {
+                    if (!answers[currentIndex]) answers[currentIndex] = [];
+                    const idx = answers[currentIndex].indexOf(i);
+                    if (idx > -1) answers[currentIndex].splice(idx, 1);
+                    else answers[currentIndex].push(i);
+                    renderQuestion();
                 };
-                container.appendChild(btn);
+                container.appendChild(div);
             });
         }
 
         function nextQuestion() {
-            currentIndex++;
-            if (currentIndex < questions.length) {
-                showQuestion();
-            } else {
-                alert("Testas baigtas!");
+            if (currentIndex < currentQuestions.length - 1) {
+                currentIndex++;
+                renderQuestion();
             }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz(timeExpired = false) {
+            clearInterval(timerInterval);
+            let correctCount = 0;
+
+            currentQuestions.forEach((q, i) => {
+                const userAns = answers[i] || [];
+                const correctSet = new Set(q.correct);
+                const userSet = new Set(userAns);
+                if (userSet.size === correctSet.size && [...userSet].every(x => correctSet.has(x))) {
+                    correctCount++;
+                }
+            });
+
+            const percent = Math.round((correctCount / currentQuestions.length) * 100);
+            const passed = percent >= currentTest.pass;
+
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            document.getElementById('score-text').innerHTML = `${correctCount} <span class="text-4xl text-slate-400">/ ${currentQuestions.length}</span>`;
+            document.getElementById('percentage-text').textContent = `${percent}%`;
+
+            const badge = document.getElementById('result-badge');
+            const msg = document.getElementById('result-message');
+
+            if (timeExpired) {
+                badge.innerHTML = `<i class="fa-solid fa-clock mr-2"></i> LAIKAS PASIBAIGĖ`;
+                badge.className = "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-orange-100 text-orange-700";
+                msg.innerHTML = `Jūs surinkote <strong>${percent}%</strong>. Laikas baigėsi.`;
+            } else if (passed) {
+                badge.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i> IŠLAIKYTA`;
+                badge.className = "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-emerald-100 text-emerald-700";
+                msg.innerHTML = `Puiku! Jūs išlaikėte testą surinkę <strong>${percent}%</strong>.`;
+            } else {
+                badge.innerHTML = `<i class="fa-solid fa-times-circle mr-2"></i> NEIŠLAIKYTA`;
+                badge.className = "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-red-100 text-red-700";
+                msg.innerHTML = `Jūs surinkote <strong>${percent}%</strong>. Rekomenduojame pakartoti.`;
+            }
+        }
+
+        function cancelQuiz() {
+            if (confirm("Ar tikrai norite nutraukti šį testą?")) {
+                clearInterval(timerInterval);
+                restartApp();
+            }
+        }
+
+        function restartApp() {
+            document.getElementById('selection-screen').classList.remove('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            clearInterval(timerInterval);
         }
     </script>
 </body>

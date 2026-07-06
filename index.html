@@ -15,7 +15,6 @@
 </head>
 <body class="bg-slate-100">
 
-    <!-- Header -->
     <header class="bg-slate-900 text-white">
         <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
             <div class="flex items-center gap-x-4">
@@ -34,37 +33,26 @@
 
         <!-- SELECTION SCREEN -->
         <div id="selection-screen">
-            <div class="text-center mb-6">
+            <div class="text-center mb-8">
                 <h2 class="text-4xl font-bold text-slate-900">Pasirinkite testą</h2>
                 <p class="text-slate-600 mt-3 max-w-2xl mx-auto">
                     Testai sudaryti iš IHF 2025 liepos 1 d. patvirtinto klausimyno
                 </p>
             </div>
 
-            <!-- Įspėjimas -->
-            <div class="max-w-2xl mx-auto mb-8">
-                <div class="bg-orange-100 border border-orange-300 text-orange-800 px-6 py-4 rounded-2xl flex items-center gap-x-3">
-                    <i class="fa-solid fa-exclamation-triangle text-xl"></i>
-                    <p class="font-medium">Nesukčiauk ;) Naudokis žiniomis!</p>
-                </div>
-            </div>
-
             <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                <!-- Trumpas -->
                 <div onclick="startTest(15)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
                     <h3 class="text-3xl font-bold">Trumpas testas</h3>
                     <p class="text-slate-500 mt-1">15 klausimų • 15 min</p>
                     <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
                 </div>
 
-                <!-- Standartinis -->
                 <div onclick="startTest(20)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
                     <h3 class="text-3xl font-bold">Standartinis testas</h3>
                     <p class="text-slate-500 mt-1">20 klausimų • 20 min</p>
                     <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
                 </div>
 
-                <!-- Ilgas -->
                 <div onclick="startTest(30)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
                     <h3 class="text-3xl font-bold">Ilgas testas</h3>
                     <p class="text-slate-500 mt-1">30 klausimų • 30 min</p>
@@ -76,8 +64,6 @@
         <!-- QUIZ SCREEN -->
         <div id="quiz-screen" class="hidden max-w-3xl mx-auto">
             <div class="bg-white rounded-3xl shadow border border-slate-200 overflow-hidden">
-                
-                <!-- Header -->
                 <div class="px-8 py-5 bg-slate-900 text-white flex justify-between items-center">
                     <div>
                         <div id="quiz-name" class="font-semibold text-xl"></div>
@@ -87,12 +73,6 @@
                         <div class="text-xs text-slate-400">LIKĘS LAIKAS</div>
                         <div id="timer" class="text-4xl font-bold tabular-nums">15:00</div>
                     </div>
-                </div>
-
-                <!-- Warning Banner -->
-                <div id="warning-banner" class="hidden bg-yellow-100 border-b border-yellow-300 px-6 py-3 text-yellow-800 text-sm font-medium flex items-center gap-x-2">
-                    <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span id="warning-text"></span>
                 </div>
 
                 <div class="p-8">
@@ -149,9 +129,17 @@
         let hiddenTimestamp = null;
 
         async function loadQuestions() {
-            const res = await fetch('questions.json');
-            if (!res.ok) throw new Error("Nepavyko įkelti questions.json");
-            questionBank = await res.json();
+            try {
+                const res = await fetch('./questions.json');
+                if (!res.ok) {
+                    throw new Error(`Nepavyko įkelti questions.json (HTTP ${res.status})`);
+                }
+                questionBank = await res.json();
+            } catch (error) {
+                alert("Klaida: Nepavyko įkelti klausimų failo (questions.json).\n\nPatikrinkite, ar failas egzistuoja repo šakniniame kataloge ir ar jis buvo įkeltas į GitHub.");
+                console.error(error);
+                throw error;
+            }
         }
 
         function shuffleArray(array) {
@@ -193,7 +181,6 @@
             document.getElementById('selection-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
             document.getElementById('results-screen').classList.add('hidden');
-            document.getElementById('warning-banner').classList.add('hidden');
 
             document.getElementById('quiz-name').textContent = `${numQuestions} klausimų testas`;
             document.getElementById('quiz-info').textContent = `${currentQuestions.length} klausimų • ${numQuestions} min`;
@@ -365,7 +352,6 @@
             document.getElementById('selection-screen').classList.remove('hidden');
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('results-screen').classList.add('hidden');
-            document.getElementById('warning-banner').classList.add('hidden');
             clearInterval(timerInterval);
             testTerminated = false;
         }
@@ -376,7 +362,7 @@
                 console.log("Klausimai įkelti:", questionBank.length);
                 enableAntiCheat();
             } catch (error) {
-                alert("Klaida įkeliant klausimus. Patikrinkite questions.json failą.");
+                // Klaida jau parodyta loadQuestions() viduje
             }
         };
     </script>

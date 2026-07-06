@@ -36,7 +36,7 @@
         <div id="selection-screen">
             <div class="text-center mb-10">
                 <h2 class="text-4xl font-bold text-slate-900">Pasirinkite testą</h2>
-                <p class="text-slate-600 mt-2">Perjungus langą ar programėlę – testas automatiškai nutraukiamas.</p>
+                <p class="text-slate-600 mt-2">Jei išeisite ilgiau nei 5 sekundes — testas bus nutrauktas.</p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -125,6 +125,7 @@
         let timerInterval = null;
         let timeLeft = 0;
         let testTerminated = false;
+        let awayTimer = null;
 
         async function loadQuestions() {
             const res = await fetch('questions.json');
@@ -241,22 +242,46 @@
             }
         }
 
-        // === SUSTIPRINTA APSAUGA (Kompiuteris + Telefonas) ===
+        // === PROTINGA APSAUGA SU 5 SEKUNDŽIŲ DELSA ===
         function enableAntiCheat() {
-            // 1. Kai vartotojas perjungia langą arba programėlę
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden && 
                     !document.getElementById('quiz-screen').classList.contains('hidden') && 
                     !testTerminated) {
-                    terminateTest();
+
+                    // Pradėti 5 sekundžių laikmatį
+                    awayTimer = setTimeout(() => {
+                        if (!testTerminated) {
+                            terminateTest();
+                        }
+                    }, 5000); // 5 sekundės
+                } 
+                else {
+                    // Grįžo atgal per 5 sekundes — atšaukiame nutraukimą
+                    if (awayTimer) {
+                        clearTimeout(awayTimer);
+                        awayTimer = null;
+                    }
                 }
             });
 
-            // 2. Papildoma apsauga kompiuteriui (blur event)
+            // Papildoma apsauga kompiuteriui
             window.addEventListener('blur', () => {
                 if (!document.getElementById('quiz-screen').classList.contains('hidden') && 
                     !testTerminated) {
-                    terminateTest();
+                    
+                    awayTimer = setTimeout(() => {
+                        if (!testTerminated) {
+                            terminateTest();
+                        }
+                    }, 5000);
+                }
+            });
+
+            window.addEventListener('focus', () => {
+                if (awayTimer) {
+                    clearTimeout(awayTimer);
+                    awayTimer = null;
                 }
             });
         }
@@ -280,7 +305,7 @@
             document.getElementById('review-section').innerHTML = `
                 <div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
                     <p class="text-red-700 font-semibold text-lg">Testas buvo automatiškai nutrauktas.</p>
-                    <p class="text-red-600 mt-2">Perjungėte langą arba atidarėte kitą programą. Tai yra draudžiama.</p>
+                    <p class="text-red-600 mt-2">Per ilgai buvote neaktyvus arba perjungėte programėlę.</p>
                 </div>
             `;
         }
@@ -349,6 +374,7 @@
             document.getElementById('results-screen').classList.add('hidden');
             clearInterval(timerInterval);
             testTerminated = false;
+            if (awayTimer) clearTimeout(awayTimer);
         }
 
         window.onload = async function () {

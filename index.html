@@ -132,8 +132,9 @@
             return text.replace(/^\d+\.\d+\)\s*/, '');
         }
 
+        // Pašalina a), b), c), d), e), f)... ir t.t.
         function cleanOptionText(text) {
-            return text.replace(/^[a-d]\)\s*/i, '');
+            return text.replace(/^[a-z]\)\s*/i, '');
         }
 
         async function startTest(numQuestions) {
@@ -286,7 +287,7 @@
         }
 
         function cancelQuiz() {
-            if (confirm("Ar tikrai norite nutraukti testą?")) {
+            if (confirm("Ar tikrai norite nutraukti šį testą?")) {
                 clearInterval(timerInterval);
                 restartApp();
             }

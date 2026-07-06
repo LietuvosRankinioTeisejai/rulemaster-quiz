@@ -156,12 +156,59 @@
             return text.replace(/^[a-z]\)\s*/i, '');
         }
 
+        function getRuleNumber(question) {
+            const match = String(question.text || '').match(/^\s*(\d+)\.\d+\)/);
+            return match ? match[1] : null;
+        }
+
+        function selectQuestionsForTest(numQuestions) {
+            const shuffledBank = shuffleArray(questionBank);
+
+            // For 15- and 20-question tests, keep the old behavior.
+            if (numQuestions !== 30) {
+                return shuffledBank.slice(0, numQuestions);
+            }
+
+            // 30-question test requirement:
+            // include at least 18 questions from different rule groups,
+            // where the rule group is the number before the dot in text like "1.1)" or "18.1)".
+            const requiredDifferentRules = Math.min(18, numQuestions);
+            const questionsByRule = new Map();
+
+            shuffledBank.forEach(question => {
+                const ruleNumber = getRuleNumber(question);
+                if (!ruleNumber) return;
+                if (!questionsByRule.has(ruleNumber)) {
+                    questionsByRule.set(ruleNumber, []);
+                }
+                questionsByRule.get(ruleNumber).push(question);
+            });
+
+            const selected = [];
+            const selectedSet = new Set();
+            const ruleNumbers = shuffleArray([...questionsByRule.keys()]);
+
+            ruleNumbers.slice(0, requiredDifferentRules).forEach(ruleNumber => {
+                const questions = questionsByRule.get(ruleNumber);
+                if (questions && questions.length > 0) {
+                    const question = questions.shift();
+                    selected.push(question);
+                    selectedSet.add(question);
+                }
+            });
+
+            const remainingQuestions = shuffledBank.filter(question => !selectedSet.has(question));
+            selected.push(...remainingQuestions.slice(0, numQuestions - selected.length));
+
+            return shuffleArray(selected);
+        }
+
         async function startTest(numQuestions) {
             if (questionBank.length === 0) {
                 await loadQuestions();
             }
 
-            const selected = shuffleArray(questionBank).slice(0, numQuestions);
+            const selected = selectQuestionsForTest(numQuestions);
 
             currentQuestions = selected.map(q => {
                 let optionsWithIndex = q.options.map((text, idx) => ({
@@ -174,7 +221,7 @@
                 };
             });
 
-            answers = new Array(currentQuestions.length).fill([]); // ← Pataisyta
+            answers = Array.from({ length: currentQuestions.length }, () => []);
             currentIndex = 0;
             timeLeft = numQuestions * 60;
             testTerminated = false;

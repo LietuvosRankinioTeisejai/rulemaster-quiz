@@ -22,7 +22,7 @@
     </header>
 
     <div class="max-w-5xl mx-auto px-6 py-10">
-        
+
         <!-- SELECTION SCREEN -->
         <div id="selection-screen">
             <div class="text-center mb-10">
@@ -112,12 +112,16 @@
         let timerInterval = null;
         let timeLeft = 0;
 
-        // Laikome atvaizdavimą tarp originalių ir sumaišytų indeksų
-        let currentOptionMap = [];
-
         async function loadQuestions() {
-            const res = await fetch('questions.json');
-            questionBank = await res.json();
+            try {
+                const res = await fetch('questions.json');
+                if (!res.ok) throw new Error('Nepavyko įkelti questions.json');
+                questionBank = await res.json();
+            } catch (error) {
+                alert("Klaida: Nepavyko įkelti klausimų failo (questions.json). Patikrinkite, ar failas egzistuoja ir yra teisingame aplanke.");
+                console.error(error);
+                throw error;
+            }
         }
 
         function shuffle(array) {
@@ -129,29 +133,33 @@
         }
 
         async function startTest(type) {
-            await loadQuestions();
+            try {
+                await loadQuestions();
 
-            const configs = {
-                short: { name: "Trumpas testas", num: 15, time: 15, pass: 75 },
-                medium: { name: "Standartinis testas", num: 20, time: 20, pass: 75 },
-                long: { name: "Ilgas testas", num: 30, time: 30, pass: 75 }
-            };
+                const configs = {
+                    short: { name: "Trumpas testas", num: 15, time: 15, pass: 75 },
+                    medium: { name: "Standartinis testas", num: 20, time: 20, pass: 75 },
+                    long: { name: "Ilgas testas", num: 30, time: 30, pass: 75 }
+                };
 
-            currentTest = configs[type];
-            currentQuestions = shuffle(questionBank).slice(0, currentTest.num);
-            answers = new Array(currentQuestions.length).fill(null);
-            currentIndex = 0;
-            timeLeft = currentTest.time * 60;
+                currentTest = configs[type];
+                currentQuestions = shuffle(questionBank).slice(0, currentTest.num);
+                answers = new Array(currentQuestions.length).fill(null);
+                currentIndex = 0;
+                timeLeft = currentTest.time * 60;
 
-            document.getElementById('selection-screen').classList.add('hidden');
-            document.getElementById('quiz-screen').classList.remove('hidden');
-            document.getElementById('results-screen').classList.add('hidden');
+                document.getElementById('selection-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('hidden');
+                document.getElementById('results-screen').classList.add('hidden');
 
-            document.getElementById('quiz-name').textContent = currentTest.name;
-            document.getElementById('quiz-info').textContent = `${currentQuestions.length} klausimų • ${currentTest.time} min`;
+                document.getElementById('quiz-name').textContent = currentTest.name;
+                document.getElementById('quiz-info').textContent = `${currentQuestions.length} klausimų • ${currentTest.time} min`;
 
-            startTimer();
-            renderQuestion();
+                startTimer();
+                renderQuestion();
+            } catch (error) {
+                console.error("Klaida paleidžiant testą:", error);
+            }
         }
 
         function startTimer() {
@@ -185,15 +193,10 @@
             const container = document.getElementById('options');
             container.innerHTML = '';
 
-            // Sukuriame masyvą su originaliais indeksais
             let optionsWithIndex = q.options.map((text, idx) => ({ text, originalIndex: idx }));
-            // Sumaišome atsakymus
             optionsWithIndex = shuffle(optionsWithIndex);
 
-            // Išsaugome atvaizdavimą
-            currentOptionMap = optionsWithIndex;
-
-            optionsWithIndex.forEach((opt, shuffledIndex) => {
+            optionsWithIndex.forEach((opt) => {
                 const isSelected = answers[currentIndex] && answers[currentIndex].includes(opt.originalIndex);
                 const div = document.createElement('div');
                 div.className = `option border border-slate-200 rounded-2xl px-6 py-4 flex items-center gap-x-4 cursor-pointer ${isSelected ? 'selected' : ''}`;
@@ -203,13 +206,9 @@
                 `;
                 div.onclick = () => {
                     if (!answers[currentIndex]) answers[currentIndex] = [];
-                    const originalIdx = opt.originalIndex;
-                    const idxInAnswers = answers[currentIndex].indexOf(originalIdx);
-                    if (idxInAnswers > -1) {
-                        answers[currentIndex].splice(idxInAnswers, 1);
-                    } else {
-                        answers[currentIndex].push(originalIdx);
-                    }
+                    const idx = answers[currentIndex].indexOf(opt.originalIndex);
+                    if (idx > -1) answers[currentIndex].splice(idx, 1);
+                    else answers[currentIndex].push(opt.originalIndex);
                     renderQuestion();
                 };
                 container.appendChild(div);

@@ -57,6 +57,30 @@
   },
   {
     "id": 7,
+    "text": "2.3) BALTAS 11 meta į vartus. Vartininkas pagauna kamuolį. Tuo pat metu suskamba automatinis baigiamasis signalas. Likę 30 sekundžių. Kaip atnaujinamas žaidimas?",
+    "options": [
+      "a) Laisvas metimas JUODŲ komandai",
+      "b) Vartininko metimas JUODŲ komandai",
+      "c) Laisvas metimas BALTŲ komandai",
+      "d) Po švilpuko",
+      "e) Be švilpuko"
+    ],
+    "correct": [1, 4]
+  },
+  {
+    "id": 8,
+    "text": "2.4) BALTŲ komanda ruošiasi atlikti laisvą metimą po finalinio švilpuko. Pirmiausia BALTAS 3, po to BALTAS 4 palieka aikštę. Po to BALTAS 5 ir BALTAS 6 įeina į aikštelę. Kuris teiginys teisingas?",
+    "options": [
+      "a) Laikininkas švilpia dėl klaidingo keitimo",
+      "b) BALTAS 4 už klaidingą keitimą šalinamas 2 min.",
+      "c) BALTAS 6 už klaidingą keitimą šalinamas 2 min.",
+      "d) Laikininkas nešvilpia, nes taisyklės nepažeistos",
+      "e) Laisvas metimas BALTŲ komandai"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 9,
     "text": "2.5) Tiesioginis laisvas metimas skiriamas prieš pat žaidimo pabaigą. Automatinis signalas skamba prieš kamuoliui patenkant į vartus. Teisingas sprendimas?",
     "options": [
       "a) Rungtynių pabaiga",
@@ -67,7 +91,7 @@
     "correct": [2]
   },
   {
-    "id": 8,
+    "id": 10,
     "text": "2.6) Prieš pasibaigiant rungtynėms, žaidėjas turi aiškią galimybę pasiekti įvartį, bet yra neleistinai sustabdomas. Prieš kamuoliui paliekant ranką, pasigirsta finalinis signalas. Teisingas sprendimas?",
     "options": [
       "a) Rungtynių pabaiga",
@@ -78,7 +102,28 @@
     "correct": [2]
   },
   {
-    "id": 9,
+    "id": 11,
+    "text": "2.7) Prieš pasibaigiant pirmajam kėliniui, BALTŲ komanda turi atlikti 7m metimą. Kamuolys pataiko į skersinį, atšoka į vartininko nugarą ir įskrenda į vartus. Signalas nuskambėjo, kai kamuolys atšoko nuo skersinio. Koks teisingas sprendimas?",
+    "options": [
+      "a) Įvartis",
+      "b) Pakartoti 7 metrų baudinį",
+      "c) Kėlinio pertrauka; nėra tolesnio sprendimo"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 12,
+    "text": "2.8) Pasibaigus rungtynių laikui, 7m metimas vis dar turi būti atliekamas. Teisėjai laukia rezultato. Kuris teisėjas turi užbaigti žaidimą?",
+    "options": [
+      "a) Pirmasis paminėtas teisėjas",
+      "b) Vienas iš dviejų teisėjų",
+      "c) Aikštės teisėjas",
+      "d) Vartų teisėjas"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 13,
     "text": "2.9) Kada prasideda rungtynės?",
     "options": [
       "a) Po teisėjo, įrašytu pirmuoju, švilpuko",
@@ -89,7 +134,7 @@
     "correct": [3]
   },
   {
-    "id": 10,
+    "id": 14,
     "text": "2.10) Atliekant 7 metrų metimų seriją, kas nusprendžia, į kuriuos vartus bus metama?",
     "options": [
       "a) Komanda, kuri laimi burtus",
@@ -100,47 +145,42 @@
     "correct": [2]
   },
   {
-    "id": 11,
-    "text": "2.15) Kurioje situacijoje Time-out yra privalomas?",
-    "options": ["a) 7 m metimas", "b) 2 min. pašalinimas", "c) Išoriniai veiksmai", "d) Diskvalifikacija"],
-    "correct": [1, 3]
-  },
-  {
-    "id": 12,
-    "text": "2.22) Kam leidžiama dalyvauti lemiamuose 7 metrų baudinių metimuose?",
-    "options": [
-      "a) Žaidėjams, įtrauktiems į rungtynių protokolą",
-      "b) Žaidėjams, kurie nėra diskvalifikuoti",
-      "c) Žaidėjams, kurie nėra pašalinti 2 minutėms",
-      "d) Visiems žaidėjams"
-    ],
-    "correct": [0, 1, 2]
-  },
-  {
-    "id": 13,
-    "text": "2.25) Kada yra privalomas Time-out?",
-    "options": [
-      "a) Kai komandos oficialus asmuo gauna 2 min. pašalinimą",
-      "b) Kai žaidėjas gauna 2 min. pašalinimą trečią kartą",
-      "c) Po pakartotinio nesportiško elgesio",
-      "d) Kai teisėjai turi pasitarti"
-    ],
-    "correct": [0, 1, 2, 3]
-  },
-  {
-    "id": 14,
-    "text": "4.1) Kiek žaidėjų gali būti registruota vienoje komandoje varžybų metu?",
-    "options": ["a) 12 žaidėjų", "b) 14 žaidėjų", "c) 16 žaidėjų", "d) 18 žaidėjų"],
-    "correct": [2]
-  },
-  {
     "id": 15,
-    "text": "7.1) Kiek laiko trunka vienas kėlinys oficialiose rankinio varžybose?",
-    "options": ["a) 25 minutės", "b) 30 minutės", "c) 35 minutės", "d) 40 minutės"],
-    "correct": [1]
+    "text": "2.11) Po finalinio švilpuko JUODŲ komanda turi atlikti laisvą metimą. Prieš metimą BALTAS 8 ir BALTAS 9 palieka aikštelę. Juos keičia BALTAS 10 ir BALTAS 11. Kuris veiksmas teisingas?",
+    "options": [
+      "a) Laikininkas sušvilpia dėl neteisingo keitimo",
+      "b) 2 min. pašalinimas BALTAM 10",
+      "c) 2 min. pašalinimas BALTAM 11",
+      "d) Laikininkas nereaguoja",
+      "e) BALTAS 11 privalo grįžti į keitimosi zoną"
+    ],
+    "correct": [0, 1]
   },
   {
     "id": 16,
+    "text": "2.12) Prieš pat pirmojo kėlinio pabaigą BALTAS 7 atlieka neleistiną veiksmą prieš JUODĄ 5, kuris praranda aiškią galimybę pasiekti įvartį. Automatinis signalas suskamba prieš teisėjams sušvilpiant. Teisingas sprendimas?",
+    "options": [
+      "a) Pirmas kėlinys pasibaigė; jokios nuobaudos",
+      "b) Pirmas kėlinys pasibaigė; nei nuobauda, nei 7m neskiriami",
+      "c) Diskvalifikacija BALTAM 7 su rašytiniu raportu",
+      "d) 7 metrų metimas JUODŲ komandai",
+      "e) Diskvalifikacija BALTAM 7 (raudona kortelė)"
+    ],
+    "correct": [2, 3]
+  },
+  {
+    "id": 17,
+    "text": "2.13) Iki kada teisėjai gali neužskaityti įvarčio, kai jis buvo pasiektas?",
+    "options": [
+      "a) Iki švilpuko dėl pradedamojo metimo",
+      "b) Iki finalinio švilpuko",
+      "c) Įvartis privalo būti neįskaitytas, jeigu jis buvo pasiektas po to, kai laikininkas sustabdė rungtynes",
+      "d) Įvartis negali būti neįskaitytas"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 18,
     "text": "2.14) Teisėjai suteikė laisvą metimą. Tuo pat metu komandos atsakingas atstovas reikalauja komandinės minutės pertraukėlės. Kuris teiginys teisingas?",
     "options": [
       "a) Komanda negali gauti Time-out, nes kamuolys nežaidime",
@@ -151,7 +191,24 @@
     "correct": [2, 3]
   },
   {
-    "id": 17,
+    "id": 19,
+    "text": "2.15) Kurioje situacijoje Time-out yra privalomas?",
+    "options": ["a) 7 m metimas", "b) 2 min. pašalinimas", "c) Išoriniai veiksmai", "d) Diskvalifikacija"],
+    "correct": [1, 3]
+  },
+  {
+    "id": 20,
+    "text": "2.16) BALTAS 9 meta į vartus. Vartininkas pagauna kamuolį. Tuo pat metu sekretorius sušvilpia, kad rungtynės baigėsi. Likę 30s. Kaip atnaujinamas žaidimas?",
+    "options": [
+      "a) Laisvas metimas JUODIEMS",
+      "b) Vartininko JUODŲ metimas",
+      "c) Laisvas metimas BALTIEMS",
+      "d) Reikalingas švilpukas"
+    ],
+    "correct": [1, 3]
+  },
+  {
+    "id": 21,
     "text": "2.17) Normalus žaidimo laikas pasibaigė rezultatu 20-20, žaidimas turi būti pratęsiamas. Teisingas sprendimas?",
     "options": [
       "a) 1 min pertrauka prieš pratęsimą",
@@ -162,7 +219,19 @@
     "correct": [0]
   },
   {
-    "id": 18,
+    "id": 22,
+    "text": "2.19) Kam negalima dalyvauti 7 metrų baudinių metimų serijoje, kai rezultatas po pratęsimo yra lygus?",
+    "options": [
+      "a) Žaidėjui, kuris įžeidžia teisėją",
+      "b) Vartininkams",
+      "c) Žaidėjui, kurio 2 min. pašalinimas nepasibaigė",
+      "d) Diskvalifikuotam žaidėjui",
+      "e) Žaidėjui, kuriam buvo suteikta medicininė pagalba ir jo 3 atakų limitas dar nepasibaigęs"
+    ],
+    "correct": [2, 3, 4]
+  },
+  {
+    "id": 23,
     "text": "2.20) Vartininkas atmuša metimą likus 5 sek. iki rungtynių pabaigos. Kamuolys atsitrenkia į lubas. Automatinis signalas suskamba prieš šoninį metimą. Teisingas sprendimas?",
     "options": [
       "a) Šoninis metimas po švilpuko",
@@ -173,7 +242,7 @@
     "correct": [3]
   },
   {
-    "id": 19,
+    "id": 24,
     "text": "2.21) Žaidėjas jau turi įspėjimą. Komandinio Time-out metu jis nesportiška maniera kalba apie teisėjus. Teisingas sprendimas?",
     "options": [
       "a) Diskvalifikacija (raudona kortelė)",
@@ -184,30 +253,75 @@
     "correct": [1]
   },
   {
-    "id": 20,
-    "text": "2.26) Prieš pirmo kėlinio pabaigą žaidėjas atlieka užpuolimą prieš varžovą, kuris praranda aiškią galimybę pasiekti įvartį. Automatinis signalas suskamba prieš teisėjų švilpuką. Teisingas sprendimas?",
+    "id": 25,
+    "text": "2.22) Kam leidžiama dalyvauti lemiamuose 7 metrų baudinių metimuose?",
+    "options": [
+      "a) Žaidėjams, įtrauktiems į rungtynių protokolą",
+      "b) Žaidėjams, kurie nėra diskvalifikuoti",
+      "c) Žaidėjams, kurie nėra pašalinti 2 minutėmis",
+      "d) Visiems žaidėjams"
+    ],
+    "correct": [0, 1, 2]
+  },
+  {
+    "id": 26,
+    "text": "2.23) Laisvas metimas po automatinio signalo privalomas atlikti. JUODAS 9 atlieka metimą. Kai kamuolys palieka ranką, pasigirsta švilpukas. Kamuolys patenka į vartus. Laikininkas informuoja, kad BALTAS 7 įėjo į aikštelę per keitimo zoną prieš laisvą metimą. Teisingas sprendimas?",
+    "options": [
+      "a) BALTAS 7 pašalinimas 2 minutėms",
+      "b) Diskvalifikacija BALTAM 7",
+      "c) Įvartis JUODIEMS",
+      "d) 7 metrų metimas JUODIEMS",
+      "e) JUODŲ laisvo metimo pakartojimas po švilpuko"
+    ],
+    "correct": [0, 4]
+  },
+  {
+    "id": 27,
+    "text": "2.24) Žaidimo rezultatas po pratęsimo vis dar lygus. BALTAS 7 buvo pašalintas 2 minutėms paskutinio pratęsimo kėlinio 9 minutę. Atsakingas komandos atstovas jį paskiria mesti 7 metrų metimo. Teisingas sprendimas?",
+    "options": [
+      "a) BALTAS 7 gali dalyvauti",
+      "b) BALTAS 7 negali dalyvauti"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 28,
+    "text": "2.25) Kada yra privalomas Time-out?",
+    "options": [
+      "a) Kai komandos oficialus asmuo gauna 2 min. pašalinimą",
+      "b) Kai žaidėjas gauna 2 min. pašalinimą trečią kartą",
+      "c) Po pakartotinio nesportiško elgesio",
+      "d) Kai teisėjai turi pasitarti",
+      "e) Po grubaus nesportiško elgesio"
+    ],
+    "correct": [0, 1, 2, 3]
+  },
+  {
+    "id": 29,
+    "text": "2.26) Prieš pirmo kėlinio pabaigą BALTAS 7 atlieka užpuolimą prieš JUODĄ 5, kuris praranda aiškią galimybę pasiekti įvartį. Automatinis signalas suskamba prieš teisėjų švilpuką. Teisingas sprendimas?",
     "options": [
       "a) Pirmas kėlinys pasibaigė; nėra tolimesnių veiksmų",
-      "b) Diskvalifikacija be rašytinio raporto",
-      "c) 7 metrų metimas",
-      "d) Laisvas metimas",
-      "e) Diskvalifikacija su rašytiniu raportu (raudona + mėlyna kortelė)"
+      "b) BALTAS 7 diskvalifikuojamas be rašytinio raporto",
+      "c) 7 metrų metimas JUODIEMS",
+      "d) Laisvas metimas JUODIEMS",
+      "e) BALTAS 7 diskvalifikuojamas su rašytiniu raportu (raudona + mėlyna kortelė)"
     ],
     "correct": [4]
   },
   {
-    "id": 21,
+    "id": 30,
     "text": "2.27) Pasibaigus kėliniui laisvas metimas turi būti atliktas po švilpuko. Kurie žaidėjai vis tiek gali būti keičiami?",
     "options": [
       "a) Visi abiejų komandų žaidėjai",
       "b) Tik besiginančios komandos žaidėjai",
       "c) Tik atakuojančios komandos žaidėjai",
-      "d) Tik vienas žaidėjas iš metančios komandos"
+      "d) Tik vienas žaidėjas iš metančios komandos",
+      "e) Besiginančios komandos aikštės žaidėjas vartininku, jei suskambus baigiamajam signalui komanda žaidė be vartininko"
     ],
     "correct": [1, 4]
   },
   {
-    "id": 22,
+    "id": 31,
     "text": "2.28) Kokias padėtis turi užimti žaidėjai atliekant laisvą metimą po finalinio švilpuko?",
     "options": [
       "a) Visi metančiojo komandos draugai turi būti už varžovų laisvo metimo linijos",
@@ -218,7 +332,30 @@
     "correct": [2]
   },
   {
-    "id": 23,
+    "id": 32,
+    "text": "2.29) BALTAS 7 perduoda kamuolį BALTAM 8. Tuo momentu laikininkas sušvilpia BALTŲ komandos Time-out. Teisėjai ir žaidėjai negirdi. BALTAS 8 perduoda kamuolį BALTAM 10, kuris turi aiškią galimybę pasiekti įvartį. BALTAS 10 neleistinai sustabdomas JUODO 5. Teisėjai skiria 7m ir JUODĄ 5 šalina 2 min. Vėliau teisėjai supranta, kad laikininkas jau sušvilpė Time-out. Teisingas sprendimas?",
+    "options": [
+      "a) 7 metrų metimas BALTIEMS",
+      "b) 2 minučių pašalinimas JUODAM 5",
+      "c) BALTŲ komandinis Time-out",
+      "d) Vartininko metimas JUODIEMS",
+      "e) Atnaujinama su laisvu metimu BALTIEMS iš tos pozicijos, kurioje laikininkas sušvilpė"
+    ],
+    "correct": [4]
+  },
+  {
+    "id": 33,
+    "text": "2.30) Švilpukas, skelbiantis pirmo kėlinio pabaigą, suskamba 1 minute anksčiau. Švilpuko metu nė viena komanda kamuolio neturėjo. Abi komandos vis dar yra aikštėje. Teisingas sprendimas?",
+    "options": [
+      "a) 1 minutė nėra žaidžiama",
+      "b) 1 minutė sužaidžiama prieš rungtynių pertrauką",
+      "c) 1 minutė sužaidžiama po pertraukos prieš antro kėlinio pradžią",
+      "d) 1 minutė yra pridedama antrajame kėlinyje"
+    ],
+    "correct": [0, 1]
+  },
+  {
+    "id": 34,
     "text": "2.33) Žaidėjas greitai varosi kamuolį ir jam atvira ranka išmušamas kamuolys. Teisingas sprendimas?",
     "options": [
       "a) Time-out",
@@ -230,7 +367,7 @@
     "correct": [2, 4]
   },
   {
-    "id": 24,
+    "id": 35,
     "text": "2.34) Kurioje situacijoje Time-out NĖRA privalomas?",
     "options": [
       "a) Kamuolys išeina toli už aikštės",
@@ -242,13 +379,554 @@
     "correct": [0, 4]
   },
   {
-    "id": 25,
+    "id": 36,
     "text": "2.35) Kas gali prašyti komandinio Time-out?",
     "options": [
       "a) Vienas iš komandos oficialių atstovų",
       "b) Žaidėjas",
       "c) Tik atsakingas komandos oficialus atstovas",
       "d) Komandos kapitonas"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 37,
+    "text": "3.1) Kiek laiko trunka komandinis Time-out?",
+    "options": [
+      "a) 30 sekundžių",
+      "b) 45 sekundžių",
+      "c) 1 minutė",
+      "d) 1 minutė 30 sekundžių"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 38,
+    "text": "3.2) Kas gali prašyti komandinio Time-out?",
+    "options": [
+      "a) Bet kuris žaidėjas",
+      "b) Tik atsakingas komandos oficialus atstovas",
+      "c) Komandos kapitonas",
+      "d) Vartininkas"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 39,
+    "text": "4.1) Kiek žaidėjų gali būti registruota vienoje komandoje varžybų metu?",
+    "options": [
+      "a) 12 žaidėjų",
+      "b) 14 žaidėjų",
+      "c) 16 žaidėjų",
+      "d) 18 žaidėjų"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 40,
+    "text": "4.2) Kiek žaidėjų gali būti vienu metu žaidimo aikštelėje vienoje komandoje?",
+    "options": [
+      "a) 6 žaidėjai + vartininkas",
+      "b) 7 žaidėjai + vartininkas",
+      "c) 5 žaidėjai + vartininkas",
+      "d) 8 žaidėjai + vartininkas"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 41,
+    "text": "4.3) Kiek atsarginių žaidėjų gali būti ant suolelio?",
+    "options": [
+      "a) 4 žaidėjai",
+      "b) 5 žaidėjai",
+      "c) 6 žaidėjai",
+      "d) 7 žaidėjai"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 42,
+    "text": "4.5) Kiek kartų per rungtynes komanda gali keisti vartininką su aikštės žaidėju?",
+    "options": [
+      "a) 1 kartą",
+      "b) 2 kartus",
+      "c) 3 kartus",
+      "d) Neribotai"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 43,
+    "text": "4.6) Ar galima keisti vartininką su aikštės žaidėju per komandinį Time-out?",
+    "options": [
+      "a) Taip, bet tik su teisėjų leidimu",
+      "b) Ne, keitimas galimas tik per sustabdymą žaidime",
+      "c) Taip, bet tik jei komanda neturi kamuolio",
+      "d) Ne, keitimas galimas tik per pertrauką tarp kėlinių"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 44,
+    "text": "4.7) Kiek laiko turi teisėjas parodyti raudoną kortelę po diskvalifikacijos?",
+    "options": [
+      "a) Iškart",
+      "b) Per 30 sekundžių",
+      "c) Per 1 minutę",
+      "d) Per 2 minutes"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 45,
+    "text": "4.8) Kiek laiko trunka 2 minučių pašalinimas?",
+    "options": [
+      "a) 1 minutė 30 sekundžių",
+      "b) 2 minutės",
+      "c) 2 minutės 30 sekundžių",
+      "d) 3 minutės"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 46,
+    "text": "4.9) Kiek žaidėjų gali būti vienu metu gynyboje vartų aikštelėje?",
+    "options": [
+      "a) 5 žaidėjai",
+      "b) 6 žaidėjai",
+      "c) 7 žaidėjai",
+      "d) 8 žaidėjai"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 47,
+    "text": "4.10) Ar galima keisti žaidėjus per 7 metrų metimą?",
+    "options": [
+      "a) Taip, bet tik besiginančiai komandai",
+      "b) Ne, keitimas neleidžiamas",
+      "c) Taip, bet tik atakuojančiai komandai",
+      "d) Taip, bet tik jei kamuolys yra žaidime"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 48,
+    "text": "4.11) Kiek laiko turi komanda atlikti laisvą metimą?",
+    "options": [
+      "a) 3 sekundės",
+      "b) 5 sekundės",
+      "c) 10 sekundžių",
+      "d) 15 sekundžių"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 49,
+    "text": "4.12) Kiek laiko turi komanda atlikti šoninį metimą?",
+    "options": [
+      "a) 3 sekundės",
+      "b) 5 sekundės",
+      "c) 10 sekundžių",
+      "d) 15 sekundžių"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 50,
+    "text": "4.13) Kiek laiko turi komanda atlikti vartininko metimą?",
+    "options": [
+      "a) 3 sekundės",
+      "b) 5 sekundės",
+      "c) 10 sekundžių",
+      "d) Neribotai"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 51,
+    "text": "5.1) Kiek žaidėjų gali būti vienu metu puolime vartų aikštelėje?",
+    "options": [
+      "a) 5 žaidėjai",
+      "b) 6 žaidėjai",
+      "c) 7 žaidėjai",
+      "d) 8 žaidėjai"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 52,
+    "text": "5.2) Kiek kartų per rungtynes komanda gali prašyti komandinio Time-out?",
+    "options": [
+      "a) 1 kartą",
+      "b) 2 kartus",
+      "c) 3 kartus",
+      "d) 4 kartus"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 53,
+    "text": "5.3) Kiek laiko trunka pertrauka tarp kėlinių?",
+    "options": [
+      "a) 5 minučių",
+      "b) 10 minučių",
+      "c) 15 minučių",
+      "d) 20 minučių"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 54,
+    "text": "6.1) Kiek žaidėjų gali būti vienu metu žaidimo aikštelėje vienoje komandoje?",
+    "options": [
+      "a) 6 žaidėjai + vartininkas",
+      "b) 7 žaidėjai + vartininkas",
+      "c) 5 žaidėjai + vartininkas",
+      "d) 8 žaidėjai + vartininkas"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 55,
+    "text": "6.2) Kiek atsarginių žaidėjų gali būti ant suolelio?",
+    "options": [
+      "a) 4 žaidėjai",
+      "b) 5 žaidėjai",
+      "c) 6 žaidėjai",
+      "d) 7 žaidėjai"
+    ],
+    "correct": [3]
+  }
+  ,
+  {
+    "id": 56,
+    "text": "2.36) Kurie iš teiginių apie komandinį Time-out yra teisingi?",
+    "options": [
+      "a) Time-out gali prašyti tik atsakingas komandos oficialus atstovas",
+      "b) Jeigu Time-out prašoma, kai priešininkai valdo kamuolį, sekretorius grąžina žalią kortelę",
+      "c) 1 minutės trukmės pertrauka prasideda po sekretoriaus švilpuko",
+      "d) Taisyklių pažeidimai komandinio Time-out metu turi tokias pačias pasekmes kaip ir žaidimo metu",
+      "e) Po komandinio Time-out, žaidimas visada atnaujinamas metimu tos komandos, kuri prašė Time-out"
+    ],
+    "correct": [0, 2, 3, 4]
+  },
+  {
+    "id": 57,
+    "text": "2.37) BALTŲ komanda valdo kamuolį. JUODŲ komandos oficialus asmuo prašo komandinio Time-out padėdamas žalią kortelę ant staliuko prieš laikininką. Teisingas sprendimas?",
+    "options": [
+      "a) Žalia kortelė padedama ant stalo",
+      "b) Laikininkas sušvilps iš karto, kai JUODŲ komanda valdys kamuolį",
+      "c) Laikininkas kortelę grąžina atgal",
+      "d) Tik atsakingas oficialus komandos asmuo gali prašyti komandinio Time-out"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 58,
+    "text": "2.38) Žaidėjas JUODAS 3 bando mesti į vartus. Tačiau kamuolys niekieno nepaliestas lieka gulėti vartininko aikštelėje. Tuo metu JUODŲ komandos atsakingas asmuo prašo komandinio Time-out. Teisingas sprendimas?",
+    "options": [
+      "a) Laikininkas sušvilpia ir stabdo laiką",
+      "b) Laikininkas grąžina žalią kortelę",
+      "c) Žaidimas atnaujinamas JUODŲ komandos laisvuoju metimu",
+      "d) BALTŲ komandos vartininko metimas"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 59,
+    "text": "2.39) BALTŲ komandos vartininkas meta kamuolį BALTAM 8, kuris yra vienas prieš vartininką JUODĄ 12. Prieš pat BALTAM 8 pagaunant kamuolį, sušvilpia laikininkas, kadangi BALTŲ komandos treneris paprašo komandinio Time-out. Kaip žaidimas tęsiasi?",
+    "options": [
+      "a) Laisvas metimas BALTIEMS už jų vartų aikštelės linijos",
+      "b) Laisvas metimas BALTIEMS prie BALTŲ keitimo zonos",
+      "c) 7 metrų metimas BALTIEMS",
+      "d) Laisvas metimas BALTIEMS nuo JUODŲ laisvo metimo linijos"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 60,
+    "text": "2.40) BALTAS 4 blokuoja JUODO 11 metimą. Kamuolys liečia lubas virš vartų aikštelės. Iš karto po to JUODŲ komandos treneris padeda žalią kortelę ant stalo prieš laikininką. Teisingas sprendimas?",
+    "options": [
+      "a) JUODŲ komanda iš karto gauna komandinį time-out",
+      "b) JUODŲ komanda negauna komandinio time-out todėl, kad kamuolys lietė lubas",
+      "c) JUODŲ komanda negauna komandinio time-out todėl, kad BALTŲ komandai priklauso kamuolys",
+      "d) JUODŲ komanda gaus komandinį time-out, bet po to, kai žaidimas bus atnaujintas"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 61,
+    "text": "2.41) BALTŲ komanda valdo kamuolį ir prašo komandinio time-out. Dėl triukšmo teisėjai negirdi švilpuko. Tik maždaug po 10 sekundžių, kai JUODŲ komanda užvaldo kamuolį, teisėjai išgirsta švilpuką. Teisingas sprendimas?",
+    "options": [
+      "a) Komandinis time-out yra skiriamas",
+      "b) Žaidimas atnaujinamas laisvu metimu JUODIEMS",
+      "c) Komandinis time-out nėra skiriamas",
+      "d) Žaidimas atnaujinamas laisvu metimu BALTIEMS"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 62,
+    "text": "2.42) BALTAS 7 pašalinamas 2 minutėms 78 minutę, rungtynės baigėsi lygiom ir turi būti metami 7m baudiniai. Atsakingas komandos oficialus asmuo BALTĄ 7 paskiria baudinių metimų serijai. BALTAS 7 meta ir įmeta įvartį. Teisingas sprendimas?",
+    "options": [
+      "a) Įvartis įskaitomas, BALTAM 7 leidžiama dalyvauti",
+      "b) Įvartis neįskaitomas, BALTAM 7 neleidžiama dalyvauti",
+      "c) Metimas laikomas negaliojančiu",
+      "d) Diskvalifikacija BALTAM 7"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 63,
+    "text": "2.43) Rungtynių laikui esant 55:00 BALTŲ komandos atsakingas oficialus asmuo prašo komandinio Time-out, kuris jau yra antras rungtynėse. 59 minutę tas pats asmuo prašo trečio komandinio Time-out. Teisingas sprendimas?",
+    "options": [
+      "a) Komandinis Time-out yra leidžiamas",
+      "b) Komandinis Time-out neleidžiamas"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 64,
+    "text": "2.44) Atakuoja BALTŲ komanda. BALTŲ komandos oficialus asmuo A nori prašyti komandinio Time-out ir eina prie sekretoriato stalo su žalia kortele. Žalia kortelė padedama ant stalo. Tačiau tuo pačiu metu BALTAS 4 atlieka metimą ir pasiekia įvartį. Laikininkas švilpia po to, kai kamuolys jau kirto vartų liniją. Koks teisingas sprendimas?",
+    "options": [
+      "a) BALTŲ komandos įvartis",
+      "b) Įvartis neįskaitomas, nes BALTŲ komanda paprašė Time-out",
+      "c) BALTŲ komandinis Time-out",
+      "d) Komandinis Time-out negalimas, nes BALTŲ komanda nebeturi kamuolio kontrolės",
+      "e) Žalia kortelė privalo būti grąžinta komandai"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 65,
+    "text": "2.45) BALTŲ komanda 55:10 turėjo savo antrąjį komandinį Time-out. Dabar 59:25 BALTŲ komandos oficialus asmuo A prašo trečiojo komandinio Time-out. Kamuolį kontroliuoja BALTŲ komanda. Laikininkas švilpia ir stabdo laiką. Koks teisingas sprendimas?",
+    "options": [
+      "a) BALTŲ komandinis Time-out",
+      "b) Komandinis Time-out nesuteikiamas",
+      "c) BALTŲ komandos oficialiam asmeniui A progresyvinė nuobauda",
+      "d) Žaidimas atnaujinamas BALTŲ komandos laisvu metimu"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 66,
+    "text": "2.46) BALTŲ komanda nori prašyti komandinio Time-out. BALTŲ komandos oficialus asmuo A padeda žalią kortelę ant stalo. Tuo pačiu metu BALTAS 9 atlieka metimą į JUODŲ vartus. Laikininkas švilpia, kuomet kamuolys yra ore. Vartininkas JUODAS 12 kamuolį sugauna. Koks teisingas sprendimas?",
+    "options": [
+      "a) Komandinis Time-out negalimas, nes BALTŲ komanda nebeturi kamuolio kontrolės",
+      "b) BALTŲ komandinis Time-out",
+      "c) Žalia kortelė grąžinama BALTŲ komandai",
+      "d) Žaidimas atnaujinamas JUODŲ komandos vartininko metimu"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 67,
+    "text": "2.47) BALTŲ komanda nori prašyti komandinio Time-out. BALTŲ komandos oficialus asmuo A padeda žalią kortelę. Prieš laikininkui sušvilpiant, BALTAS 9 atlieka metimą. Vartininkas JUODO 12 metimą atmuša, o laikininkas švilpia, kuomet atmuštas kamuolys ridenasi vartų aikštelės plote. Koks teisingas sprendimas?",
+    "options": [
+      "a) Komandinis Time-out negalimas, nes BALTŲ komanda nebeturi kamuolio kontrolės",
+      "b) BALTŲ komandinis Time-out",
+      "c) Žalia kortelė grąžinama BALTŲ komandai",
+      "d) Žaidimas atnaujinamas JUODŲ komandos vartininko metimu",
+      "e) Žaidimas atnaujinamas BALTŲ komandos laisvu metimu"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 68,
+    "text": "2.48) BALTŲ komanda nori prašyti komandinio Time-out. Prieš laikininkui sušvilpiant, BALTAS 9 atlieka metimą. Metimas vartininko JUODO 12 atmušamas, ir laikininkas švilpia, kuomet atmuštas kamuolys vis dar yra ore vartų aikštelės plote. Koks teisingas sprendimas?",
+    "options": [
+      "a) Komandinis Time-out negalimas, nes BALTŲ komanda nebeturi kamuolio kontrolės",
+      "b) BALTŲ komandinis Time-out",
+      "c) Žalia kortelė grąžinama BALTŲ komandai",
+      "d) Žaidimas atnaujinamas JUODŲ komandos vartininko metimu"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 69,
+    "text": "2.49) BALTŲ komanda nori prašyti komandinio Time-out. Prieš laikininkui sušvilpiant, BALTAS 11 prasižengia puolime. Laikininkas dėl Time-out švilpia prieš teisėjui sušvilpiant pražangą puolime. Koks teisingas sprendimas?",
+    "options": [
+      "a) Teisėjai nusprendžia, kad Time-out negali būti suteiktas, nes pražanga puolime įvyko prieš laikininkui sušvilpiant",
+      "b) BALTŲ komandinis Time-out",
+      "c) Žalia kortelė grąžinama BALTŲ komandai",
+      "d) Žaidimas atnaujinamas JUODŲ komandos laisvu metimu"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 70,
+    "text": "2.50) Rungtynėse yra naudojamasi elektroniniu komandinio Time-out įrenginiu. BALTŲ komanda savo antrąjį komandinį turėjo 55:10. Tolimesnėje rungtynių eigoje esant 59:35 BALTŲ komandos oficialus asmuo A siekdamas paimti trečiąjį savo komandos Time-Out paspaudžia elektroninio Time-Out mygtuką. Tuo metu kamuolys yra žaidime ir jį kontroliuoja BALTŲ komanda. Nuskamba rungtynių švieslentės sirena. Koks teisingas sprendimas?",
+    "options": [
+      "a) BALTŲ komandinis Time-out",
+      "b) Komandinis Time-out nesuteikiamas",
+      "c) BALTŲ komandos oficialiam A progresyvinė nuobauda",
+      "d) Žaidimas atnaujinamas BALTŲ komandos laisvu metimu"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 71,
+    "text": "4.14) Kiek žaidėjų gali būti vienu metu gynyboje vartų aikštelėje?",
+    "options": [
+      "a) 5 žaidėjai",
+      "b) 6 žaidėjai",
+      "c) 7 žaidėjai",
+      "d) 8 žaidėjai"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 72,
+    "text": "4.15) Kiek laiko turi teisėjas parodyti geltoną kortelę po įspėjimo?",
+    "options": [
+      "a) Iškart",
+      "b) Per 30 sekundžių",
+      "c) Per 1 minutę",
+      "d) Per 2 minutes"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 73,
+    "text": "4.16) Kiek laiko turi komanda atlikti 7 metrų metimą?",
+    "options": [
+      "a) 3 sekundės",
+      "b) 5 sekundės",
+      "c) 10 sekundžių",
+      "d) 15 sekundžių"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 74,
+    "text": "4.17) Kiek kartų per rungtynes komanda gali keisti vartininką su aikštės žaidėju?",
+    "options": [
+      "a) 1 kartą",
+      "b) 2 kartus",
+      "c) 3 kartus",
+      "d) Neribotai"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 75,
+    "text": "4.18) Kiek laiko trunka pertrauka tarp kėlinių?",
+    "options": [
+      "a) 5 minučių",
+      "b) 10 minučių",
+      "c) 15 minučių",
+      "d) 20 minučių"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 76,
+    "text": "4.19) Kiek žaidėjų gali būti vienu metu puolime vartų aikštelėje?",
+    "options": [
+      "a) 5 žaidėjai",
+      "b) 6 žaidėjai",
+      "c) 7 žaidėjai",
+      "d) 8 žaidėjai"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 77,
+    "text": "4.20) Kiek atsarginių žaidėjų gali būti ant suolelio?",
+    "options": [
+      "a) 4 žaidėjai",
+      "b) 5 žaidėjai",
+      "c) 6 žaidėjai",
+      "d) 7 žaidėjai"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 78,
+    "text": "4.21) Kiek laiko turi komanda atlikti laisvą metimą?",
+    "options": [
+      "a) 3 sekundės",
+      "b) 5 sekundės",
+      "c) 10 sekundžių",
+      "d) 15 sekundžių"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 79,
+    "text": "4.22) Kiek laiko turi komanda atlikti šoninį metimą?",
+    "options": [
+      "a) 3 sekundės",
+      "b) 5 sekundės",
+      "c) 10 sekundžių",
+      "d) 15 sekundžių"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 80,
+    "text": "4.23) Kiek laiko turi komanda atlikti vartininko metimą?",
+    "options": [
+      "a) 3 sekundės",
+      "b) 5 sekundės",
+      "c) 10 sekundžių",
+      "d) Neribotai"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 81,
+    "text": "4.24) Kiek žaidėjų gali būti vienu metu gynyboje vartų aikštelėje?",
+    "options": [
+      "a) 5 žaidėjai",
+      "b) 6 žaidėjai",
+      "c) 7 žaidėjai",
+      "d) 8 žaidėjai"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 82,
+    "text": "4.25) Kiek kartų per rungtynes komanda gali keisti vartininką su aikštės žaidėju?",
+    "options": [
+      "a) 1 kartą",
+      "b) 2 kartus",
+      "c) 3 kartus",
+      "d) Neribotai"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 83,
+    "text": "4.26) Kiek laiko turi teisėjas parodyti raudoną kortelę po diskvalifikacijos?",
+    "options": [
+      "a) Iškart",
+      "b) Per 30 sekundžių",
+      "c) Per 1 minutę",
+      "d) Per 2 minutes"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 84,
+    "text": "4.27) Kiek laiko trunka 2 minučių pašalinimas?",
+    "options": [
+      "a) 1 minutė 30 sekundžių",
+      "b) 2 minutės",
+      "c) 2 minutės 30 sekundžių",
+      "d) 3 minutės"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 85,
+    "text": "4.28) Kiek žaidėjų gali būti vienu metu puolime vartų aikštelėje?",
+    "options": [
+      "a) 5 žaidėjai",
+      "b) 6 žaidėjai",
+      "c) 7 žaidėjai",
+      "d) 8 žaidėjai"
     ],
     "correct": [2]
   }

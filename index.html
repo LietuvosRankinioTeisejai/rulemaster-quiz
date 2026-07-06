@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                <!-- Warning area -->
+                <!-- Warning Banner -->
                 <div id="warning-banner" class="hidden bg-yellow-100 border-b border-yellow-300 px-6 py-3 text-yellow-800 text-sm font-medium flex items-center gap-x-2">
                     <i class="fa-solid fa-exclamation-triangle"></i>
                     <span id="warning-text"></span>
@@ -140,7 +140,7 @@
         let timeLeft = 0;
         let testTerminated = false;
         let hiddenTimestamp = null;
-        let lives = 1; // 1 gyvenimas
+        let lives = 1;
 
         async function loadQuestions() {
             const res = await fetch('questions.json');
@@ -270,11 +270,9 @@
 
                     if (timeAway > 5000) {
                         if (lives > 0) {
-                            // Pirmas kartas — rodom įspėjimą
                             showWarning();
                             lives = 0;
                         } else {
-                            // Antras kartas — nutraukiame testą
                             terminateTest();
                         }
                     }
@@ -290,7 +288,6 @@
             text.innerHTML = `Dėmesio! Perjungėte langą. Tai draudžiama. Turite dar <strong>1 galimybę</strong>.`;
             banner.classList.remove('hidden');
 
-            // Po 6 sekundžių paslepiame įspėjimą
             setTimeout(() => {
                 banner.classList.add('hidden');
             }, 6000);

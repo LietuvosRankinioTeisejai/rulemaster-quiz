@@ -27,19 +27,25 @@
         <div id="selection-screen">
             <div class="text-center mb-10">
                 <h2 class="text-4xl font-semibold tracking-tight text-slate-900">Pasirinkite testą</h2>
+                <p class="text-slate-600 mt-2">Klausimai imami atsitiktinai iš visos duomenų bazės</p>
             </div>
             <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <div onclick="startTest('short')" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
+                <!-- Trumpas -->
+                <div onclick="startTest(15)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
                     <h3 class="text-3xl font-semibold">Trumpas testas</h3>
                     <p class="mt-2">15 klausimų • 15 min</p>
                     <button class="mt-6 w-full bg-blue-700 text-white py-3 rounded-2xl">Pradėti</button>
                 </div>
-                <div onclick="startTest('medium')" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
+
+                <!-- Standartinis -->
+                <div onclick="startTest(20)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
                     <h3 class="text-3xl font-semibold">Standartinis testas</h3>
                     <p class="mt-2">20 klausimų • 20 min</p>
                     <button class="mt-6 w-full bg-blue-700 text-white py-3 rounded-2xl">Pradėti</button>
                 </div>
-                <div onclick="startTest('long')" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
+
+                <!-- Ilgas -->
+                <div onclick="startTest(30)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
                     <h3 class="text-3xl font-semibold">Ilgas testas</h3>
                     <p class="mt-2">30 klausimų • 30 min</p>
                     <button class="mt-6 w-full bg-blue-700 text-white py-3 rounded-2xl">Pradėti</button>
@@ -105,12 +111,12 @@
 
     <script>
         let questionBank = [];
-        let currentTest = null;
         let currentQuestions = [];
         let answers = [];
         let currentIndex = 0;
         let timerInterval = null;
         let timeLeft = 0;
+        let currentTestConfig = {};
 
         async function loadQuestions() {
             try {
@@ -118,13 +124,13 @@
                 if (!res.ok) throw new Error('Nepavyko įkelti questions.json');
                 questionBank = await res.json();
             } catch (error) {
-                alert("Klaida: Nepavyko įkelti klausimų failo (questions.json). Patikrinkite, ar failas egzistuoja ir yra teisingame aplanke.");
+                alert("Klaida: Nepavyko įkelti questions.json failo.");
                 console.error(error);
                 throw error;
             }
         }
 
-        function shuffle(array) {
+        function shuffleArray(array) {
             return [...array].sort(() => Math.random() - 0.5);
         }
 
@@ -132,28 +138,45 @@
             return text.replace(/^\d+\.\d+\)\s*/, '');
         }
 
-        async function startTest(type) {
+        async function startTest(numQuestions) {
             try {
-                await loadQuestions();
+                if (questionBank.length === 0) {
+                    await loadQuestions();
+                }
 
-                const configs = {
-                    short: { name: "Trumpas testas", num: 15, time: 15, pass: 75 },
-                    medium: { name: "Standartinis testas", num: 20, time: 20, pass: 75 },
-                    long: { name: "Ilgas testas", num: 30, time: 30, pass: 75 }
-                };
+                // Paimame atsitiktinius klausimus iš visos bazės
+                const selectedQuestions = shuffleArray(questionBank).slice(0, numQuestions);
 
-                currentTest = configs[type];
-                currentQuestions = shuffle(questionBank).slice(0, currentTest.num);
+                // Kiekvienam klausimui išmaišome atsakymų variantus
+                currentQuestions = selectedQuestions.map(q => {
+                    let optionsWithIndex = q.options.map((text, idx) => ({
+                        text: text,
+                        originalIndex: idx
+                    }));
+                    optionsWithIndex = shuffleArray(optionsWithIndex);
+
+                    return {
+                        ...q,
+                        shuffledOptions: optionsWithIndex
+                    };
+                });
+
                 answers = new Array(currentQuestions.length).fill(null);
                 currentIndex = 0;
-                timeLeft = currentTest.time * 60;
+
+                currentTestConfig = {
+                    name: `${numQuestions} klausimų testas`,
+                    time: numQuestions
+                };
+
+                timeLeft = numQuestions * 60;
 
                 document.getElementById('selection-screen').classList.add('hidden');
                 document.getElementById('quiz-screen').classList.remove('hidden');
                 document.getElementById('results-screen').classList.add('hidden');
 
-                document.getElementById('quiz-name').textContent = currentTest.name;
-                document.getElementById('quiz-info').textContent = `${currentQuestions.length} klausimų • ${currentTest.time} min`;
+                document.getElementById('quiz-name').textContent = currentTestConfig.name;
+                document.getElementById('quiz-info').textContent = `${currentQuestions.length} klausimų • ${currentTestConfig.time} min`;
 
                 startTimer();
                 renderQuestion();
@@ -183,8 +206,7 @@
 
         function renderQuestion() {
             const q = currentQuestions[currentIndex];
-            const cleanText = cleanQuestionText(q.text);
-            document.getElementById('question-text').textContent = cleanText;
+            document.getElementById('question-text').textContent = cleanQuestionText(q.text);
             document.getElementById('question-counter').textContent = `Klausimas ${currentIndex + 1} iš ${currentQuestions.length}`;
 
             const answered = answers.filter(a => a && a.length > 0).length;
@@ -193,10 +215,7 @@
             const container = document.getElementById('options');
             container.innerHTML = '';
 
-            let optionsWithIndex = q.options.map((text, idx) => ({ text, originalIndex: idx }));
-            optionsWithIndex = shuffle(optionsWithIndex);
-
-            optionsWithIndex.forEach((opt) => {
+            q.shuffledOptions.forEach((opt) => {
                 const isSelected = answers[currentIndex] && answers[currentIndex].includes(opt.originalIndex);
                 const div = document.createElement('div');
                 div.className = `option border border-slate-200 rounded-2xl px-6 py-4 flex items-center gap-x-4 cursor-pointer ${isSelected ? 'selected' : ''}`;
@@ -261,7 +280,6 @@
             });
 
             const percent = Math.round((correctCount / currentQuestions.length) * 100);
-            const passed = percent >= currentTest.pass;
 
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('results-screen').classList.remove('hidden');
@@ -273,7 +291,7 @@
             if (timeExpired) {
                 badge.innerHTML = `<i class="fa-solid fa-clock mr-2"></i> LAIKAS PASIBAIGĖ`;
                 badge.className = "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-orange-100 text-orange-700";
-            } else if (passed) {
+            } else if (percent >= 75) {
                 badge.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i> IŠLAIKYTA`;
                 badge.className = "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-emerald-100 text-emerald-700";
             } else {
@@ -297,6 +315,14 @@
             document.getElementById('results-screen').classList.add('hidden');
             clearInterval(timerInterval);
         }
+
+        // Automatiškai įkelia klausimus
+        window.onload = async () => {
+            try {
+                await loadQuestions();
+                console.log(`Įkelta ${questionBank.length} klausimų.`);
+            } catch (e) {}
+        };
     </script>
 </body>
 </html>

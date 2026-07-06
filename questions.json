@@ -212,8 +212,7 @@
       "d) Diskvalifikacija"
     ],
     "correct": [1, 3]
-  }
-],
+  },
   {
     "id": 20,
     "text": "2.16) BALTAS 9 meta į vartus. Vartininkas JUODAS 12 pagauna kamuolį. Tuo pat metu sekretorius sušvilpia, jog rungtynės baigėsi. Teisėjai parodo jam, kad iki 2 kėlinio pabaigos liko 30s. Visi žaidėjai yra aikštelėje. Kaip žaidimas turėtų būti atnaujinamas?",
@@ -326,8 +325,7 @@
       "e) Po grubaus nesportiško elgesio"
     ],
     "correct": [0, 1, 2, 3]
-  }
-],
+  },
   {
     "id": 30,
     "text": "2.26) Prieš pirmo kėlinio pabaigą BALTAS 7 atlieka užpuolimą prieš JUODĄ 5, kuris praranda aiškią galimybę pasiekti įvartį. Automatinis signalas suskamba prieš teisėjų švilpuką. Teisingas sprendimas?",

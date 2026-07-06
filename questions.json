@@ -1,0 +1,255 @@
+[
+  {
+    "id": 1,
+    "text": "1.1) Kokie žaidimo aikštelės matmenys yra nustatyti pagal taisykles?",
+    "options": [
+      "a) 40 x 20 metrų",
+      "b) 42 x 20 metrų",
+      "c) 38 x 18 metrų",
+      "d) Ilgis tarp 38 ir 42 metrų, plotis tarp 18 ir 22 metrų"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 2,
+    "text": "1.2) Kokio turi būti aukščio ir pločio vartų matmenys, matuojant iš vidinės pusės?",
+    "options": [
+      "a) 1.92 x 2.92 metrai",
+      "b) 2.00 x 3.00 metrai",
+      "c) 2.05 x 3.05 metrai",
+      "d) 2.08 x 3.08 metrai"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 3,
+    "text": "1.3) Kokio pločio yra vartų tarp virpstų linija?",
+    "options": ["a) 5 cm", "b) 6 cm", "c) 8 cm", "d) 10 cm"],
+    "correct": [2]
+  },
+  {
+    "id": 4,
+    "text": "1.4) Kurie iš teiginių apie pradedamojo metimo zoną yra teisingi?",
+    "options": [
+      "a) Ji sudaryta iš 3 m apskritimo",
+      "b) Ji sudaryta iš 4 m apskritimo",
+      "c) Pradedamojo metimo zona gali būti skirtingos spalvos nei žaidimo aikštė",
+      "d) Pradedamojo metimo zona gali būti tiesiog apskritimo linija"
+    ],
+    "correct": [1, 2, 3]
+  },
+  {
+    "id": 5,
+    "text": "2.1) Vartininkas atremia metimą ir kamuolys užrieda už galinės vartų linijos. Tuo metu pasigirsta automatinis baigiamasis signalas. Kaip atnaujinamas žaidimas?",
+    "options": ["a) Vartininko metimu", "b) Laisvu metimu", "c) Be švilpuko", "d) Po švilpuko"],
+    "correct": [0, 3]
+  },
+  {
+    "id": 6,
+    "text": "2.2) Po automatinio baigiamojo signalo, pasibaigus pirmajam kėliui, teisėjai nustatė, kad pirmasis kėlinys baigėsi 1 min. anksčiau. Teisingas sprendimas?",
+    "options": [
+      "a) Prailginti antrąjį kėlinį 1 min.",
+      "b) 1 min. prarasta ir trūkumo nepaisoma",
+      "c) Po kėlinio pertraukos, pirmiausiai žaidžiama 1 min. pasiliekant tose pusėse",
+      "d) Žaidėjai lieka aikštelėje ir sužaidžia likusią minutę"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 7,
+    "text": "2.5) Tiesioginis laisvas metimas skiriamas prieš pat žaidimo pabaigą. Automatinis signalas skamba prieš kamuoliui patenkant į vartus. Teisingas sprendimas?",
+    "options": [
+      "a) Rungtynių pabaiga",
+      "b) Komanda kartoja laisvą metimą be švilpuko",
+      "c) Komanda kartoja laisvą metimą po švilpuko",
+      "d) 7 m metimas skiriamas"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 8,
+    "text": "2.6) Prieš pasibaigiant rungtynėms, žaidėjas turi aiškią galimybę pasiekti įvartį, bet yra neleistinai sustabdomas. Prieš kamuoliui paliekant ranką, pasigirsta finalinis signalas. Teisingas sprendimas?",
+    "options": [
+      "a) Rungtynių pabaiga",
+      "b) Laisvas metimas",
+      "c) 7 metrų metimas",
+      "d) Rungtynių pabaiga, pastaba protokole"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 9,
+    "text": "2.9) Kada prasideda rungtynės?",
+    "options": [
+      "a) Po teisėjo, įrašytu pirmuoju, švilpuko",
+      "b) Kai kamuolys palieka metančiojo ranką",
+      "c) Kai laikininkas įjungia laikmatį",
+      "d) Po aikštės teisėjo švilpuko pradedamajam metimui atlikti"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 10,
+    "text": "2.10) Atliekant 7 metrų metimų seriją, kas nusprendžia, į kuriuos vartus bus metama?",
+    "options": [
+      "a) Komanda, kuri laimi burtus",
+      "b) Komanda, kuri pralaimi burtus",
+      "c) Teisėjai",
+      "d) Pirmuoju įrašytas teisėjas"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 11,
+    "text": "2.15) Kurioje situacijoje Time-out yra privalomas?",
+    "options": ["a) 7 m metimas", "b) 2 min. pašalinimas", "c) Išoriniai veiksmai", "d) Diskvalifikacija"],
+    "correct": [1, 3]
+  },
+  {
+    "id": 12,
+    "text": "2.22) Kam leidžiama dalyvauti lemiamuose 7 metrų baudinių metimuose?",
+    "options": [
+      "a) Žaidėjams, įtrauktiems į rungtynių protokolą",
+      "b) Žaidėjams, kurie nėra diskvalifikuoti",
+      "c) Žaidėjams, kurie nėra pašalinti 2 minutėms",
+      "d) Visiems žaidėjams"
+    ],
+    "correct": [0, 1, 2]
+  },
+  {
+    "id": 13,
+    "text": "2.25) Kada yra privalomas Time-out?",
+    "options": [
+      "a) Kai komandos oficialus asmuo gauna 2 min. pašalinimą",
+      "b) Kai žaidėjas gauna 2 min. pašalinimą trečią kartą",
+      "c) Po pakartotinio nesportiško elgesio",
+      "d) Kai teisėjai turi pasitarti"
+    ],
+    "correct": [0, 1, 2, 3]
+  },
+  {
+    "id": 14,
+    "text": "4.1) Kiek žaidėjų gali būti registruota vienoje komandoje varžybų metu?",
+    "options": ["a) 12 žaidėjų", "b) 14 žaidėjų", "c) 16 žaidėjų", "d) 18 žaidėjų"],
+    "correct": [2]
+  },
+  {
+    "id": 15,
+    "text": "7.1) Kiek laiko trunka vienas kėlinys oficialiose rankinio varžybose?",
+    "options": ["a) 25 minutės", "b) 30 minutės", "c) 35 minutės", "d) 40 minutės"],
+    "correct": [1]
+  },
+  {
+    "id": 16,
+    "text": "2.14) Teisėjai suteikė laisvą metimą. Tuo pat metu komandos atsakingas atstovas reikalauja komandinės minutės pertraukėlės. Kuris teiginys teisingas?",
+    "options": [
+      "a) Komanda negali gauti Time-out, nes kamuolys nežaidime",
+      "b) Sekretorius sušvilpia ir parodo gestą Nr.15",
+      "c) Teisėjai patvirtina Time-out",
+      "d) Sekretorius pažymi Time-out protokole"
+    ],
+    "correct": [2, 3]
+  },
+  {
+    "id": 17,
+    "text": "2.17) Normalus žaidimo laikas pasibaigė rezultatu 20-20, žaidimas turi būti pratęsiamas. Teisingas sprendimas?",
+    "options": [
+      "a) 1 min pertrauka prieš pratęsimą",
+      "b) 5 min pertrauka prieš pratęsimą",
+      "c) 1 min pertrauka tarp kėlinių pratęsime",
+      "d) 5 min pertrauka tarp kėlinių pratęsime"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 18,
+    "text": "2.20) Vartininkas atmuša metimą likus 5 sek. iki rungtynių pabaigos. Kamuolys atsitrenkia į lubas. Automatinis signalas suskamba prieš šoninį metimą. Teisingas sprendimas?",
+    "options": [
+      "a) Šoninis metimas po švilpuko",
+      "b) Time-out",
+      "c) Rungtynių pabaiga",
+      "d) Šoninis metimas privalomas atlikti, tada rungtynės baigiasi"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 19,
+    "text": "2.21) Žaidėjas jau turi įspėjimą. Komandinio Time-out metu jis nesportiška maniera kalba apie teisėjus. Teisingas sprendimas?",
+    "options": [
+      "a) Diskvalifikacija (raudona kortelė)",
+      "b) 2 minučių pašalinimas",
+      "c) Įspėjimas",
+      "d) Joks veiksmas negalimas"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 20,
+    "text": "2.26) Prieš pirmo kėlinio pabaigą žaidėjas atlieka užpuolimą prieš varžovą, kuris praranda aiškią galimybę pasiekti įvartį. Automatinis signalas suskamba prieš teisėjų švilpuką. Teisingas sprendimas?",
+    "options": [
+      "a) Pirmas kėlinys pasibaigė; nėra tolimesnių veiksmų",
+      "b) Diskvalifikacija be rašytinio raporto",
+      "c) 7 metrų metimas",
+      "d) Laisvas metimas",
+      "e) Diskvalifikacija su rašytiniu raportu (raudona + mėlyna kortelė)"
+    ],
+    "correct": [4]
+  },
+  {
+    "id": 21,
+    "text": "2.27) Pasibaigus kėliniui laisvas metimas turi būti atliktas po švilpuko. Kurie žaidėjai vis tiek gali būti keičiami?",
+    "options": [
+      "a) Visi abiejų komandų žaidėjai",
+      "b) Tik besiginančios komandos žaidėjai",
+      "c) Tik atakuojančios komandos žaidėjai",
+      "d) Tik vienas žaidėjas iš metančios komandos"
+    ],
+    "correct": [1, 4]
+  },
+  {
+    "id": 22,
+    "text": "2.28) Kokias padėtis turi užimti žaidėjai atliekant laisvą metimą po finalinio švilpuko?",
+    "options": [
+      "a) Visi metančiojo komandos draugai turi būti už varžovų laisvo metimo linijos",
+      "b) Visi metančiojo komandos draugai turi būti savo aikštelės pusėje",
+      "c) Varžovai turi būti atsitraukę 3 metrus nuo metančiojo arba prie savo vartų aikštelės linijos",
+      "d) Visi metančiojo komandos draugai turi stovėti kartu su metančiuoju prie varžovų laisvo metimo linijos"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 23,
+    "text": "2.33) Žaidėjas greitai varosi kamuolį ir jam atvira ranka išmušamas kamuolys. Teisingas sprendimas?",
+    "options": [
+      "a) Time-out",
+      "b) Pradedamasis metimas",
+      "c) Progresyvinė nuobauda",
+      "d) Laisvas metimas",
+      "e) 2 minučių pašalinimas"
+    ],
+    "correct": [2, 4]
+  },
+  {
+    "id": 24,
+    "text": "2.34) Kurioje situacijoje Time-out NĖRA privalomas?",
+    "options": [
+      "a) Kamuolys išeina toli už aikštės",
+      "b) Laikininko švilpukas",
+      "c) Žaidėjas galimai yra traumuotas",
+      "d) Kai teisėjai parodo skirtingas kryptis",
+      "e) Aikštės žaidėjo keitimasis su vartininku"
+    ],
+    "correct": [0, 4]
+  },
+  {
+    "id": 25,
+    "text": "2.35) Kas gali prašyti komandinio Time-out?",
+    "options": [
+      "a) Vienas iš komandos oficialių atstovų",
+      "b) Žaidėjas",
+      "c) Tik atsakingas komandos oficialus atstovas",
+      "d) Komandos kapitonas"
+    ],
+    "correct": [2]
+  }
+]

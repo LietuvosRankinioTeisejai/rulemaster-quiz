@@ -6,6 +6,15 @@
     <title>Rankinio Taisyklių Testai</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Uždrausti kopijavimą testo metu */
+        #quiz-screen {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
 </head>
 <body class="bg-slate-50">
     <header class="bg-white border-b">
@@ -30,21 +39,16 @@
                 <p class="text-slate-600 mt-2">Klausimai imami atsitiktinai iš visos duomenų bazės</p>
             </div>
             <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <!-- Trumpas -->
                 <div onclick="startTest(15)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
                     <h3 class="text-3xl font-semibold">Trumpas testas</h3>
                     <p class="mt-2">15 klausimų • 15 min</p>
                     <button class="mt-6 w-full bg-blue-700 text-white py-3 rounded-2xl">Pradėti</button>
                 </div>
-
-                <!-- Standartinis -->
                 <div onclick="startTest(20)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
                     <h3 class="text-3xl font-semibold">Standartinis testas</h3>
                     <p class="mt-2">20 klausimų • 20 min</p>
                     <button class="mt-6 w-full bg-blue-700 text-white py-3 rounded-2xl">Pradėti</button>
                 </div>
-
-                <!-- Ilgas -->
                 <div onclick="startTest(30)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:shadow-xl">
                     <h3 class="text-3xl font-semibold">Ilgas testas</h3>
                     <p class="mt-2">30 klausimų • 30 min</p>
@@ -138,19 +142,22 @@
             return text.replace(/^\d+\.\d+\)\s*/, '');
         }
 
+        // Pašalina "a)", "b)", "c)", "d)" iš atsakymo teksto
+        function cleanOptionText(text) {
+            return text.replace(/^[a-d]\)\s*/i, '');
+        }
+
         async function startTest(numQuestions) {
             try {
                 if (questionBank.length === 0) {
                     await loadQuestions();
                 }
 
-                // Paimame atsitiktinius klausimus iš visos bazės
                 const selectedQuestions = shuffleArray(questionBank).slice(0, numQuestions);
 
-                // Kiekvienam klausimui išmaišome atsakymų variantus
                 currentQuestions = selectedQuestions.map(q => {
                     let optionsWithIndex = q.options.map((text, idx) => ({
-                        text: text,
+                        text: cleanOptionText(text),           // Čia pašaliname a), b), c), d)
                         originalIndex: idx
                     }));
                     optionsWithIndex = shuffleArray(optionsWithIndex);
@@ -316,11 +323,20 @@
             clearInterval(timerInterval);
         }
 
-        // Automatiškai įkelia klausimus
+        // Uždrausti kopijavimą viso quiz ekrano
+        function disableCopy() {
+            const quizScreen = document.getElementById('quiz-screen');
+            if (quizScreen) {
+                quizScreen.addEventListener('copy', e => e.preventDefault());
+                quizScreen.addEventListener('cut', e => e.preventDefault());
+            }
+        }
+
         window.onload = async () => {
             try {
                 await loadQuestions();
                 console.log(`Įkelta ${questionBank.length} klausimų.`);
+                disableCopy(); // Įjungiame apsaugą nuo kopijavimo
             } catch (e) {}
         };
     </script>

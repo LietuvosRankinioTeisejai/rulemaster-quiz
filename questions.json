@@ -2325,5 +2325,379 @@
       "h) Po medicininės pagalbos suteikimo BALTAS 12 žaidimą gali tęsti nepalikęs žaidimo aikštelės"
     ],
     "correct": [1, 3, 4, 5, 6]
-  }
+  },
+  {
+    "id": 164,
+    "text": "7.1) Kamuolys skrieja ore šoninės linijos link. BALTAS 3 sugeba kamuolį perduoti BALTAM 7 prieš kamuoliui pasiekiant liniją. BALTAS 3 padaro tai būdamas viena pėda už aikštelės ribų. BALTAS 7 pagauna kamuolį ir pasiekia įvartį. Teisingas sprendimas?",
+    "options": [
+      "a) Šoninis metimas JUODŲ komandai",
+      "b) Laisvas metimas JUODŲ komandai",
+      "c) Įvartis",
+      "d) BALTAS 3 šalinamas 2min."
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 165,
+    "text": "7.2) JUODAS 3 atlieka rizikingą perdavimą JUODAM 11. Kai kamuolys yra ore, JUODAS 11 supranta, kad negalės jo pagauti, tokiu būdu jis kumščiu smūgiuoja kamuolį JUODAM 9, kuris yra aikštes viduryje. Teisingas sprendimas?",
+    "options": [
+      "a) Žaidimas tęsiamas",
+      "b) Laisvas metimas BALTŲ komandai iš JUODO 9 esamos vietos",
+      "c) Laisvas metimas BALTŲ komandai iš JUODO 11 esamos vietos",
+      "d) 2 minutės JUODAM 11"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 166,
+    "text": "7.3) BALTAS 4 kamuolį pagauna stovėdamas. Tada jis pašoka ir leidžiasi ant dešinės kojos, pašoka nuo kairės kojos, ir atlieka metimą. Kiek žingsnių BALTAS 4 atliko?",
+    "options": [
+      "a) 1",
+      "b) 2",
+      "c) 3",
+      "d) 4"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 167,
+    "text": "7.4) Žaidėjas pašoka pagauti komandos draugo mestą kamuolį. Ant žemės jis nusileidžia dvejomis kojomis tuo pačiu momentu. Tada jis pakelia dešinę koją, atlieka žingsnį į šalį ir pritraukia kairę koją prie dešinės. Kiek žingsnių jis atliko?",
+    "options": [
+      "a) 1",
+      "b) 3",
+      "c) 0",
+      "d) 2"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 168,
+    "text": "7.5) Žaidėjas komandos draugo mestą kamuolį pagauna ore, leidžiasi ant dešinės kojos ir pašoka nuo tos pačios kojos. Po to jis pirmiausia padeda kairę koją ir tada dešinę, ir atlieka metimą. Kiek žingsnių jis atliko?",
+    "options": [
+      "a) 3",
+      "b) 2",
+      "c) 1",
+      "d) 0"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 169,
+    "text": "7.6) BALTAS 5 nesugraibo kamuolio, bet galiausiai jį sugebėjo apvaldyti. Po to jis atlieka tris žingsnius, sumuša kamuolį ir atlieka dar tris žingsnius prieš pasiekdamas įvartį. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas JUODŲ komandai",
+      "b) Įvartis",
+      "c) JUODŲ komandai vartininko metimas",
+      "d) Šoninis metimas JUODŲ komandai"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 170,
+    "text": "7.7) BALTAS 5 nori pradėti ataką. Jis varosi kamuolį, tuo metu atlikdamas 5 žingsnius. Po to jis vėl paįima kamuolį ir atlieka perdavimą. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas JUODŲ komandai",
+      "b) Laisvas metimas BALTŲ komandai",
+      "c) Žaisti toliau",
+      "d) 7-metrų metimas JUODŲ komandai"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 171,
+    "text": "7.8) JUODAS 6 pagauna kamuolį, paslysta ir nukrenta. Gulėdamas ant nugaros jis meta kamuolį JUODAM 9. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas BALTŲ komandai",
+      "b) Žaidžiama toliau",
+      "c) Laisvas metimas JUODŲ komandai"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 172,
+    "text": "7.9) BALTAS 3 bėga tarp dviejų priešininkų ir kamuolį, savo bėgimo kryptimi, pasimuša į priekį. Kamuolį jis vėl sugriebia prieš jam paliečiant žemę. Dabar kelias iki JUODŲ komandos vartų yra laisvas. BALTAS 3 kamuolį sumuša vieną kartą ir įmeta įvartį. Teisingas sprendimas?",
+    "options": [
+      "a) Įvartis",
+      "b) Laisvas metimas JUODŲ komandai",
+      "c) JUODŲ komandos vartininko metimas"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 173,
+    "text": "7.10) BALTAS 7 po vieną kartą atlikto driblingo, nori atlikti perdavimą BALTAM 5, bet BALTAS 5 yra uždengtas priešininkų. BALTAS 7 pasimeta taip pamesdamas kamuolį, bet vėl jį sugauna prieš jam paliečiant grindis. Teisingas sprendimas?",
+    "options": [
+      "a) Žaisti toliau",
+      "b) Laisvas metimas JUODŲ komandai",
+      "c) Laisvas metimas BALTŲ komandai"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 174,
+    "text": "7.11) Kaip pakartotinas pasyvus žaidimas yra baudžiamas?",
+    "options": [
+      "a) Laisvas metimas ir įspėjimas",
+      "b) Laisvas metimas ir pašalinimas",
+      "c) Laisvas metimas",
+      "d) Laisvas metimas ir diskvalifikacija (teisėjai parodo raudoną kortelę)"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 175,
+    "text": "7.12) BALTO 4 mestas kamuolys atšoko nuo JUODŲ komandos vartų virpsto, palietė teisėją stovintį vartininko aikštelėje šalia vartų ir nuo jo išriedėjo ne už vartų, bet už šoninės linijos. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas BALTŲ komandai",
+      "b) Šoninis metimas JUODŲ komandai",
+      "c) Vartininko metimas JUODŲ komandai"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 176,
+    "text": "7.13) BALTŲ komanda atlieka šoninį metimą. BALTAS 5 kamuolį meta į aikštę, kur jis liečia teisėją ir įrieda į JUODŲ komandos vartus. Teisingas sprendimas?",
+    "options": [
+      "a) Pakartotinas metimas po švilpuko",
+      "b) Laisvas metimas JUODŲ komandai",
+      "c) Laisvas metimas BALTŲ komandai",
+      "d) Įvartis"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 177,
+    "text": "7.14) JUODAS 3 pašokęs meta, o BALTAS 9 kamuolį blokuoja. Kamuolys nukrinta ant grindų ir BALTAS 9 kamuolį pakelia abejomis rankomis ir pradeda jį varytis, norėdamas pradėti kontrataką. Jis pasiekia įvartį į JUODŲ komandos vartus. Teisingas sprendimas?",
+    "options": [
+      "a) Įvartis BALTŲ komandai",
+      "b) Laisvas metimas JUODŲ komandai",
+      "c) 2 min. pašalinimas BALTAM 9",
+      "d) Time-out"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 178,
+    "text": "7.15) BALTAS 5 varosi kamuolį palei šoninę liniją. JUODAS 2 taisyklingai trukdo jo judėjimą. Norėdamas apeiti JUODĄ 2 vis dar varydamasis kamuolį BALTAS 5 peržengia šoninę liniją. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas BALTŲ komandai",
+      "b) Šoninis metimas JUODŲ komandai",
+      "c) Laisvas metimas JUODŲ komandai",
+      "d) Žaidžiama toliau"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 179,
+    "text": "7.16) Po netikslaus BALTO 3 perdavimo BALTAM 9, kamuolys rieda link šoninės linijos netoli BALTŲ komandos keitimų zonos. JUODAS 10 yra už 1 metro ir yra pasirengęs kamuolį paimti. BALTAS 9 kamuolį sugeba pasiekti ir perdavimu išgelbsti kamuolį nuo išėjimo už šoninės linijos. Teisingas sprendimas?",
+    "options": [
+      "a) Žaidžiama toliau",
+      "b) Laisvas metimas JUODŲ komandai",
+      "c) Įspėjimas arba 2 min. pašalinimas BALTAM 9",
+      "d) Šoninis metimas JUODŲ komandai"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 180,
+    "text": "7.17) Atakuojančios komandos žaidėjas JUODAS 7 neturėdamas kamuolio, išnaudodamas plotą, stovi už žaidimo aikštės ribų. Teisėjai tai pastebi bei prašo jo žaisti aikštelėje, tačiau pastarasis nereaguoja. Teisingas sprendimas?",
+    "options": [
+      "a) Žaisti toliau",
+      "b) Laisvas metimas BALTŲ komandai",
+      "c) Progresyvi nuobauda JUODAM 7",
+      "d) Šoninis metimas BALTŲ komandai"
+    ]
+  },
+  {
+    "id": 181,
+    "text": "7.18) Žaidėjas šoka virš priešininkų vartininko aikštelės. Jis visiškai kontroliuoja kamuolį bei kūną ir turi gerą poziciją metimui atlikti. Tačiau, vietoj metimo, jis apsisuka ore ir perduoda kamuolį komandos draugui, kuris kamuolį perduoda kitam. Teisingas sprendimas?",
+    "options": [
+      "a) Įspėjamasis gestas apie pasyvų žaidimą",
+      "b) Už pasyvų žaidimą iš karto skiriamas laisvas metimas",
+      "c) Laisvas metimas skiriamas už nesportišką elgesį",
+      "d) Progresyvinė nuobauda"
+    ]
+  },
+  {
+    "id": 182,
+    "text": "7.19) BALTAS 3 atlieka metimą į JUODŲ komandos vartus ir pataiko į vartų virpstą. Kamuolys iš vartų aikštelės išrieda atgal į žaidimo aikštelę. Būdami prie laisvo metimo linijos, BALTAS 3 ir JUODAS 4 nesukeldami jokio pavojaus vienas kitam neria kamuolio link. JUODAS 4 kamuolį sugeba pastumti JUODAM 6, kuris pradeda kontrataką ir pasiekia įvartį. Teisingas sprendimas?",
+    "options": [
+      "a) JUODAS 4 įspėjamas",
+      "b) Įvartis JUODŲ komandai",
+      "c) Priklausomai nuo aplinkybių laisvas metimas BALTŲ arba JUODŲ komandai",
+      "d) JUODŲ komandos vartininko metimas"
+    ]
+  },
+  {
+    "id": 183,
+    "text": "7.20) BALTAS 10 kamuolį bando perduoti BALTAM 8, kuris yra prie JUODŲ komandos vartų aikštelės linijos. JUODAS 10 stovi nejudėdamas priekyje prieš BALTĄ 8 ir kamuolys pataiko jam į koją. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas BALTŲ komandai",
+      "b) Žaisti toliau",
+      "c) Tai priklauso nuo to, kas gaus kamuolį"
+    ]
+  },
+  {
+    "id": 184,
+    "text": "7.21) BALTAS 15 blokuoja JUODO 9 perdavimą, po to kamuolys ridenasi grindimis. BALTAS 15 ir JUODAS 9 šoka siekti kamuolio, BALTAS 15 kamuolį sugauna ir slysta grindimis. Jis atsistoja, su kamuoliu padaro 3 žingsnius ir perduoda jį komandos draugui, kuris pasiekia įvartį. Teisingas sprendimas?",
+    "options": [
+      "a) Įvartis BALTŲ komandai",
+      "b) Laisvas metimas JUODŲ komandai"
+    ]
+  },
+  {
+    "id": 185,
+    "text": "7.22) BALTŲ komanda 57 min. pirmauja rezultatu 24-23, bet turi 1 žaidėju mažiau, negu JUODI. Aikštės teisėjas BALTAM 3 paskyrė laisvą metimą. BALTAS 6 stengiasi laisvą metimą atlikti keletą metrų toliau nuo taisyklingo vietos, nors teisėjas tą vietą parodė pakankamai aiškiai. Teisingas sprendimas?",
+    "options": [
+      "a) Pozicijos pataisymas, švilpukas, jokio kito veiksmo",
+      "b) Pozicijos pataisymas, švilpukas, teisėjas parodo rankos gestą dėl pasyvaus žaidimo",
+      "c) Pozicijos pataisymas, BALTAM 6 skiriama progresyvi nuobauda, švilpukas, rankos gestas dėl pasyvaus žaidimo"
+    ]
+  },
+  {
+    "id": 186,
+    "text": "7.23) JUODŲ komanda žaidžia 1 žaidėju mažiau. JUODŲ komandos žaidėjai jau užėmė pozicijas atakai ir pradėjo pasiruošimo fazę. JUODAS 6 ir JUODAS 8 nusprendžia palikti aikštę dėl keitimo. Teisingas sprendimas?",
+    "options": [
+      "a) Įspėjamasis signalas",
+      "b) Įspėjamasis signalas, jeigu žaidimo tempas nesikeičia 5 sekundžių laikotarpyje",
+      "c) Iš karto laisvas metimas BALTŲ komandai dėl pasyvaus žaidimo",
+      "d) Pasikartojus situacijai JUODAS 6 ar JUODAS 8 įspėjamas",
+      "e) Pasikartojus situacijai JUODAS 6 ar JUODAS 8 pašalinamas 2 min."
+    ]
+  },
+  {
+    "id": 187,
+    "text": "7.24) Dėl kurių veiksmų įspėjamas pasyvo signalas yra atšaukiamas?",
+    "options": [
+      "a) Kamuolio sugrįžimas atakuojantiems po vartininko atmušto 7 metrų metimo",
+      "b) Kamuolio sugrįžimas atakuojantiems po kamuolio atšokimo nuo skersinio arba virpsto",
+      "c) Komandos Time-out",
+      "d) Dėl veiksmingo poveikio prieš komandoms atliekant kitus pasyvius veiksmus",
+      "e) Nei po vieno a-d punktuose nurodyto veiksmo"
+    ]
+  },
+  {
+    "id": 188,
+    "text": "7.25) Kurie iš šių teiginių dėl įspėjamojo pasyvaus žaidimo signalo yra teisingi (IHF rankos signalas Nr.17)?",
+    "options": [
+      "a) Jeigu pastebimas pasyvus žaidimas, pirma tai parodo vartų teisėjas, naudodamas rankos signalą 17. Tada aikštės teisėjas ranką pakelia tokiu pačiu būdu.",
+      "b) Jei komanda kontroliuojanti kamuolį, po pakelto įspėjamojo pasyvaus žaidimo signalo, reikalauja komandinio Time-out, atnaujinus rungtynes, pasyvaus žaidimo signalas vėl turi būti rodomas",
+      "c) Jei signalas rodomas, o komanda nesistengia susikurti pozicijos metimui į vartus, tai arba aikštės, arba vartų teisėjas dėl pasyvaus žaidimo skiria laisvą metimą",
+      "d) Kai pasyvaus žaidimo signalas parodomas, teisėjas dėl pasyvaus žaidimo nusprendžia ne vėliau, kai po atlikų 4 perdavimų nebuvo metimo įvartus"
+    ]
+  },
+  {
+    "id": 189,
+    "text": "7.26) BALTŲ komanda delsia atlikti pradedamą metimą. Komanda jau buvo perspėta už tokią jos taktiką. Teisingas sprendimas?",
+    "options": [
+      "a) Žaisti toliau",
+      "b) Time out, pradedamas metimas po švilpuko",
+      "c) Time out, pradedamas metimas po švilpuko, iškart rodomas pasyvaus žaidimo gestas",
+      "d) Švilpukas pradedamam metimui ir iškart rodomas pasyvaus žaidimo gestas",
+      "e) Progresyvi nuobauda atsakingam BALTŲ komandos oficialiam asmeniui"
+    ]
+  },
+  {
+    "id": 190,
+    "text": "7.27) Kurie iš sekančių paaiškinimų apie pasyvaus žaidimo signalo panaikinimą yra teisingi?",
+    "options": [
+      "a) Pasyvaus žaidimo signalas turi būti panaikinamas, kuomet besiginančios komandos oficialus asmuo baudžiamas progresyvine nuobauda",
+      "b) Kai perspėjantis signalas yra pirmą kartą parodomas atakos metu, rankos turi būti nuleidžiamos po maždaug 10 sek.",
+      "c) Perspėjantis signalas po pirmo sustabdymo turi būti priminančiai parodomas, jei jis buvo rodomas prieš sustabdymą",
+      "d) Pasyvaus žaidimo signalas visada turi būti panaikinamas, kai besiginančios komandos žaidėjas baudžiamas progresyvine nuobauda",
+      "e) Teisėjai pasyvaus žaidimo signalą parodo, kai žaidėjas aiškiai kontroliuoja kamuolį"
+    ]
+  },
+  {
+    "id": 191,
+    "text": "7.28) Kurie iš sekančių teiginių apie pasyvų žaidimą yra teisingi?",
+    "options": [
+      "a) Komandai neturėtų būti leidžiama išnaudoti daugiau nei 5 sek. nuo atakos kūrimo iki jos pabaigimo fazės",
+      "b) Teisėjai turi atkreipti dėmesį į lėtą ir vėluojantį žaidėjų pasikeitimą po atlikto pradedamo metimo",
+      "c) Teisėjai privalo stebėti, ar komanda stengiasi didinti tempą ar įgyti erdvės pranašumą atakos kūrimo fazės metu",
+      "d) Teisėjai pasyvų žaidimą turi pradėti stebėti, iš karto, kai tik komanda įgauna kamuolio kontrolę savo aikštelės pusėje",
+      "e) Komandai, kuri stengėsi sukurti kontrataką, privalo būti leidžiama daryti normalų keitimą, pereinant iš kontratakos į normalią atakos kūrimo fazę"
+    ]
+  },
+  {
+    "id": 192,
+    "text": "7.29) BALTŲ komanda kontroluoja kamuolį. Teisėjai parodo įspėjamąjį rankos gestą dėl pasyvaus žaidimo. Po pirmojo perdavimo BALTAS 5 meta į vartus. JUODAS 2 metimą blokuoja, kamuolys atšoka atgal BALTAM 5, kuris jį perduoda BALTAM 9. Kiek perdavimų buvo atlikta?",
+    "options": [
+      "a) 3",
+      "b) 4",
+      "c) 5"
+    ]
+  },
+  {
+    "id": 193,
+    "text": "7.30) BALTŲ komanda kontroluoja kamuolį. Teisėjai parodo įspėjamąjį pasyvaus žaidimo signalą. BALTAS 9 stengiasi atlikti perdavimą BALTAM 2, bet JUODAS 8 perdavimą blokuoja ir kamuolys grįžta BALTAM 9 atgal. BALTAS 9 bando veržtis, bet gynėjų yra bauduojamas, skiriamas laisvas metimas. BALTAS 8 atlikdamas laisvą metimą, kamuolį pasuoja BALTAM 2. Kiek perdavimų buvo atlikta?",
+    "options": [
+      "a) 1",
+      "b) 2",
+      "c) 3"
+    ]
+  },
+  {
+    "id": 194,
+    "text": "7.31) BALTŲ komanda kontroluoja kamuolį. Teisėjai BALTŲ komandos žaidime įžvelgia pasyvaus žaidimo tendenciją. Teisėjai parodo įspėjamąjį pasyvaus žaidimo signalą. JUODŲ komanda pamačiusi, kad yra rodomas pasyvaus žaidimo signalas, nusprendžia gintis agresyviau, stengiasi puolėjus subauduoti laisvam metimui. Po trečiojo BALTŲ komandos perdavimo, JUODI juos subauduoja laisvam metimui. Teisingas sprendimas?",
+    "options": [
+      "a) BALTŲ komandai liko 4 perdavimai metimui į vartus atlikti",
+      "b) BALTŲ komandai liko 2 perdavimai metimui į vartus atlikti",
+      "c) BALTŲ komandai liko 1 perdavimas metimui į vartus atlikti",
+      "d) BALTŲ komanda atlikdama laisvą metimą turi tiesiogiai mesti į vartus"
+    ]
+  },
+  {
+    "id": 195,
+    "text": "7.32) Kontroluoja kamuolį BALTŲ komanda. Teisėjai BALTŲ komandos žaidime įžvelgia pasyvaus žaidimo tendenciją ir parodo įspėjamąjį pasyvaus žaidimo signalą. BALTAS 9 gavęs ketvirtą perdavimą atlieka metimą į vartus. Metimą blokuoja JUODAS 3 ir kamuolys išeina už šoninės aikštės linijos, šoninis metimas BALTIEMS. Teisingas sprendimas?",
+    "options": [
+      "a) Įspėjamasis pasyvaus žaidimo signalas panaikinamas",
+      "b) BALTŲ komandai liko 4 perdavimai metimui į vartus atlikti",
+      "c) BALTŲ komandai liko 2 perdavimai metimui į vartus atlikti",
+      "d) BALTŲ komandai liko 1 perdavimas metimui į vartus atlikti"
+    ]
+  },
+  {
+    "id": 196,
+    "text": "7.33) BALTŲ komanda kontroluoja kamuolį dėl pasyvaus žaidimo tendencijos, teisėjai parodo įspėjamąjį pasyvaus žaidimo signalą. Po 4-o perdavimo BALTAS 5 meta į vartus. Metimą blokuoja JUODAS 3 kamuolys grįžta BALTAM 5. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas JUODŲ komandai",
+      "b) BALTŲ komandai liko 1 perdavimas metimui į vartus atlikti",
+      "c) Įspėjamasis pasyvaus žaidimo signalas tęsiamas",
+      "d) Įspėjamasis pasyvaus žaidimo signalas panaikinamas",
+      "e) BALTŲ komandai nebegali atlikti perdavimų metimui į vartus atlikti"
+    ]
+  },
+  {
+    "id": 197,
+    "text": "7.34) JUODŲ komanda atakuoja. Teisėjai įspėja dėl pasyvaus žaidimo. JUODAS 7 kamuolį perduoda JUODAM 11. JUODAS 11 stengiasi prasiveržti, tačiau BALTO 3 yra sulaikomas. Teisėjai laisvą metimą paskiria JUODŲ komandai. JUODAS 11 atlikdamas laisvą metimą kamuolį perduoda JUODAM 2, kuris atlieka metimą į vartus. Metimą blokuoja gynėjas BALTAS 4 ir kamuolys atšoka JUODAM 11. JUODAS 11 atlieka metimą į vartus, bet jis yra lengvai pastumiamas BALTO 5 ir vartininkas BALTAS 1 sugeba metimą atremti. Koks teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas JUODŲ komandai; nauja ataka, kadangi jie įgavo kamuolio kontrolę po metimo į vartus",
+      "b) Laisvas metimas JUODŲ komandai; įspėjimas dėl pasyvo, JUODŲ komanda išnaudojo du perdavimus",
+      "c) Laisvas metimas JUODŲ komandai; įspėjimas dėl pasyvo, JUODŲ komanda išnaudojo tris perdavimus",
+      "d) Laisvas metimas JUODŲ komandai; įspėjimas dėl pasyvo, JUODŲ komanda išnaudojo keturis perdavimus"
+    ]
+  },
+  {
+    "id": 198,
+    "text": "7.35) Rezultatas lygus 27-27, rungtynėse lieka žaisti 20 sekundžių. BALTŲ komanda žaidžia be vartininko. Teisėjai rodo įspėjamąjį pasyvaus žaidimo signalą. Po trijų perdavimų BALTAS 8 kamuolį perduoda BALTAM 7, kuris atlieka metimą į vartus. Kamuolį JUODAS 2 blokuoja, kuris nuo jo atšokęs, nurieda už šoninės linijos. Iš karto, kai tik šoninis metimas buvo atliktas, nuskamba laikininko sirena, kadangi BALTŲ komanda prašo komandinės Time-Out pertraukėlės. Kaip žaidimas turėtų būti atnaujinamas?",
+    "options": [
+      "a) BALTŲ komandai laisvas metimas",
+      "b) BALTŲ komandai šoninis metimas",
+      "c) Paskirtas metimas turi būti atliekamas tiesioginiu metimu į vartus",
+      "d) Be galimybės paskirtą metimą atlikti tiesioginiu metimu į vartus, puolėjas dar turi galimybę vieną perdavimą atlikti savo komandos draugui"
+    ]
+  },
+  {
+    "id": 199,
+    "text": "7.36) BALTŲ komanda puola. Po teisėjų parodyto įspėjamojo signalo dėl pasyvaus žaidimo buvo atlikti du perdavimai, po kurių BALTAS 7 atliko metimą į vartus. Kamuolys JUODO 8 yra blokuojamas. BALTAS 8 sugauna atšokusį kamuolį ir meta į vartus. JUODAS 8 dar kartą kamuolį blokuoja. BALTAS 8 vėl sugauna kamuolį ir jį perduoda BALTAM 6, kuris turi aiškią galimybę įvarčiui pasiekti. Tuo metu, BALTAS 6 yra traukiamas iš už nugaros JUODO 7 taip, jog visiškai prarado kūno kontrolę. Koks yra teisingas sprendimas?",
+    "options": [
+      "a) 7m baudinys BALTŲ komandai",
+      "b) Laisvas metimas JUODŲ komandai",
+      "c) Tiesioginės 2 min pašalinimas JUODAM 7",
+      "d) Diskvalifikacija JUODAM 7 (teisėjai parodo raudoną kortelę)",
+      "e) Laisvas metimas BALTŲ komandai",
+      "f) Time-Out"
+    ]
+  },
 ]

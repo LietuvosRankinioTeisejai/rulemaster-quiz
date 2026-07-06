@@ -11,22 +11,20 @@
             user-select: none;
             -webkit-user-select: none;
         }
-        .handball-bg {
-            background: linear-gradient(135deg, #1e2937 0%, #0f172a 100%);
-        }
     </style>
 </head>
 <body class="bg-slate-100">
+
     <!-- Header -->
-    <header class="handball-bg text-white">
-        <div class="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
+    <header class="bg-slate-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
             <div class="flex items-center gap-x-4">
-                <div class="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <i class="fa-solid fa-futbol text-white text-4xl"></i>
+                <div class="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center">
+                    <i class="fa-solid fa-futbol text-white text-3xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold tracking-tight">Rankinio Taisyklių Testai</h1>
-                    <p class="text-orange-400 text-sm">IHF 2025 • Lietuvos Rankinio Teisėjai</p>
+                    <h1 class="text-2xl font-bold">Rankinio Taisyklių Testai</h1>
+                    <p class="text-orange-400 text-sm">IHF 2025 • Oficialūs klausimai</p>
                 </div>
             </div>
         </div>
@@ -37,61 +35,34 @@
         <!-- SELECTION SCREEN -->
         <div id="selection-screen">
             <div class="text-center mb-10">
-                <h2 class="text-4xl font-bold tracking-tight text-slate-900">Pasirinkite testą</h2>
-                <p class="text-slate-600 mt-2 text-lg">Klausimai imami atsitiktinai iš oficialios IHF 2025 bazės</p>
+                <h2 class="text-4xl font-bold text-slate-900">Pasirinkite testą</h2>
+                <p class="text-slate-600 mt-2">Perjungus langą ar programėlę – testas automatiškai nutraukiamas.</p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                <!-- Trumpas -->
-                <div onclick="startTest(15)" 
-                     class="group bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-3xl font-bold text-slate-900">Trumpas</h3>
-                            <p class="text-slate-500 mt-1">15 klausimų • 15 min</p>
-                        </div>
-                        <i class="fa-solid fa-bolt text-4xl text-orange-500 group-hover:scale-110 transition-transform"></i>
-                    </div>
-                    <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl transition-colors">
-                        Pradėti testą
-                    </button>
+                <div onclick="startTest(15)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
+                    <h3 class="text-3xl font-bold">Trumpas testas</h3>
+                    <p class="text-slate-500 mt-1">15 klausimų • 15 min</p>
+                    <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
                 </div>
 
-                <!-- Standartinis -->
-                <div onclick="startTest(20)" 
-                     class="group bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-3xl font-bold text-slate-900">Standartinis</h3>
-                            <p class="text-slate-500 mt-1">20 klausimų • 20 min</p>
-                        </div>
-                        <i class="fa-solid fa-balance-scale text-4xl text-orange-500 group-hover:scale-110 transition-transform"></i>
-                    </div>
-                    <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl transition-colors">
-                        Pradėti testą
-                    </button>
+                <div onclick="startTest(20)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
+                    <h3 class="text-3xl font-bold">Standartinis testas</h3>
+                    <p class="text-slate-500 mt-1">20 klausimų • 20 min</p>
+                    <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
                 </div>
 
-                <!-- Ilgas -->
-                <div onclick="startTest(30)" 
-                     class="group bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-3xl font-bold text-slate-900">Ilgas</h3>
-                            <p class="text-slate-500 mt-1">30 klausimų • 30 min</p>
-                        </div>
-                        <i class="fa-solid fa-tachometer-alt text-4xl text-orange-500 group-hover:scale-110 transition-transform"></i>
-                    </div>
-                    <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl transition-colors">
-                        Pradėti testą
-                    </button>
+                <div onclick="startTest(30)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
+                    <h3 class="text-3xl font-bold">Ilgas testas</h3>
+                    <p class="text-slate-500 mt-1">30 klausimų • 30 min</p>
+                    <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
                 </div>
             </div>
         </div>
 
         <!-- QUIZ SCREEN -->
         <div id="quiz-screen" class="hidden max-w-3xl mx-auto">
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-white rounded-3xl shadow border border-slate-200 overflow-hidden">
                 <div class="px-8 py-5 bg-slate-900 text-white flex justify-between items-center">
                     <div>
                         <div id="quiz-name" class="font-semibold text-xl"></div>
@@ -99,7 +70,7 @@
                     </div>
                     <div class="text-right">
                         <div class="text-xs text-slate-400">LIKĘS LAIKAS</div>
-                        <div id="timer" class="text-4xl font-semibold tabular-nums">15:00</div>
+                        <div id="timer" class="text-4xl font-bold tabular-nums">15:00</div>
                     </div>
                 </div>
 
@@ -109,19 +80,17 @@
                         <div id="question-counter" class="font-semibold"></div>
                     </div>
                     <div class="mb-6">
-                        <h3 id="question-text" class="text-2xl font-semibold leading-tight"></h3>
+                        <h3 id="question-text" class="text-2xl font-semibold"></h3>
                     </div>
                     <div id="options" class="space-y-3"></div>
                 </div>
 
-                <div class="px-8 py-5 bg-slate-50 border-t flex justify-between items-center">
-                    <button onclick="cancelQuiz()" class="text-red-600 hover:text-red-700 font-medium flex items-center gap-x-2">
-                        <i class="fa-solid fa-times"></i> Nutraukti
-                    </button>
+                <div class="px-8 py-5 bg-slate-50 border-t flex justify-between">
+                    <button onclick="cancelQuiz()" class="text-red-600 font-medium">Nutraukti testą</button>
                     <div class="flex gap-x-3">
-                        <button onclick="prevQuestion()" class="px-6 py-2.5 border border-slate-300 rounded-2xl hover:bg-slate-100">← Ankstesnis</button>
-                        <button onclick="nextQuestion()" class="px-6 py-2.5 border border-slate-300 rounded-2xl hover:bg-slate-100">Kitas →</button>
-                        <button onclick="finishQuiz()" class="px-8 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-2xl">Baigti testą</button>
+                        <button onclick="prevQuestion()" class="px-6 py-2.5 border rounded-2xl">← Ankstesnis</button>
+                        <button onclick="nextQuestion()" class="px-6 py-2.5 border rounded-2xl">Kitas →</button>
+                        <button onclick="finishQuiz()" class="px-8 py-2.5 bg-emerald-600 text-white font-semibold rounded-2xl">Baigti</button>
                     </div>
                 </div>
             </div>
@@ -129,7 +98,7 @@
 
         <!-- RESULTS SCREEN -->
         <div id="results-screen" class="hidden max-w-4xl mx-auto">
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-white rounded-3xl shadow border border-slate-200 overflow-hidden">
                 <div class="px-8 pt-8 pb-6 text-center">
                     <div id="result-badge" class="inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold mb-4"></div>
                     <div class="text-6xl font-bold" id="score-text"></div>
@@ -137,12 +106,11 @@
                 </div>
 
                 <div class="px-8 pb-8">
-                    <h3 class="font-semibold text-lg mb-4">Teisingi atsakymai:</h3>
+                    <h3 class="font-semibold text-lg mb-4">Testo rezultatai</h3>
                     <div id="review-section" class="space-y-4 text-sm"></div>
                 </div>
 
                 <div class="p-8 flex gap-3 border-t">
-                    <button onclick="window.print()" class="flex-1 px-6 py-3 bg-white border rounded-2xl font-medium">Spausdinti</button>
                     <button onclick="restartApp()" class="flex-1 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-2xl">Grįžti į testus</button>
                 </div>
             </div>
@@ -150,15 +118,13 @@
     </div>
 
     <script>
-        // === VISAS JAVASCRIPT KODAS LIEKA TAS PATS KAIP ANKSČIAU ===
-        // (kopijuok iš ankstesnio atsakymo visą <script> dalį)
-        
         let questionBank = [];
         let currentQuestions = [];
         let answers = [];
         let currentIndex = 0;
         let timerInterval = null;
         let timeLeft = 0;
+        let testTerminated = false;
 
         async function loadQuestions() {
             const res = await fetch('questions.json');
@@ -199,6 +165,7 @@
             answers = new Array(currentQuestions.length).fill(null);
             currentIndex = 0;
             timeLeft = numQuestions * 60;
+            testTerminated = false;
 
             document.getElementById('selection-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
@@ -274,7 +241,53 @@
             }
         }
 
+        // === SUSTIPRINTA APSAUGA (Kompiuteris + Telefonas) ===
+        function enableAntiCheat() {
+            // 1. Kai vartotojas perjungia langą arba programėlę
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && 
+                    !document.getElementById('quiz-screen').classList.contains('hidden') && 
+                    !testTerminated) {
+                    terminateTest();
+                }
+            });
+
+            // 2. Papildoma apsauga kompiuteriui (blur event)
+            window.addEventListener('blur', () => {
+                if (!document.getElementById('quiz-screen').classList.contains('hidden') && 
+                    !testTerminated) {
+                    terminateTest();
+                }
+            });
+        }
+
+        function terminateTest() {
+            if (testTerminated) return;
+            testTerminated = true;
+            clearInterval(timerInterval);
+
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            document.getElementById('result-badge').innerHTML = 
+                `<i class="fa-solid fa-exclamation-triangle mr-2"></i> TESTAS NUTRAUKTAS`;
+            document.getElementById('result-badge').className = 
+                "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-red-100 text-red-700";
+
+            document.getElementById('score-text').innerHTML = `0`;
+            document.getElementById('percentage-text').textContent = `Testas nutrauktas`;
+
+            document.getElementById('review-section').innerHTML = `
+                <div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+                    <p class="text-red-700 font-semibold text-lg">Testas buvo automatiškai nutrauktas.</p>
+                    <p class="text-red-600 mt-2">Perjungėte langą arba atidarėte kitą programą. Tai yra draudžiama.</p>
+                </div>
+            `;
+        }
+
         function finishQuiz(timeExpired = false) {
+            if (testTerminated) return;
+
             clearInterval(timerInterval);
 
             let correctCount = 0;
@@ -324,7 +337,7 @@
         }
 
         function cancelQuiz() {
-            if (confirm("Ar tikrai norite nutraukti šį testą?")) {
+            if (confirm("Ar tikrai norite nutraukti testą?")) {
                 clearInterval(timerInterval);
                 restartApp();
             }
@@ -335,23 +348,16 @@
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('results-screen').classList.add('hidden');
             clearInterval(timerInterval);
-        }
-
-        function blockCopy() {
-            const screen = document.getElementById('quiz-screen');
-            if (screen) {
-                screen.addEventListener('copy', e => e.preventDefault());
-                screen.addEventListener('cut', e => e.preventDefault());
-            }
+            testTerminated = false;
         }
 
         window.onload = async function () {
             try {
                 await loadQuestions();
                 console.log("Klausimai įkelti:", questionBank.length);
-                blockCopy();
+                enableAntiCheat();
             } catch (error) {
-                alert("Klaida įkeliant klausimus.");
+                alert("Klaida įkeliant klausimus. Patikrinkite questions.json failą.");
             }
         };
     </script>

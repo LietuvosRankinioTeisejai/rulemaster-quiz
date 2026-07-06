@@ -53,7 +53,7 @@
 
                 <div onclick="startTest(30)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
                     <h3 class="text-3xl font-bold">Ilgas testas</h3>
-                    <p class="text-slate-500 mt-1">30 klausimų • 30 min • teorijos testas</p>
+                    <p class="text-slate-500 mt-1">30 klausimų • 30 min</p>
                     <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
                 </div>
             </div>
@@ -152,35 +152,8 @@
             return text.replace(/^\d+\.\d+\)\s*/, '');
         }
 
-
-        function getRuleNumber(question) {
-            const match = String(question.text || '').match(/^(\d+)\./);
-            return match ? Number(match[1]) : null;
-        }
-
-        function selectQuestionsForQuiz(bank, numQuestions) {
-            const shuffledBank = shuffleArray(bank);
-
-            // 30 klausimų testui užtikriname po bent 1 klausimą iš 1–18 taisyklių.
-            if (numQuestions !== 30) {
-                return shuffledBank.slice(0, numQuestions);
-            }
-
-            const mandatory = [];
-            const used = new Set();
-
-            for (let rule = 1; rule <= 18; rule++) {
-                const candidates = shuffledBank.filter(q => getRuleNumber(q) === rule && !used.has(q));
-                if (candidates.length === 0) {
-                    throw new Error(`Nerasta klausimų ${rule} taisyklei.`);
-                }
-                const picked = candidates[0];
-                mandatory.push(picked);
-                used.add(picked);
-            }
-
-            const remaining = shuffledBank.filter(q => !used.has(q));
-            return mandatory.concat(shuffleArray(remaining).slice(0, numQuestions - mandatory.length));
+        function cleanOptionText(text) {
+            return text.replace(/^[a-z]\)\s*/i, '');
         }
 
         async function startTest(numQuestions) {
@@ -188,13 +161,7 @@
                 await loadQuestions();
             }
 
-            let selected;
-            try {
-                selected = selectQuestionsForQuiz(questionBank, numQuestions);
-            } catch (error) {
-                alert(error.message || 'Nepavyko sudaryti testo klausimų.');
-                return;
-            }
+            const selected = shuffleArray(questionBank).slice(0, numQuestions);
 
             currentQuestions = selected.map(q => {
                 let optionsWithIndex = q.options.map((text, idx) => ({

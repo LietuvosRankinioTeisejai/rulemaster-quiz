@@ -770,21 +770,27 @@
       "a) BALTŲ komandinis Time-out",
       "b) Komandinis Time-out nesuteikiamas",
       "c) BALTŲ komandos oficialiam A progresyvinė nuobauda",
-      "d) Žaidimas atnaujinamas BALTŲ komandos laisvu metimu"
+      "d) Žaidimas atnaujinamas BALTŲ komandos laisvu metimu",
+      "e) Žaidimas antnaujinamas JUODŲ komandos laisvu metimu",
+      "d) JUODŲ komanda gali rinktis tarp laisvo metimo ir 7m baudinio"
     ],
     "correct": [
-      1
+      1, 2, 3
     ],
     "_note": "OFFICIAL HAS LETTERS ['b', 'c', 'e'] BUT SOME NOT FOUND IN JSON OPTIONS"
   },
   {
     "id": 55,
-    "text": "2.51) BALTŲ komanda nori prašyti komandinio Time-out. BALTŲ komandos oficialus asmuo A padeda žalią kortelę ant stalo. Prieš laikininkui sušvilpiant, BALTAS 9 atlieka metimą. Metimas vartininko JUODO 12 atmušamas, ir laikininkas švilpia, kuomet atmuštas kamuolys vis dar yra ore vartų aikštelės plote. Koks teisingas sprendimas?",
+    "text": "2.51) Rungtynėse yra naudojamasi elektroniniu komandinio Time-out įrenginiu. BALTŲ komanda turi kamuolio kontrolę. Rungtynių laikui esant 58:40 BALTAS 7 prasiženge puolime. Prieš teisėjams sušvilpiant dėl šios pražangos puolime, nuskamba BALTŲ komandos oficialaus asmens A aktyvuota elektroninė komandinio Time-Out sirena. Iškart po to, teisėjai sušvilpia BALTO 7 pražangą puolime. Koks teisingas sprendimas?",
     "options": [
       "a) Komandinis Time-out negalimas, nes BALTŲ komanda nebeturi kamuolio kontrolės",
       "b) BALTŲ komandinis Time-out",
-      "c) Žalia kortelė grąžinama BALTŲ komandai",
-      "d) Žaidimas atnaujinamas JUODŲ komandos vartininko metimu"
+      "c) Viena komandinė Time-out pertraukėlė BALTŲ komandai yra panaikinama",
+      "d) Žaidimas atnaujinamas JUODŲ komandos vartininko metimu",
+      "e) Žaidimas antnaujinamas BALTŲ komandos laisvu metimu",
+      "f) Žaidimas antnaujinamas JUODŲ komandos 7m baudinio metimu",
+      "g) JUODŲ komanda gali rinktis tarp laisvo metimo ir 7m baudinio",
+      "h) BALTŲ komandos oficialiam A progresyvinė nuobauda"
     ],
     "correct": [
       0,
@@ -793,59 +799,69 @@
     ]
   },
   {
-    "id": 56,
-    "text": "2.52) BALTŲ komanda nori prašyti komandinio Time-out. Prieš laikininkui sušvilpiant, BALTAS 11 prasižengia puolime. Laikininkas dėl Time-out švilpia prieš teisėjui sušvilpiant pražangą puolime. Koks teisingas sprendimas?",
-    "options": [
-      "a) Teisėjai nusprendžia, kad Time-out negali būti suteiktas, nes pražanga puolime įvyko prieš laikininkui sušvilpiant",
-      "b) BALTŲ komandinis Time-out",
-      "c) Žalia kortelė grąžinama BALTŲ komandai",
-      "d) Žaidimas atnaujinamas JUODŲ komandos laisvu metimu"
+    "id": 165,
+  "text": "2.52) Rungtynėse yra naudojamasi elektroniniu komandinio Time-out įrenginiu. Pirmajame kėlinyje esant 29:50 laikui BALTAS 9 atlieka metimą į vartus. Metimą vartininkas JUODAS 12 atremia ir po atremto metimo kamuolys yra ore virš vartų aikštelės. Tuo metu, nuskamba JUODŲ komandos oficialaus asmens A aktyvuota elektroninė komandinio Time-Out sirena. Koks teisingas sprendimas?",
+  "options": [
+    "a) Komandinis Time-out nėra galimas, kadangi kamuolio JUODŲ komanda nekontroliuoja",
+    "b) JUODŲ komandinis Time-out",
+    "c) Viena komandinė Time-out pertraukėlė JUODŲ komandai yra panaikinama",
+    "d) Žaidimas atnaujinamas JUODŲ komandos vartininko metimu",
+    "e) Žaidimas atnaujinamas BALTŲ komandos laisvu metimu",
+    "f) Žaidimas atnaujinamas JUODŲ komandos laisvu metimu",
+    "g) BALTŲ komanda gali rinktis tarp laisvo metimo ir 7m baudin io",
+    "h) Žaidimas atnaujinamas BALTŲ komandos 7m baudiniu",
+    "i) JUODŲ komandos oficialiam A progresyvinė nuobauda"
     ],
     "correct": [
-      0
+      0, 2, 7, 8
     ],
     "_note": "OFFICIAL HAS LETTERS ['a', 'c', 'h', 'i'] BUT SOME NOT FOUND IN JSON OPTIONS"
   },
   {
-    "id": 57,
-    "text": "2.53) Rungtynėse yra naudojamasis elektroniniu komandinio Time-out įrenginiu. BALTŲ komanda savo antrąjį komandinį turėjo 55:10. Tolimesnėje rungtynių eigoje esant 59:35 BALTŲ komandos oficialus asmuo A siekdamas paimti trečiąjį savo komandos Time-Out paspaudžia elektroninio Time-Out mygtuką. Tuo metu kamuolys yra žaidime ir jį kontroliuoja BALTŲ komanda. Nuskamba rungtynių švieslentės sirena. Koks teisingas sprendimas?",
-    "options": [
-      "a) BALTŲ komandinis Time-out",
-      "b) Komandinis Time-out nesuteikiamas",
-      "c) BALTŲ komandos oficialiam A progresyvinė nuobauda",
-      "d) Žaidimas atnaujinamas BALTŲ komandos laisvu metimu"
-    ],
-    "correct": [
-      1
-    ],
+    "id": 166,
+  "text": "2.53) JUODŲ komanda atakuoja. Teisėjai įspėja apie pasyvų žaidimą. Po dviejų perdavimų nuskamba rungtynių inspektoriaus švilpukas, todėl kad JUODŲ komandos oficialaus asmens A paprašė komandinio Time-Out. Nei teisėjai, nei žaidėjai šio signalo neįgirdėjo ir žaidė toliau. Ketvirtą perdavimą gavęs JUODŲ komandos krašto puolėjas turi aiškią galimybę įvarčiui pasiekti. Jis šoka norėdamas atlikti metimą. Tuo metu jį BALTAS 4 stumia ir jis dėl to praranda kūno kontrolę. Metimą vartininkas atremia. Tik tai šiuo metu, teisėjai ir žaidėjai suvokia, kad rungtynių inspektorius dėl paprašyto komandinio Time-Out rungtynes buvo sustabdęs. Koks teisingas sprendimas?",
+  "options": [
+    "a) JUODŲ komandinis Time-out",
+    "b) Žaidimas atnaujinamas JUODŲ komandos laisvu metimu",
+    "c) Žaidimas atnaujinamas JUODŲ komandos 7m baudin io metimu",
+    "d) BALTAS 4 yra pašalinamas 2min nuobaudai",
+    "e) Niekas nėra baudžiamas",
+    "f) Įspėjimas dėl pasyvaus žaidimo galioja – JUODŲ komandai liko galimi dar 2 perdavimai",
+    "g) Įspėjimas dėl pasyvaus žaidimo galioja – JUODŲ komandai liko galimi dar 4 perdavimai",
+    "h) Įspėjimas dėl pasyvaus žaidimo panaikinamas, nes BALTAS 4 yra šalinamas 2min nuobaudai"
+  ],
+  "correct": [0, 1, 3, 5],
     "_note": "OFFICIAL HAS LETTERS ['a', 'b', 'd', 'f'] BUT SOME NOT FOUND IN JSON OPTIONS"
   },
   {
-    "id": 58,
-    "text": "2.54) BALTŲ komanda nori prašyti komandinio Time-out. BALTŲ komandos oficialus asmuo A padeda žalią kortelę ant stalo. Prieš laikininkui sušvilpiant, BALTAS 9 atlieka metimą. Metimas vartininko JUODO 12 atmušamas, ir laikininkas švilpia, kuomet atmuštas kamuolys vis dar yra ore vartų aikštelės plote. Koks teisingas sprendimas?",
-    "options": [
-      "a) Komandinis Time-out negalimas, nes BALTŲ komanda nebeturi kamuolio kontrolės",
-      "b) BALTŲ komandinis Time-out",
-      "c) Žalia kortelė grąžinama BALTŲ komandai",
-      "d) Žaidimas atnaujinamas JUODŲ komandos vartininko metimu"
-    ],
-    "correct": [
-      0,
-      2
-    ]
+    "id": 167,
+  "text": "2.54) BALTŲ komanda atlieka metimą į vartus. Vartininkas JUODAS 1 metimą atremia. Kamuoliui šokinėjant vartų aikštelės plote BALTŲ komandos oficialus A reikalaudamas komandinio Time-Out žalią kortelę padeda riešais laikinininką. Laikininkas švilpia kamuoliui vis dar šokinėjant vartų aikštelėje, tačiau kamuolys yra labai arti BALTO 13, kuris prie vartų aikštelės linijos yra visiškai laisvas. Koks teisingas sprendimas?",
+  "options": [
+    "a) BALTŲ komandinis Time-out",
+    "b) Komandinis Time-out negalimas ir žalia Time-Out kortelė grąžinama BALTŲ komandos oficialiam A",
+    "c) Laisvas metimas BALTŲ komandai",
+    "d) JUODŲ komandos vartininko metimas",
+    "e) Laisvas metimas JUODŲ komandai",
+    "i) 7m baudin io metimas BALTŲ komandai"
+  ],
+  "correct": [0, 2]
   },
   {
-    "id": 59,
-    "text": "2.55) BALTŲ komanda nori prašyti komandinio Time-out. Prieš laikininkui sušvilpiant, BALTAS 11 prasižengia puolime. Laikininkas dėl Time-out švilpia prieš teisėjui sušvilpiant pražangą puolime. Koks teisingas sprendimas?",
-    "options": [
-      "a) Teisėjai nusprendžia, kad Time-out negali būti suteiktas, nes pražanga puolime įvyko prieš laikininkui sušvilpiant",
-      "b) BALTŲ komandinis Time-out",
-      "c) Žalia kortelė grąžinama BALTŲ komandai",
-      "d) Žaidimas atnaujinamas JUODŲ komandos laisvu metimu"
-    ],
-    "correct": [
-      0
-    ],
+    "id": 168,
+  "text": "2.55) Rungtynėse yra naudojamasi elektroniniu komandinio Time-out įrenginiu. Rezultatui esant 31:31 atakuoja BALTŲ komanda. Iki rungtynių pabaigos likus žaisti 20 sekundžių, BALTAS 7 įmeta įvartį. JUODŲ komandos oficialus asmuo A, norėdamas paspausti elektroninės komandinio Time-Out sistemos mygtuką, bėga sekretoriato stalo link. Prieš oficialiam A paspaudžiant mygtuką, JUODAS 10 atstoja nuo atsarginių suolelio ir nuspaudžia elektroninės komandinio Time-Out sistemos mygtuką prieš pat JUODŲ komandos pradedamo metimo atlikimą. Koks yra teisingas sprendimas?",
+  "options": [
+    "a) JUODŲ komandinis Time-out",
+    "b) JUODŲ komandai Time-out nėra suteikiamas",
+    "c) Žaidimas atnaujinamas JUODŲ komandos pradedamu metimu",
+    "d) Žaidimas atnaujinamas BALTŲ komandos laisvu metimu",
+    "e) Žaidimas atnaujinamas BALTŲ komandos 7m metimu",
+    "f) BALTŲ komandos oficialus A gali rinktis tarp 7m baudin io ir laisvo metimo",
+    "g) JUODŲ komandos oficialiam A progresyvinė nuobauda",
+    "h) JUODAS 10 yra šalinamas 2min",
+    "i) JUODAS 10 yra diskvalifikuojamas be rašytinio raporto (teisėjai parodo raudoną kortelę)",
+    "j) JUODŲ komanda praranda vieną komandinį Time-out"
+  ],
+  "correct": [1, 2, 7, 9],
     "_note": "OFFICIAL HAS LETTERS ['b', 'c', 'h', 'j'] BUT SOME NOT FOUND IN JSON OPTIONS"
   },
   {
@@ -2205,5 +2221,109 @@
       2,
       3
     ]
+  },
+  {
+    "id": 156,
+    "text": "6.17) Vartininkas BALTAS 12 pašoka žaidimo aikštelėje už savo vartų aikštelės, sugauna kamuolį ore, kurį jam perdavė BALTAS 4 ir meta kamuolį už savo vartų linijos. Po to vartininkas nusileidžia savo vartų aikštelėje. Teisingas sprendimas?",
+    "options": [
+      "a) BALTŲ komandos vartininko metimas",
+      "b) JUODŲ komandos šoninis metimas",
+      "c) JUODŲ komandos laisvas metimas",
+      "d) BALTAS 12 įspėjamas"
+    ],
+    "correct": [
+      1
+    ]
+  },
+  {
+    "id": 156,
+    "text": "6.18) BALTAS 9 atlieka metimą į JUODŲ vartus. Vartininkas JUODAS 1 metimą atremia ir kamuolys ridenasi žaidimo aikštelės link, kur JUODŲ komandos žaidėjas yra pasirengęs kamuolį pakelti. Kadangi vartininkas JUODAS 1 susižeidė atmušdamas metimą, teisėjai sustabdo žaidimą, kai kamuolys vis dar yra vartų aikštelėje. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas BALTŲ komandai",
+      "b) Vartininko metimas JUODŲ komandai",
+      "c) Laisvas metimas JUODŲ komandai"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 157,
+    "text": "6.19) Kamuolys ridenasi BALTŲ komandos vartų aikštelėje. Tuo momentu laikininkas sušvilpia ir paaiškina, kad BALTAS 5 atliko blogą keitimą. Teisingas sprendimas?",
+    "options": [
+      "a) Vartininko metimas BALTŲ komandai",
+      "b) 2 min. pašalinimas BALTAM 5",
+      "c) JUODŲ komandos laisvas metimas nuo BALTŲ komandos laisvo metimo linijos",
+      "d) JUODŲ komandos laisvas metimas nuo BALTŲ komandos keitimų zonos"
+    ],
+    "correct": [1, 2]
+  },
+  {
+    "id": 158,
+    "text": "6.20) BALTAS 5 atlieka metimą į vartus. Vartininkas JUODAS 12 atmuša ir kamuolys virš vartininko aikštelės skrenda ore linijos žaidėjo BALTO 11 link, kuris stovi prie vartų aikštelės linijos pasirengęs pagauti kamuolį ir turi aiškią galimybę pasiekti įvartį. Gynėjas JUODAS 2 šoka kamuolio link ir būdamas ore virš vartų aikštelės, kamuolį numuša už šoninės linijos. Dėl ant kamuolio esančio rankinio tepalo, kamuolys, neliestas vartininko, lieka gulėti vartų aikštelėje. Teisingas sprendimas?",
+    "options": [
+      "a) Vartininko metimas JUODŲ komandai",
+      "b) Laisvas metimas BALTŲ komandai",
+      "c) 7m metimas BALTŲ komandai",
+      "d) Progresyvinė nuobauda JUODAM 2"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 159,
+    "text": "6.21) Vartininkas JUODAS 1 atremia metimą ir kamuolį nori perduoti JUODAM 6, kuris yra pasirengęs greitai atakai. Atlikdamas perdavimas JUODAS 1 užmina ant vartų aikštelės linijos. JUODAS 6 kamuolį pagauna ir įmeta įvartį. Teisingas sprendimas?",
+    "options": [
+      "a) Įvartis",
+      "b) Laisvas metimas BALTŲ komandai",
+      "c) Korekcija ir pakartoti vartininko metimą po švilpuko",
+      "d) Įvartis negalioja"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 160,
+    "text": "6.22) BALTAS 6 kontratakuoja. Jis pašoka, meta į vartus ir nusileidžia JUODŲ vartų aikštelėje. Vartininkas JUODAS 12 atremia metimą ir kamuolys atšoka BALTAM 11, kuris įmeta įvartį, kol BALTAS 6 tarp vartininko ir BALTO 11 guli vartų aikštelėje. Teisingas sprendimas?",
+    "options": [
+      "a) Įvartis BALTIEMS",
+      "b) JUODŲ komandos vartininko metimas",
+      "c) JUODŲ komandos laisvas metimas"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 161,
+    "text": "6.23) BALTŲ komanda atakuoja ir žaidžia be vartininko (tušti vartai). BALTAS 11 meta į vartus. Vartininkas JUODAS 1 metimą atlaiko. Jis atlieka vartininko metimą mesdamas tiesiai į tuščius priešininkų komandos vartus. BALTAS 10 stengiasi atmušti mestą kamuolį. Jis pašoka iš už savo vartų aikštelės ribų ir būdamas ore virš savo vartų aikštelės paliečia kamuolį. Kamuolys užrieda už galinės vartų linijos. Palietęs kamuolį BALTAS 10 nusileidžia savo vartų aikštelėje. Koks teisingas sprendimas?",
+    "options": [
+      "a) BALTŲ komandos vartininko metimas",
+      "b) JUODŲ komandos laisvas metimas",
+      "c) 7m metimas JUODŲ komandai",
+      "d) JUODŲ komandos šoninis metimas",
+      "e) BALTAM 10 progresyvinė nuobauda"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 162,
+    "text": "6.24) BALTŲ komanda atakuoja ir žaidžia be vartininko (vartai yra tušti). BALTAS 11 meta į vartus. Vartininkas JUODAS 1 metimą atlaiko. Jis vartininko metimą atlieka mesdamas tiesiai į tuščius priešininkų komandos vartus. BALTAS 10 stengiasi atmušti mestą kamuolį. Jis pašoka iš už savo vartų aikštelės ribų, būdamas ore virš savo vartų aikštelės pagauna kamuolį ir nusileidžia su juo rankose. Koks teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas JUODŲ komandai",
+      "b) 7m metimas JUODŲ komandai",
+      "c) 2 min pašalinimas BALTAM 10",
+      "d) Jokios nuobaudos"
+    ],
+    "correct": [0]
+  },
+  {
+    "id": 163,
+    "text": "6.25) JUODAS 5 meta į vartus. Vartininkas BALTAS 12 metimą atlaiko. Vartų apsaugojimo metu, BALTAS 12 galva atsitrenkia į vartų virpstą ir susižeidęs parkrenta ant grindų. JUODAS 3 sugauna nuo vartininko atšokusį kamuolį ir būdamas prie BALTŲ komandos 6m linijos turi aiškią galimybę pasiekti įvartį. Koks teisingas sprendimas?",
+    "options": [
+      "a) JUODAM 3 suteikiamas pranašumas",
+      "b) Žaidimas stabdomas nedelsimat",
+      "c) Žaidimas atnaujinamas JUODŲ komandos 7m metimu",
+      "d) Žaidimas atnaujinamas JUODŲ komandos laisvu metimu",
+      "e) Time-out",
+      "f) Teisėjai suteikia dviems JUODŲ komandos atstovams įeiti į žaidimo aikštelę medicininės pagalbos suteikimui BALTAM 12",
+      "g) Po medicininės pagalbos suteikimo BALTAS 12 privalo palikti žaidimo aikštelę ir į ją gali sugrįžti po 3-ios savo komandos atakos",
+      "h) Po medicininės pagalbos suteikimo BALTAS 12 žaidimą gali tęsti nepalikęs žaidimo aikštelės"
+    ],
+    "correct": [1, 3, 4, 5, 6]
   }
 ]

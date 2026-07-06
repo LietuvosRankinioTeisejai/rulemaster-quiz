@@ -15,7 +15,6 @@
 </head>
 <body class="bg-slate-100">
 
-    <!-- Header -->
     <header class="bg-slate-900 text-white">
         <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
             <div class="flex items-center gap-x-4">
@@ -24,7 +23,7 @@
                 </div>
                 <div>
                     <h1 class="text-2xl font-bold">Rankinio Taisyklių Testai</h1>
-                    <p class="text-orange-400 text-sm">IHF 2025 • Oficialūs klausimai</p>
+                    <p class="text-orange-400 text-sm">IHF 2025</p>
                 </div>
             </div>
         </div>
@@ -86,7 +85,7 @@
                 </div>
 
                 <div class="px-8 py-5 bg-slate-50 border-t flex justify-between">
-                    <button onclick="cancelQuiz()" class="text-red-600 font-medium">Nutraukti testą</button>
+                    <button onclick="cancelQuiz()" class="text-red-600 font-medium">Nutraukti</button>
                     <div class="flex gap-x-3">
                         <button onclick="prevQuestion()" class="px-6 py-2.5 border rounded-2xl">← Ankstesnis</button>
                         <button onclick="nextQuestion()" class="px-6 py-2.5 border rounded-2xl">Kitas →</button>
@@ -242,48 +241,45 @@
             }
         }
 
-        // === PROTINGA APSAUGA SU 5 SEKUNDŽIŲ DELSA ===
+        // === PATIKIMA 5 SEKUNDŽIŲ APSAUGA ===
         function enableAntiCheat() {
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden && 
-                    !document.getElementById('quiz-screen').classList.contains('hidden') && 
-                    !testTerminated) {
+            document.addEventListener('visibilitychange', handleVisibility);
+            window.addEventListener('blur', handleBlur);
+            window.addEventListener('focus', handleFocus);
+        }
 
-                    // Pradėti 5 sekundžių laikmatį
-                    awayTimer = setTimeout(() => {
-                        if (!testTerminated) {
-                            terminateTest();
-                        }
-                    }, 5000); // 5 sekundės
-                } 
-                else {
-                    // Grįžo atgal per 5 sekundes — atšaukiame nutraukimą
-                    if (awayTimer) {
-                        clearTimeout(awayTimer);
-                        awayTimer = null;
-                    }
-                }
-            });
+        function handleVisibility() {
+            if (document.hidden) {
+                startAwayTimer();
+            } else {
+                clearAwayTimer();
+            }
+        }
 
-            // Papildoma apsauga kompiuteriui
-            window.addEventListener('blur', () => {
-                if (!document.getElementById('quiz-screen').classList.contains('hidden') && 
-                    !testTerminated) {
-                    
-                    awayTimer = setTimeout(() => {
-                        if (!testTerminated) {
-                            terminateTest();
-                        }
-                    }, 5000);
-                }
-            });
+        function handleBlur() {
+            if (!document.getElementById('quiz-screen').classList.contains('hidden')) {
+                startAwayTimer();
+            }
+        }
 
-            window.addEventListener('focus', () => {
-                if (awayTimer) {
-                    clearTimeout(awayTimer);
-                    awayTimer = null;
+        function handleFocus() {
+            clearAwayTimer();
+        }
+
+        function startAwayTimer() {
+            clearAwayTimer();
+            awayTimer = setTimeout(() => {
+                if (!testTerminated) {
+                    terminateTest();
                 }
-            });
+            }, 5000); // 5 sekundės
+        }
+
+        function clearAwayTimer() {
+            if (awayTimer) {
+                clearTimeout(awayTimer);
+                awayTimer = null;
+            }
         }
 
         function terminateTest() {
@@ -374,7 +370,7 @@
             document.getElementById('results-screen').classList.add('hidden');
             clearInterval(timerInterval);
             testTerminated = false;
-            if (awayTimer) clearTimeout(awayTimer);
+            clearAwayTimer();
         }
 
         window.onload = async function () {
@@ -383,7 +379,7 @@
                 console.log("Klausimai įkelti:", questionBank.length);
                 enableAntiCheat();
             } catch (error) {
-                alert("Klaida įkeliant klausimus. Patikrinkite questions.json failą.");
+                alert("Klaida įkeliant klausimus.");
             }
         };
     </script>

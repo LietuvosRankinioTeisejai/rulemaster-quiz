@@ -349,8 +349,7 @@
     ],
     "correct": [
       1, 4
-    ],
-    "_note": "OFFICIAL HAS LETTERS ['b', 'e'] BUT SOME NOT FOUND IN JSON OPTIONS"
+    ]
   },
   {
     "id": 26,
@@ -731,8 +730,7 @@
     ],
     "correct": [
       1
-    ],
-    "_note": "OFFICIAL HAS LETTERS ['a', 'c', 'f'] BUT SOME NOT FOUND IN JSON OPTIONS"
+    ]
   },
   {
     "id": 52,
@@ -745,8 +743,7 @@
     ],
     "correct": [
       1
-    ],
-    "_note": "OFFICIAL HAS LETTERS ['b', 'e'] BUT SOME NOT FOUND IN JSON OPTIONS"
+    ]
   },
   {
     "id": 53,
@@ -776,8 +773,7 @@
     ],
     "correct": [
       1, 2, 3
-    ],
-    "_note": "OFFICIAL HAS LETTERS ['b', 'c', 'e'] BUT SOME NOT FOUND IN JSON OPTIONS"
+    ]
   },
   {
     "id": 55,
@@ -814,8 +810,7 @@
     ],
     "correct": [
       0, 2, 7, 8
-    ],
-    "_note": "OFFICIAL HAS LETTERS ['a', 'c', 'h', 'i'] BUT SOME NOT FOUND IN JSON OPTIONS"
+    ]
   },
   {
     "id": 166,
@@ -830,8 +825,7 @@
     "g) Įspėjimas dėl pasyvaus žaidimo galioja – JUODŲ komandai liko galimi dar 4 perdavimai",
     "h) Įspėjimas dėl pasyvaus žaidimo panaikinamas, nes BALTAS 4 yra šalinamas 2min nuobaudai"
   ],
-  "correct": [0, 1, 3, 5],
-    "_note": "OFFICIAL HAS LETTERS ['a', 'b', 'd', 'f'] BUT SOME NOT FOUND IN JSON OPTIONS"
+  "correct": [0, 1, 3, 5]
   },
   {
     "id": 167,
@@ -861,8 +855,7 @@
     "i) JUODAS 10 yra diskvalifikuojamas be rašytinio raporto (teisėjai parodo raudoną kortelę)",
     "j) JUODŲ komanda praranda vieną komandinį Time-out"
   ],
-  "correct": [1, 2, 7, 9],
-    "_note": "OFFICIAL HAS LETTERS ['b', 'c', 'h', 'j'] BUT SOME NOT FOUND IN JSON OPTIONS"
+  "correct": [1, 2, 7, 9]
   },
   {
     "id": 60,
@@ -2699,5 +2692,5 @@
       "e) Laisvas metimas BALTŲ komandai",
       "f) Time-Out"
     ]
-  },
+  }
 ]

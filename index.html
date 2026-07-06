@@ -15,6 +15,7 @@
 </head>
 <body class="bg-slate-100">
 
+    <!-- Header -->
     <header class="bg-slate-900 text-white">
         <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
             <div class="flex items-center gap-x-4">
@@ -33,11 +34,14 @@
 
         <!-- SELECTION SCREEN -->
         <div id="selection-screen">
-            <div class="text-center mb-8">
+            <div class="text-center mb-6">
                 <h2 class="text-4xl font-bold text-slate-900">Pasirinkite testą</h2>
+                <p class="text-slate-600 mt-3 max-w-2xl mx-auto">
+                    Testai sudaryti iš IHF 2025 liepos 1 d. patvirtinto klausimyno
+                </p>
             </div>
 
-            <!-- ĮSPĖJIMAS -->
+            <!-- Įspėjimas -->
             <div class="max-w-2xl mx-auto mb-8">
                 <div class="bg-orange-100 border border-orange-300 text-orange-800 px-6 py-4 rounded-2xl flex items-center gap-x-3">
                     <i class="fa-solid fa-exclamation-triangle text-xl"></i>
@@ -46,18 +50,21 @@
             </div>
 
             <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <!-- Trumpas -->
                 <div onclick="startTest(15)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
                     <h3 class="text-3xl font-bold">Trumpas testas</h3>
                     <p class="text-slate-500 mt-1">15 klausimų • 15 min</p>
                     <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
                 </div>
 
+                <!-- Standartinis -->
                 <div onclick="startTest(20)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
                     <h3 class="text-3xl font-bold">Standartinis testas</h3>
                     <p class="text-slate-500 mt-1">20 klausimų • 20 min</p>
                     <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
                 </div>
 
+                <!-- Ilgas -->
                 <div onclick="startTest(30)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
                     <h3 class="text-3xl font-bold">Ilgas testas</h3>
                     <p class="text-slate-500 mt-1">30 klausimų • 30 min</p>
@@ -140,7 +147,6 @@
         let timeLeft = 0;
         let testTerminated = false;
         let hiddenTimestamp = null;
-        let lives = 1;
 
         async function loadQuestions() {
             const res = await fetch('questions.json');
@@ -183,7 +189,6 @@
             timeLeft = numQuestions * 60;
             testTerminated = false;
             hiddenTimestamp = null;
-            lives = 1;
 
             document.getElementById('selection-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
@@ -260,37 +265,18 @@
             }
         }
 
-        // === 1 GYVENIMAS + ĮSPĖJIMAS ===
         function enableAntiCheat() {
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden && !testTerminated) {
                     hiddenTimestamp = Date.now();
                 } else if (!document.hidden && hiddenTimestamp && !testTerminated) {
                     const timeAway = Date.now() - hiddenTimestamp;
-
                     if (timeAway > 5000) {
-                        if (lives > 0) {
-                            showWarning();
-                            lives = 0;
-                        } else {
-                            terminateTest();
-                        }
+                        terminateTest();
                     }
                     hiddenTimestamp = null;
                 }
             });
-        }
-
-        function showWarning() {
-            const banner = document.getElementById('warning-banner');
-            const text = document.getElementById('warning-text');
-
-            text.innerHTML = `Dėmesio! Perjungėte langą. Tai draudžiama. Turite dar <strong>1 galimybę</strong>.`;
-            banner.classList.remove('hidden');
-
-            setTimeout(() => {
-                banner.classList.add('hidden');
-            }, 6000);
         }
 
         function terminateTest() {
@@ -311,8 +297,8 @@
 
             document.getElementById('review-section').innerHTML = `
                 <div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
-                    <p class="text-red-700 font-semibold text-lg">Testas buvo nutrauktas.</p>
-                    <p class="text-red-600 mt-2">Perjungėte langą antrą kartą. Tai yra draudžiama.</p>
+                    <p class="text-red-700 font-semibold text-lg">Testas buvo automatiškai nutrauktas.</p>
+                    <p class="text-red-600 mt-2">Per ilgai buvote neaktyvus arba perjungėte programėlę.</p>
                 </div>
             `;
         }
@@ -382,7 +368,6 @@
             document.getElementById('warning-banner').classList.add('hidden');
             clearInterval(timerInterval);
             testTerminated = false;
-            lives = 1;
         }
 
         window.onload = async function () {
@@ -391,7 +376,7 @@
                 console.log("Klausimai įkelti:", questionBank.length);
                 enableAntiCheat();
             } catch (error) {
-                alert("Klaida įkeliant klausimus.");
+                alert("Klaida įkeliant klausimus. Patikrinkite questions.json failą.");
             }
         };
     </script>

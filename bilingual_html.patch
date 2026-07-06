@@ -1,0 +1,452 @@
+--- /mnt/data/rankinio_testai_rule_balanced.html	2026-07-06 17:40:57.340708499 +0000
++++ /mnt/data/rankinio_testai_bilingual.html	2026-07-06 17:43:28.656414694 +0000
+@@ -20,10 +20,17 @@
+                     <i class="fa-solid fa-futbol text-white text-3xl"></i>
+                 </div>
+                 <div>
+-                    <h1 class="text-2xl font-bold">Rankinio Taisyklių Testai</h1>
+-                    <p class="text-orange-400 text-sm">IHF 2025</p>
++                    <h1 id="app-title" class="text-2xl font-bold">Rankinio Taisyklių Testai</h1>
++                    <p id="app-subtitle" class="text-orange-400 text-sm">IHF 2025</p>
+                 </div>
+             </div>
++            <div class="flex items-center gap-2">
++                <label id="language-label" for="language-select" class="text-sm text-slate-300">Kalba</label>
++                <select id="language-select" onchange="changeLanguage(this.value)" class="bg-slate-800 border border-slate-700 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
++                    <option value="lt">Lietuvių</option>
++                    <option value="en">English</option>
++                </select>
++            </div>
+         </div>
+     </header>
+ 
+@@ -32,29 +39,29 @@
+         <!-- SELECTION SCREEN -->
+         <div id="selection-screen">
+             <div class="text-center mb-8">
+-                <h2 class="text-4xl font-bold text-slate-900">Pasirinkite testą</h2>
+-                <p class="text-slate-600 mt-3 max-w-2xl mx-auto">
++                <h2 id="selection-title" class="text-4xl font-bold text-slate-900">Pasirinkite testą</h2>
++                <p id="selection-description" class="text-slate-600 mt-3 max-w-2xl mx-auto">
+                     Testai sudaryti iš IHF 2025 liepos 1 d. patvirtinto klausimyno
+                 </p>
+             </div>
+ 
+             <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                 <div onclick="startTest(15)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
+-                    <h3 class="text-3xl font-bold">Trumpas testas</h3>
+-                    <p class="text-slate-500 mt-1">15 klausimų • 15 min</p>
+-                    <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
++                    <h3 id="short-test-title" class="text-3xl font-bold">Trumpas testas</h3>
++                    <p id="short-test-meta" class="text-slate-500 mt-1">15 klausimų • 15 min</p>
++                    <button id="short-start-button" class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
+                 </div>
+ 
+                 <div onclick="startTest(20)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
+-                    <h3 class="text-3xl font-bold">Standartinis testas</h3>
+-                    <p class="text-slate-500 mt-1">20 klausimų • 20 min</p>
+-                    <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
++                    <h3 id="standard-test-title" class="text-3xl font-bold">Standartinis testas</h3>
++                    <p id="standard-test-meta" class="text-slate-500 mt-1">20 klausimų • 20 min</p>
++                    <button id="standard-start-button" class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
+                 </div>
+ 
+                 <div onclick="startTest(30)" class="bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer hover:border-orange-400 hover:shadow-xl transition-all">
+-                    <h3 class="text-3xl font-bold">Ilgas testas</h3>
+-                    <p class="text-slate-500 mt-1">30 klausimų • 30 min</p>
+-                    <button class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
++                    <h3 id="long-test-title" class="text-3xl font-bold">Ilgas testas</h3>
++                    <p id="long-test-meta" class="text-slate-500 mt-1">30 klausimų • 30 min</p>
++                    <button id="long-start-button" class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 rounded-2xl">Pradėti</button>
+                 </div>
+             </div>
+         </div>
+@@ -69,7 +76,7 @@
+                         <div id="quiz-info" class="text-sm text-slate-400"></div>
+                     </div>
+                     <div class="text-right">
+-                        <div class="text-xs text-slate-400">LIKĘS LAIKAS</div>
++                        <div id="timer-label" class="text-xs text-slate-400">LIKĘS LAIKAS</div>
+                         <div id="timer" class="text-4xl font-bold tabular-nums">15:00</div>
+                     </div>
+                 </div>
+@@ -94,10 +101,10 @@
+                 <div class="px-4 py-5 bg-slate-50 border-t">
+                     <div class="flex flex-col gap-3">
+                         <div class="grid grid-cols-2 gap-3">
+-                            <button onclick="prevQuestion()" class="nav-button px-6 py-3.5 border border-slate-300 rounded-2xl font-medium active:bg-slate-100">← Ankstesnis</button>
+-                            <button onclick="nextQuestion()" class="nav-button px-6 py-3.5 border border-slate-300 rounded-2xl font-medium active:bg-slate-100">Kitas →</button>
++                            <button id="prev-button" onclick="prevQuestion()" class="nav-button px-6 py-3.5 border border-slate-300 rounded-2xl font-medium active:bg-slate-100">← Ankstesnis</button>
++                            <button id="next-button" onclick="nextQuestion()" class="nav-button px-6 py-3.5 border border-slate-300 rounded-2xl font-medium active:bg-slate-100">Kitas →</button>
+                         </div>
+-                        <button onclick="confirmFinish()" class="w-full px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-2xl">Baigti testą anksčiau</button>
++                        <button id="finish-early-button" onclick="confirmFinish()" class="w-full px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-2xl">Baigti testą anksčiau</button>
+                     </div>
+                 </div>
+             </div>
+@@ -113,18 +120,115 @@
+                 </div>
+ 
+                 <div class="px-8 pb-8">
+-                    <h3 class="font-semibold text-lg mb-4">Testo rezultatai</h3>
++                    <h3 id="results-title" class="font-semibold text-lg mb-4">Testo rezultatai</h3>
+                     <div id="review-section" class="space-y-4 text-sm"></div>
+                 </div>
+ 
+                 <div class="p-8 flex gap-3 border-t">
+-                    <button onclick="restartApp()" class="flex-1 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-2xl">Grįžti į testus</button>
++                    <button id="restart-button" onclick="restartApp()" class="flex-1 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-2xl">Grįžti į testus</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+ 
+     <script>
++        const QUESTION_FILES = {
++            lt: './questions-lt.json',
++            en: './questions-en.json'
++        };
++
++        const translations = {
++            lt: {
++                pageTitle: 'Rankinio Taisyklių Testai',
++                appTitle: 'Rankinio Taisyklių Testai',
++                appSubtitle: 'IHF 2025',
++                languageLabel: 'Kalba',
++                selectionTitle: 'Pasirinkite testą',
++                selectionDescription: 'Testai sudaryti iš IHF 2025 liepos 1 d. patvirtinto klausimyno',
++                shortTestTitle: 'Trumpas testas',
++                shortTestMeta: '15 klausimų • 15 min',
++                standardTestTitle: 'Standartinis testas',
++                standardTestMeta: '20 klausimų • 20 min',
++                longTestTitle: 'Ilgas testas',
++                longTestMeta: '30 klausimų • 30 min',
++                startButton: 'Pradėti',
++                timerLabel: 'LIKĘS LAIKAS',
++                prevButton: '← Ankstesnis',
++                nextButton: 'Kitas →',
++                finishEarlyButton: 'Baigti testą anksčiau',
++                resultsTitle: 'Testo rezultatai',
++                restartButton: 'Grįžti į testus',
++                quizName: '{count} klausimų testas',
++                quizInfo: '{count} klausimų • {minutes} min',
++                questionCounter: 'Klausimas {current} iš {total}',
++                progressText: '{answered} iš {total} atsakyta',
++                loadErrorAlert: 'Klaida: Nepavyko įkelti {file} failo.',
++                loadErrorGeneric: 'Klaida įkeliant klausimus.',
++                fileMissingError: '{file} nerastas',
++                warningCheat: 'Nesukčiauk 😂 Perjungėte langą! Tau liko viena gyvybė. 👀',
++                testTerminatedBadge: 'TESTAS NUTRAUKTAS',
++                testTerminated: 'Testas nutrauktas',
++                testTerminatedMessage: 'Testas buvo nutrauktas.',
++                secondSwitchMessage: 'Perjungėte langą antrą kartą.',
++                confirmFinish: 'Ar tikrai nori baigti testą anksčiau?',
++                confirmCancel: 'Ar tikrai norite nutraukti testą?',
++                changeLanguageConfirm: 'Pakeitus kalbą dabartinis testas bus nutrauktas. Tęsti?',
++                unanswered: 'Neatsakyta',
++                yourAnswer: 'Tavo atsakymas:',
++                correctAnswer: 'Teisingas atsakymas:',
++                timeExpiredBadge: 'LAIKAS PASIBAIGĖ',
++                passedBadge: 'IŠLAIKYTA',
++                failedBadge: 'NEIŠLAIKYTA',
++                questionsLoadedLog: 'Klausimai įkelti:'
++            },
++            en: {
++                pageTitle: 'Handball Rules Tests',
++                appTitle: 'Handball Rules Tests',
++                appSubtitle: 'IHF 2025',
++                languageLabel: 'Language',
++                selectionTitle: 'Choose a test',
++                selectionDescription: 'Tests are based on the questionnaire approved by the IHF on 1 July 2025',
++                shortTestTitle: 'Short test',
++                shortTestMeta: '15 questions • 15 min',
++                standardTestTitle: 'Standard test',
++                standardTestMeta: '20 questions • 20 min',
++                longTestTitle: 'Long test',
++                longTestMeta: '30 questions • 30 min',
++                startButton: 'Start',
++                timerLabel: 'TIME LEFT',
++                prevButton: '← Previous',
++                nextButton: 'Next →',
++                finishEarlyButton: 'Finish test early',
++                resultsTitle: 'Test results',
++                restartButton: 'Back to tests',
++                quizName: '{count}-question test',
++                quizInfo: '{count} questions • {minutes} min',
++                questionCounter: 'Question {current} of {total}',
++                progressText: '{answered} of {total} answered',
++                loadErrorAlert: 'Error: Could not load the {file} file.',
++                loadErrorGeneric: 'Error loading questions.',
++                fileMissingError: '{file} not found',
++                warningCheat: 'No cheating 😂 You switched windows! You have one life left. 👀',
++                testTerminatedBadge: 'TEST TERMINATED',
++                testTerminated: 'Test terminated',
++                testTerminatedMessage: 'The test was terminated.',
++                secondSwitchMessage: 'You switched windows for the second time.',
++                confirmFinish: 'Are you sure you want to finish the test early?',
++                confirmCancel: 'Are you sure you want to cancel the test?',
++                changeLanguageConfirm: 'Changing the language will cancel the current test. Continue?',
++                unanswered: 'Unanswered',
++                yourAnswer: 'Your answer:',
++                correctAnswer: 'Correct answer:',
++                timeExpiredBadge: 'TIME EXPIRED',
++                passedBadge: 'PASSED',
++                failedBadge: 'FAILED',
++                questionsLoadedLog: 'Questions loaded:'
++            }
++        };
++
++        let currentLang = localStorage.getItem('quizLanguage') || 'lt';
++        if (!QUESTION_FILES[currentLang]) currentLang = 'lt';
++
+         let questionBank = [];
+         let currentQuestions = [];
+         let answers = [];
+@@ -135,25 +239,102 @@
+         let hiddenTimestamp = null;
+         let lives = 1;
+ 
++        function t(key, replacements = {}) {
++            let value = (translations[currentLang] && translations[currentLang][key]) || translations.lt[key] || key;
++            Object.entries(replacements).forEach(([name, replacement]) => {
++                value = value.replaceAll(`{${name}}`, replacement);
++            });
++            return value;
++        }
++
++        function setText(id, key) {
++            const element = document.getElementById(id);
++            if (element) element.textContent = t(key);
++        }
++
++        function applyTranslations() {
++            document.documentElement.lang = currentLang;
++            document.title = t('pageTitle');
++            const languageSelect = document.getElementById('language-select');
++            if (languageSelect) languageSelect.value = currentLang;
++
++            setText('app-title', 'appTitle');
++            setText('app-subtitle', 'appSubtitle');
++            setText('language-label', 'languageLabel');
++            setText('selection-title', 'selectionTitle');
++            setText('selection-description', 'selectionDescription');
++            setText('short-test-title', 'shortTestTitle');
++            setText('short-test-meta', 'shortTestMeta');
++            setText('standard-test-title', 'standardTestTitle');
++            setText('standard-test-meta', 'standardTestMeta');
++            setText('long-test-title', 'longTestTitle');
++            setText('long-test-meta', 'longTestMeta');
++            setText('short-start-button', 'startButton');
++            setText('standard-start-button', 'startButton');
++            setText('long-start-button', 'startButton');
++            setText('timer-label', 'timerLabel');
++            setText('prev-button', 'prevButton');
++            setText('next-button', 'nextButton');
++            setText('finish-early-button', 'finishEarlyButton');
++            setText('results-title', 'resultsTitle');
++            setText('restart-button', 'restartButton');
++
++            if (currentQuestions.length > 0 && !document.getElementById('quiz-screen').classList.contains('hidden')) {
++                renderQuestion();
++            }
++        }
++
+         async function loadQuestions() {
+-            const res = await fetch('./questions.json');
++            const file = QUESTION_FILES[currentLang];
++            const res = await fetch(file, { cache: 'no-store' });
+             if (!res.ok) {
+-                alert("Klaida: Nepavyko įkelti questions.json failo.");
+-                throw new Error("questions.json nerastas");
++                alert(t('loadErrorAlert', { file }));
++                throw new Error(t('fileMissingError', { file }));
+             }
+             questionBank = await res.json();
+         }
+ 
++        async function changeLanguage(lang) {
++            if (!QUESTION_FILES[lang] || lang === currentLang) return;
++
++            const quizIsRunning = !document.getElementById('quiz-screen').classList.contains('hidden');
++            if (quizIsRunning && !confirm(t('changeLanguageConfirm'))) {
++                document.getElementById('language-select').value = currentLang;
++                return;
++            }
++
++            currentLang = lang;
++            localStorage.setItem('quizLanguage', currentLang);
++            questionBank = [];
++            currentQuestions = [];
++            answers = [];
++            currentIndex = 0;
++            clearInterval(timerInterval);
++            testTerminated = false;
++            hiddenTimestamp = null;
++            lives = 1;
++
++            applyTranslations();
++            restartApp();
++
++            try {
++                await loadQuestions();
++                console.log(t('questionsLoadedLog'), questionBank.length);
++            } catch (error) {
++                alert(t('loadErrorGeneric'));
++            }
++        }
++
+         function shuffleArray(array) {
+             return [...array].sort(() => Math.random() - 0.5);
+         }
+ 
+         function cleanQuestionText(text) {
+-            return text.replace(/^\d+\.\d+\)\s*/, '');
++            return String(text || '').replace(/^\d+\.\d+\)\s*/, '');
+         }
+ 
+         function cleanOptionText(text) {
+-            return text.replace(/^[a-z]\)\s*/i, '');
++            return String(text || '').replace(/^[a-z]\)\s*/i, '');
+         }
+ 
+         function getRuleNumber(question) {
+@@ -164,14 +345,10 @@
+         function selectQuestionsForTest(numQuestions) {
+             const shuffledBank = shuffleArray(questionBank);
+ 
+-            // For 15- and 20-question tests, keep the old behavior.
+             if (numQuestions !== 30) {
+                 return shuffledBank.slice(0, numQuestions);
+             }
+ 
+-            // 30-question test requirement:
+-            // include at least 18 questions from different rule groups,
+-            // where the rule group is the number before the dot in text like "1.1)" or "18.1)".
+             const requiredDifferentRules = Math.min(18, numQuestions);
+             const questionsByRule = new Map();
+ 
+@@ -233,8 +410,8 @@
+             document.getElementById('results-screen').classList.add('hidden');
+             document.getElementById('warning-banner').classList.add('hidden');
+ 
+-            document.getElementById('quiz-name').textContent = `${numQuestions} klausimų testas`;
+-            document.getElementById('quiz-info').textContent = `${currentQuestions.length} klausimų • ${numQuestions} min`;
++            document.getElementById('quiz-name').textContent = t('quizName', { count: numQuestions });
++            document.getElementById('quiz-info').textContent = t('quizInfo', { count: currentQuestions.length, minutes: numQuestions });
+ 
+             startTimer();
+             renderQuestion();
+@@ -262,10 +439,16 @@
+         function renderQuestion() {
+             const q = currentQuestions[currentIndex];
+             document.getElementById('question-text').textContent = cleanQuestionText(q.text);
+-            document.getElementById('question-counter').textContent = `Klausimas ${currentIndex + 1} iš ${currentQuestions.length}`;
++            document.getElementById('question-counter').textContent = t('questionCounter', {
++                current: currentIndex + 1,
++                total: currentQuestions.length
++            });
+ 
+             const answeredCount = answers.filter(a => a && a.length > 0).length;
+-            document.getElementById('progress-text').textContent = `${answeredCount} iš ${currentQuestions.length} atsakyta`;
++            document.getElementById('progress-text').textContent = t('progressText', {
++                answered: answeredCount,
++                total: currentQuestions.length
++            });
+ 
+             const container = document.getElementById('options');
+             container.innerHTML = '';
+@@ -329,7 +512,7 @@
+         function showWarning() {
+             const banner = document.getElementById('warning-banner');
+             const text = document.getElementById('warning-text');
+-            text.innerHTML = `Nesukčiauk 😂 Perjungėte langą! Tau liko viena gyvybė. 👀`;
++            text.innerHTML = t('warningCheat');
+             banner.classList.remove('hidden');
+             setTimeout(() => banner.classList.add('hidden'), 6000);
+         }
+@@ -342,20 +525,20 @@
+             document.getElementById('quiz-screen').classList.add('hidden');
+             document.getElementById('results-screen').classList.remove('hidden');
+ 
+-            document.getElementById('result-badge').innerHTML = `<i class="fa-solid fa-exclamation-triangle mr-2"></i> TESTAS NUTRAUKTAS`;
++            document.getElementById('result-badge').innerHTML = `<i class="fa-solid fa-exclamation-triangle mr-2"></i> ${t('testTerminatedBadge')}`;
+             document.getElementById('result-badge').className = "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-red-100 text-red-700";
+             document.getElementById('score-text').innerHTML = `0`;
+-            document.getElementById('percentage-text').textContent = `Testas nutrauktas`;
++            document.getElementById('percentage-text').textContent = t('testTerminated');
+             document.getElementById('review-section').innerHTML = `
+                 <div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+-                    <p class="text-red-700 font-semibold text-lg">Testas buvo nutrauktas.</p>
+-                    <p class="text-red-600 mt-2">Perjungėte langą antrą kartą.</p>
++                    <p class="text-red-700 font-semibold text-lg">${t('testTerminatedMessage')}</p>
++                    <p class="text-red-600 mt-2">${t('secondSwitchMessage')}</p>
+                 </div>
+             `;
+         }
+ 
+         function confirmFinish() {
+-            if (confirm("Ar tikrai nori baigti testą anksčiau?")) {
++            if (confirm(t('confirmFinish'))) {
+                 finishQuiz();
+             }
+         }
+@@ -376,15 +559,15 @@
+ 
+                 if (isCorrect) correctCount++;
+ 
+-                const userText = userAns.length > 0 ? userAns.map(idx => q.options[idx]).join(", ") : "Neatsakyta";
++                const userText = userAns.length > 0 ? userAns.map(idx => q.options[idx]).join(", ") : t('unanswered');
+                 const correctText = q.correct.map(idx => q.options[idx]).join(", ");
+ 
+                 reviewHTML += `
+                     <div class="border rounded-2xl p-4 ${isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}">
+                         <div class="font-medium mb-2">${cleanQuestionText(q.text)}</div>
+                         <div class="text-sm">
+-                            <span class="font-semibold">Tavo atsakymas:</span> ${userText}<br>
+-                            <span class="font-semibold">Teisingas atsakymas:</span> <span class="text-emerald-700">${correctText}</span>
++                            <span class="font-semibold">${t('yourAnswer')}</span> ${userText}<br>
++                            <span class="font-semibold">${t('correctAnswer')}</span> <span class="text-emerald-700">${correctText}</span>
+                         </div>
+                     </div>
+                 `;
+@@ -400,13 +583,13 @@
+ 
+             const badge = document.getElementById('result-badge');
+             if (timeExpired) {
+-                badge.innerHTML = `<i class="fa-solid fa-clock mr-2"></i> LAIKAS PASIBAIGĖ`;
++                badge.innerHTML = `<i class="fa-solid fa-clock mr-2"></i> ${t('timeExpiredBadge')}`;
+                 badge.className = "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-orange-100 text-orange-700";
+             } else if (percent >= 75) {
+-                badge.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i> IŠLAIKYTA`;
++                badge.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i> ${t('passedBadge')}`;
+                 badge.className = "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-emerald-100 text-emerald-700";
+             } else {
+-                badge.innerHTML = `<i class="fa-solid fa-times-circle mr-2"></i> NEIŠLAIKYTA`;
++                badge.innerHTML = `<i class="fa-solid fa-times-circle mr-2"></i> ${t('failedBadge')}`;
+                 badge.className = "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-red-100 text-red-700";
+             }
+ 
+@@ -414,7 +597,7 @@
+         }
+ 
+         function cancelQuiz() {
+-            if (confirm("Ar tikrai norite nutraukti testą?")) {
++            if (confirm(t('confirmCancel'))) {
+                 clearInterval(timerInterval);
+                 restartApp();
+             }
+@@ -431,11 +614,12 @@
+ 
+         window.onload = async function () {
+             try {
++                applyTranslations();
+                 await loadQuestions();
+-                console.log("Klausimai įkelti:", questionBank.length);
++                console.log(t('questionsLoadedLog'), questionBank.length);
+                 enableAntiCheat();
+             } catch (error) {
+-                alert("Klaida įkeliant klausimus.");
++                alert(t('loadErrorGeneric'));
+             }
+         };
+     </script>

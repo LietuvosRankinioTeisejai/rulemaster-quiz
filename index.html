@@ -90,7 +90,6 @@
                     <div class="text-2xl text-slate-500 mt-1" id="percentage-text"></div>
                 </div>
 
-                <!-- TEISINGI ATSAKYMAI -->
                 <div class="px-8 pb-8">
                     <h3 class="font-semibold text-lg mb-4">Teisingi atsakymai:</h3>
                     <div id="review-section" class="space-y-4 text-sm"></div>
@@ -113,6 +112,9 @@
         let timerInterval = null;
         let timeLeft = 0;
 
+        // Laikome atvaizdavimą tarp originalių ir sumaišytų indeksų
+        let currentOptionMap = [];
+
         async function loadQuestions() {
             const res = await fetch('questions.json');
             questionBank = await res.json();
@@ -122,7 +124,6 @@
             return [...array].sort(() => Math.random() - 0.5);
         }
 
-        // Pašalina numerį iš klausimo teksto (pvz. "2.14) ")
         function cleanQuestionText(text) {
             return text.replace(/^\d+\.\d+\)\s*/, '');
         }
@@ -184,19 +185,31 @@
             const container = document.getElementById('options');
             container.innerHTML = '';
 
-            q.options.forEach((option, i) => {
-                const isSelected = answers[currentIndex] && answers[currentIndex].includes(i);
+            // Sukuriame masyvą su originaliais indeksais
+            let optionsWithIndex = q.options.map((text, idx) => ({ text, originalIndex: idx }));
+            // Sumaišome atsakymus
+            optionsWithIndex = shuffle(optionsWithIndex);
+
+            // Išsaugome atvaizdavimą
+            currentOptionMap = optionsWithIndex;
+
+            optionsWithIndex.forEach((opt, shuffledIndex) => {
+                const isSelected = answers[currentIndex] && answers[currentIndex].includes(opt.originalIndex);
                 const div = document.createElement('div');
                 div.className = `option border border-slate-200 rounded-2xl px-6 py-4 flex items-center gap-x-4 cursor-pointer ${isSelected ? 'selected' : ''}`;
                 div.innerHTML = `
                     <input type="checkbox" class="w-5 h-5 accent-blue-700 pointer-events-none" ${isSelected ? 'checked' : ''}>
-                    <div class="flex-1">${option}</div>
+                    <div class="flex-1">${opt.text}</div>
                 `;
                 div.onclick = () => {
                     if (!answers[currentIndex]) answers[currentIndex] = [];
-                    const idx = answers[currentIndex].indexOf(i);
-                    if (idx > -1) answers[currentIndex].splice(idx, 1);
-                    else answers[currentIndex].push(i);
+                    const originalIdx = opt.originalIndex;
+                    const idxInAnswers = answers[currentIndex].indexOf(originalIdx);
+                    if (idxInAnswers > -1) {
+                        answers[currentIndex].splice(idxInAnswers, 1);
+                    } else {
+                        answers[currentIndex].push(originalIdx);
+                    }
                     renderQuestion();
                 };
                 container.appendChild(div);

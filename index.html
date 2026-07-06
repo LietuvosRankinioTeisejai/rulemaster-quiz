@@ -7,12 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* Uždrausti kopijavimą testo metu */
         #quiz-screen {
             user-select: none;
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
     </style>
 </head>
@@ -120,18 +117,11 @@
         let currentIndex = 0;
         let timerInterval = null;
         let timeLeft = 0;
-        let currentTestConfig = {};
 
         async function loadQuestions() {
-            try {
-                const res = await fetch('questions.json');
-                if (!res.ok) throw new Error('Nepavyko įkelti questions.json');
-                questionBank = await res.json();
-            } catch (error) {
-                alert("Klaida: Nepavyko įkelti questions.json failo.");
-                console.error(error);
-                throw error;
-            }
+            const res = await fetch('questions.json');
+            if (!res.ok) throw new Error("Nepavyko įkelti questions.json");
+            questionBank = await res.json();
         }
 
         function shuffleArray(array) {
@@ -142,54 +132,41 @@
             return text.replace(/^\d+\.\d+\)\s*/, '');
         }
 
-        // Pašalina "a)", "b)", "c)", "d)" iš atsakymo teksto
         function cleanOptionText(text) {
             return text.replace(/^[a-d]\)\s*/i, '');
         }
 
         async function startTest(numQuestions) {
-            try {
-                if (questionBank.length === 0) {
-                    await loadQuestions();
-                }
-
-                const selectedQuestions = shuffleArray(questionBank).slice(0, numQuestions);
-
-                currentQuestions = selectedQuestions.map(q => {
-                    let optionsWithIndex = q.options.map((text, idx) => ({
-                        text: cleanOptionText(text),           // Čia pašaliname a), b), c), d)
-                        originalIndex: idx
-                    }));
-                    optionsWithIndex = shuffleArray(optionsWithIndex);
-
-                    return {
-                        ...q,
-                        shuffledOptions: optionsWithIndex
-                    };
-                });
-
-                answers = new Array(currentQuestions.length).fill(null);
-                currentIndex = 0;
-
-                currentTestConfig = {
-                    name: `${numQuestions} klausimų testas`,
-                    time: numQuestions
-                };
-
-                timeLeft = numQuestions * 60;
-
-                document.getElementById('selection-screen').classList.add('hidden');
-                document.getElementById('quiz-screen').classList.remove('hidden');
-                document.getElementById('results-screen').classList.add('hidden');
-
-                document.getElementById('quiz-name').textContent = currentTestConfig.name;
-                document.getElementById('quiz-info').textContent = `${currentQuestions.length} klausimų • ${currentTestConfig.time} min`;
-
-                startTimer();
-                renderQuestion();
-            } catch (error) {
-                console.error("Klaida paleidžiant testą:", error);
+            if (questionBank.length === 0) {
+                await loadQuestions();
             }
+
+            const selected = shuffleArray(questionBank).slice(0, numQuestions);
+
+            currentQuestions = selected.map(q => {
+                let optionsWithIndex = q.options.map((text, idx) => ({
+                    text: cleanOptionText(text),
+                    originalIndex: idx
+                }));
+                return {
+                    ...q,
+                    shuffledOptions: shuffleArray(optionsWithIndex)
+                };
+            });
+
+            answers = new Array(currentQuestions.length).fill(null);
+            currentIndex = 0;
+            timeLeft = numQuestions * 60;
+
+            document.getElementById('selection-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+
+            document.getElementById('quiz-name').textContent = `${numQuestions} klausimų testas`;
+            document.getElementById('quiz-info').textContent = `${currentQuestions.length} klausimų • ${numQuestions} min`;
+
+            startTimer();
+            renderQuestion();
         }
 
         function startTimer() {
@@ -216,8 +193,8 @@
             document.getElementById('question-text').textContent = cleanQuestionText(q.text);
             document.getElementById('question-counter').textContent = `Klausimas ${currentIndex + 1} iš ${currentQuestions.length}`;
 
-            const answered = answers.filter(a => a && a.length > 0).length;
-            document.getElementById('progress-text').textContent = `${answered} iš ${currentQuestions.length} atsakyta`;
+            const answeredCount = answers.filter(a => a && a.length > 0).length;
+            document.getElementById('progress-text').textContent = `${answeredCount} iš ${currentQuestions.length} atsakyta`;
 
             const container = document.getElementById('options');
             container.innerHTML = '';
@@ -259,31 +236,30 @@
             clearInterval(timerInterval);
 
             let correctCount = 0;
-            const reviewHTML = [];
+            let reviewHTML = '';
 
             currentQuestions.forEach((q, i) => {
                 const userAns = answers[i] || [];
-                const correctSet = new Set(q.correct);
-                const userSet = new Set(userAns);
-                const isCorrect = userSet.size === correctSet.size && [...userSet].every(x => correctSet.has(x));
+                const isCorrect = userAns.length === q.correct.length && 
+                                  userAns.every(ans => q.correct.includes(ans));
 
                 if (isCorrect) correctCount++;
 
-                const userAnswersText = userAns.length > 0 
+                const userText = userAns.length > 0 
                     ? userAns.map(idx => q.options[idx]).join(", ") 
                     : "Neatsakyta";
 
-                const correctAnswersText = q.correct.map(idx => q.options[idx]).join(", ");
+                const correctText = q.correct.map(idx => q.options[idx]).join(", ");
 
-                reviewHTML.push(`
+                reviewHTML += `
                     <div class="border rounded-2xl p-4 ${isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}">
                         <div class="font-medium mb-2">${cleanQuestionText(q.text)}</div>
                         <div class="text-sm">
-                            <span class="font-semibold">Tavo atsakymas:</span> ${userAnswersText}<br>
-                            <span class="font-semibold">Teisingas atsakymas:</span> <span class="text-emerald-700">${correctAnswersText}</span>
+                            <span class="font-semibold">Tavo atsakymas:</span> ${userText}<br>
+                            <span class="font-semibold">Teisingas atsakymas:</span> <span class="text-emerald-700">${correctText}</span>
                         </div>
                     </div>
-                `);
+                `;
             });
 
             const percent = Math.round((correctCount / currentQuestions.length) * 100);
@@ -306,11 +282,11 @@
                 badge.className = "inline-flex items-center gap-x-2 px-6 py-2 rounded-3xl text-sm font-semibold bg-red-100 text-red-700";
             }
 
-            document.getElementById('review-section').innerHTML = reviewHTML.join('');
+            document.getElementById('review-section').innerHTML = reviewHTML;
         }
 
         function cancelQuiz() {
-            if (confirm("Ar tikrai norite nutraukti šį testą?")) {
+            if (confirm("Ar tikrai norite nutraukti testą?")) {
                 clearInterval(timerInterval);
                 restartApp();
             }
@@ -323,21 +299,23 @@
             clearInterval(timerInterval);
         }
 
-        // Uždrausti kopijavimą viso quiz ekrano
-        function disableCopy() {
-            const quizScreen = document.getElementById('quiz-screen');
-            if (quizScreen) {
-                quizScreen.addEventListener('copy', e => e.preventDefault());
-                quizScreen.addEventListener('cut', e => e.preventDefault());
+        // Uždrausti kopijavimą
+        function blockCopy() {
+            const screen = document.getElementById('quiz-screen');
+            if (screen) {
+                screen.addEventListener('copy', e => e.preventDefault());
+                screen.addEventListener('cut', e => e.preventDefault());
             }
         }
 
-        window.onload = async () => {
+        window.onload = async function () {
             try {
                 await loadQuestions();
-                console.log(`Įkelta ${questionBank.length} klausimų.`);
-                disableCopy(); // Įjungiame apsaugą nuo kopijavimo
-            } catch (e) {}
+                console.log("Klausimai sėkmingai įkelti:", questionBank.length);
+                blockCopy();
+            } catch (error) {
+                alert("Klaida įkeliant klausimus. Patikrinkite questions.json failą.");
+            }
         };
     </script>
 </body>

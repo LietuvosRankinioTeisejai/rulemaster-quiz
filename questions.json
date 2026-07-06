@@ -2499,7 +2499,8 @@
       "b) Laisvas metimas BALTŲ komandai",
       "c) Progresyvi nuobauda JUODAM 7",
       "d) Šoninis metimas BALTŲ komandai"
-    ]
+    ],
+    "correct": [1]
   },
   {
     "id": 181,
@@ -2509,7 +2510,8 @@
       "b) Už pasyvų žaidimą iš karto skiriamas laisvas metimas",
       "c) Laisvas metimas skiriamas už nesportišką elgesį",
       "d) Progresyvinė nuobauda"
-    ]
+    ],
+    "correct": [1]
   },
   {
     "id": 182,
@@ -2519,7 +2521,8 @@
       "b) Įvartis JUODŲ komandai",
       "c) Priklausomai nuo aplinkybių laisvas metimas BALTŲ arba JUODŲ komandai",
       "d) JUODŲ komandos vartininko metimas"
-    ]
+    ],
+    "correct": [1]
   },
   {
     "id": 183,
@@ -2528,7 +2531,8 @@
       "a) Laisvas metimas BALTŲ komandai",
       "b) Žaisti toliau",
       "c) Tai priklauso nuo to, kas gaus kamuolį"
-    ]
+    ],
+    "correct": [1]
   },
   {
     "id": 184,
@@ -2536,7 +2540,8 @@
     "options": [
       "a) Įvartis BALTŲ komandai",
       "b) Laisvas metimas JUODŲ komandai"
-    ]
+    ],
+    "correct": [0]
   },
   {
     "id": 185,
@@ -2545,7 +2550,8 @@
       "a) Pozicijos pataisymas, švilpukas, jokio kito veiksmo",
       "b) Pozicijos pataisymas, švilpukas, teisėjas parodo rankos gestą dėl pasyvaus žaidimo",
       "c) Pozicijos pataisymas, BALTAM 6 skiriama progresyvi nuobauda, švilpukas, rankos gestas dėl pasyvaus žaidimo"
-    ]
+    ],
+    "correct": [2]
   },
   {
     "id": 186,
@@ -2556,7 +2562,8 @@
       "c) Iš karto laisvas metimas BALTŲ komandai dėl pasyvaus žaidimo",
       "d) Pasikartojus situacijai JUODAS 6 ar JUODAS 8 įspėjamas",
       "e) Pasikartojus situacijai JUODAS 6 ar JUODAS 8 pašalinamas 2 min."
-    ]
+    ],
+    "correct": [0]
   },
   {
     "id": 187,
@@ -2567,7 +2574,8 @@
       "c) Komandos Time-out",
       "d) Dėl veiksmingo poveikio prieš komandoms atliekant kitus pasyvius veiksmus",
       "e) Nei po vieno a-d punktuose nurodyto veiksmo"
-    ]
+    ],
+    "correct": [4]
   },
   {
     "id": 188,
@@ -2577,7 +2585,8 @@
       "b) Jei komanda kontroliuojanti kamuolį, po pakelto įspėjamojo pasyvaus žaidimo signalo, reikalauja komandinio Time-out, atnaujinus rungtynes, pasyvaus žaidimo signalas vėl turi būti rodomas",
       "c) Jei signalas rodomas, o komanda nesistengia susikurti pozicijos metimui į vartus, tai arba aikštės, arba vartų teisėjas dėl pasyvaus žaidimo skiria laisvą metimą",
       "d) Kai pasyvaus žaidimo signalas parodomas, teisėjas dėl pasyvaus žaidimo nusprendžia ne vėliau, kai po atlikų 4 perdavimų nebuvo metimo įvartus"
-    ]
+    ],
+    "correct": [0, 2]
   },
   {
     "id": 189,
@@ -2588,7 +2597,8 @@
       "c) Time out, pradedamas metimas po švilpuko, iškart rodomas pasyvaus žaidimo gestas",
       "d) Švilpukas pradedamam metimui ir iškart rodomas pasyvaus žaidimo gestas",
       "e) Progresyvi nuobauda atsakingam BALTŲ komandos oficialiam asmeniui"
-    ]
+    ],
+    "correct": [3]
   },
   {
     "id": 190,
@@ -2599,7 +2609,8 @@
       "c) Perspėjantis signalas po pirmo sustabdymo turi būti priminančiai parodomas, jei jis buvo rodomas prieš sustabdymą",
       "d) Pasyvaus žaidimo signalas visada turi būti panaikinamas, kai besiginančios komandos žaidėjas baudžiamas progresyvine nuobauda",
       "e) Teisėjai pasyvaus žaidimo signalą parodo, kai žaidėjas aiškiai kontroliuoja kamuolį"
-    ]
+    ],
+    "correct": [0, 3, 4]
   },
   {
     "id": 191,
@@ -2610,7 +2621,8 @@
       "c) Teisėjai privalo stebėti, ar komanda stengiasi didinti tempą ar įgyti erdvės pranašumą atakos kūrimo fazės metu",
       "d) Teisėjai pasyvų žaidimą turi pradėti stebėti, iš karto, kai tik komanda įgauna kamuolio kontrolę savo aikštelės pusėje",
       "e) Komandai, kuri stengėsi sukurti kontrataką, privalo būti leidžiama daryti normalų keitimą, pereinant iš kontratakos į normalią atakos kūrimo fazę"
-    ]
+    ],
+    "correct": [1, 2, 3, 4]
   },
   {
     "id": 192,
@@ -2619,7 +2631,8 @@
       "a) 3",
       "b) 4",
       "c) 5"
-    ]
+    ],
+    "correct": [0]
   },
   {
     "id": 193,
@@ -2628,7 +2641,8 @@
       "a) 1",
       "b) 2",
       "c) 3"
-    ]
+    ],
+    "correct": [1]
   },
   {
     "id": 194,
@@ -2638,7 +2652,8 @@
       "b) BALTŲ komandai liko 2 perdavimai metimui į vartus atlikti",
       "c) BALTŲ komandai liko 1 perdavimas metimui į vartus atlikti",
       "d) BALTŲ komanda atlikdama laisvą metimą turi tiesiogiai mesti į vartus"
-    ]
+    ],
+    "correct": [2]
   },
   {
     "id": 195,
@@ -2648,7 +2663,8 @@
       "b) BALTŲ komandai liko 4 perdavimai metimui į vartus atlikti",
       "c) BALTŲ komandai liko 2 perdavimai metimui į vartus atlikti",
       "d) BALTŲ komandai liko 1 perdavimas metimui į vartus atlikti"
-    ]
+    ],
+    "correct": [3]
   },
   {
     "id": 196,
@@ -2659,7 +2675,8 @@
       "c) Įspėjamasis pasyvaus žaidimo signalas tęsiamas",
       "d) Įspėjamasis pasyvaus žaidimo signalas panaikinamas",
       "e) BALTŲ komandai nebegali atlikti perdavimų metimui į vartus atlikti"
-    ]
+    ],
+    "correct": [1, 2]
   },
   {
     "id": 197,
@@ -2669,7 +2686,8 @@
       "b) Laisvas metimas JUODŲ komandai; įspėjimas dėl pasyvo, JUODŲ komanda išnaudojo du perdavimus",
       "c) Laisvas metimas JUODŲ komandai; įspėjimas dėl pasyvo, JUODŲ komanda išnaudojo tris perdavimus",
       "d) Laisvas metimas JUODŲ komandai; įspėjimas dėl pasyvo, JUODŲ komanda išnaudojo keturis perdavimus"
-    ]
+    ],
+    "correct": [2]
   },
   {
     "id": 198,
@@ -2679,7 +2697,8 @@
       "b) BALTŲ komandai šoninis metimas",
       "c) Paskirtas metimas turi būti atliekamas tiesioginiu metimu į vartus",
       "d) Be galimybės paskirtą metimą atlikti tiesioginiu metimu į vartus, puolėjas dar turi galimybę vieną perdavimą atlikti savo komandos draugui"
-    ]
+    ],
+    "correct": [0, 3]
   },
   {
     "id": 199,
@@ -2691,6 +2710,239 @@
       "d) Diskvalifikacija JUODAM 7 (teisėjai parodo raudoną kortelę)",
       "e) Laisvas metimas BALTŲ komandai",
       "f) Time-Out"
-    ]
+    ],
+    "correct": [1, 3, 5]
+  },
+  {
+    "id": 200,
+    "text": "8.1) BALTŲ komandos kontratakos metu, žaidėjas JUODAS 7 įeina į žaidimo aikštelę kaip papildomas žaidėjas ir taip sulaiko BALTĄ 5, kad šis praranda aiškią galimybę pasiekti įvartį. Teisingas sprendimas?",
+    "options": [
+      "a) 2min. pašalinimas JUODAM 7",
+      "b) Diskvalifikacija JUODAM 7 be rašytinio raporto (teisėjai parodo raudoną kortelę)",
+      "c) Diskvalifikacija JUODAM 7 su rašytiniu raportu (teisėjai parodo raudoną ir mėlyną korteles)",
+      "d) Laisvas metimas",
+      "e) 7 metrų metimas"
+    ],
+    "correct": [2, 4]
+  },
+  {
+    "id": 201,
+    "text": "8.2) JUODAS 8, kuris nėra įtrauktas į rungtynių protokolą, ateina vėliau ir tiesiai iš persirengimo kambario bėga į aikštelę. Jis stumia pašokusį BALTĄ 6 į nugarą ir taip nutraukia aiškią galimybę pasiekti įvartį, nes BALTAS 6 praranda kūno kontrolę. Teisingas sprendimas?",
+    "options": [
+      "a) 7 m metimas BALTŲ komandai",
+      "b) Laisvas metimas BALTŲ komandai",
+      "c) JUODAS 8 diskvalifikuojamas be rašytinio raporto (teisėjai parodo raudoną kortelę)",
+      "d) JUODAS 8 diskvalifikuojamas su rašytiniu raportu (teisėjai parodo raudoną ir mėlyną korteles)",
+      "e) Progresyvinė nuobauda atsakingam JUODŲ komandos oficialiam asmeniui"
+    ],
+    "correct": [0, 3, 4]
+  },
+  {
+    "id": 202,
+    "text": "8.3) Pasibaigus pirmam kėliniui, einant į persirengimo kambarį, BALTŲ komandos oficialus asmuo B nesportiniu būdu reikšia nepasitenkinimą prieš teisėjus. BALTŲ komandos oficialus asmuo A jau buvo įspėtas pirmajame rungtynių kėlinyje. Teisingas sprendimas?",
+    "options": [
+      "a) BALTŲ komandos oficialus asmuo B šalinamas 2min.",
+      "b) BALTŲ komandos oficialus asmuo diskvalifikuojamas (teisėjai parodo raudoną kortelę)",
+      "c) BALTŲ komanda antrą kėlinį pradeda vienu žaidėju mažiau",
+      "d) Nuobauda negalima, bet rašytinis raportas"
+    ],
+    "correct": [0, 2]
+  },
+  {
+    "id": 203,
+    "text": "8.4) BALTAS 6 jau du kartus buvo pašalintas 2min.. Dabar BALTAS 6 atlieka blogą keitimą. Koks turi būti sprendimas, jeigu jis dar yra kaltas dėl ypatingai grubaus nesportinio elgesio, po to, kai teisėjai jį informavo dėl blogo keitimo?",
+    "options": [
+      "a) 2min. pašalinimas BALTAM 6",
+      "b) Diskvalifikacija BALTAM 6 be rašytinio raporto (teisėjai parodo raudoną kortelę)",
+      "c) Diskvalifikacija BALTAM 6 su rašytiniu raportu (teisėjai parodo raudoną ir mėlyną korteles)",
+      "d) BALTŲ komanda 2 min aikštelėje žaidžia vienu žaidėju mažiau",
+      "e) BALTŲ komanda 2 min aikštelėje žaidžia dviem žaidėjais mažiau",
+      "f) BALTŲ komanda 4 min aikštelėje žaidžia vienu žaidėju mažiau"
+    ],
+    "correct": [0, 2, 5]
+  },
+  {
+    "id": 204,
+    "text": "8.5) BALTAS pašalintas 2 minutėms, bet komandos oficialus A į aikštelę jį siunčia praėjus vienai minutei. Prieš laikininkui sušvilpiant BALTAS 2 spėja sužlugdyti JUODŲ komandos aiškią galimybę pasiekti įvartį. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas JUODŲ komandai ir papildomas pašalinimas BALTAM 2",
+      "b) 7m metimas JUODŲ komandai, papildomas pašalinimas BALTAM 2 ir BALTŲ komanda likusį BALTO 2 pašalinimo laiką žaidžia dar vienu žaidėju mažiau",
+      "c) 7m metimas JUODŲ komandai, BALTAS diskvalifikuojamas be rašytinio raporto ir BALTŲ komanda likusį BALTO 2 pašalinimo laiką žaidžia dar vienu žaidėju mažiau (teisėjai parodo raudoną kortelę)",
+      "d) 7m metimas JUODŲ komandai, BALTAS diskvalifikuojamas ir BALTŲ komanda likusį BALTO 2 pašalinimo laiką žaidžia dar vienu žaidėju mažiau, rašytinis raportas (teisėjai parodo raudoną ir mėlyną korteles)"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 205,
+    "text": "8.6) BALTŲ komandos atakos metu, linijos žaidėjas BALTAS 7 neturėdamas kamuolio, liemeniu blokuoja JUODĄ 4. Teisingas sprendimas?",
+    "options": [
+      "a) JUODŲ komandai laisvas metimas",
+      "b) BALTAM 7 progresyvinė nuobauda",
+      "c) Žaidimas tęsiamas be stabdymo"
+    ],
+    "correct": [2]
+  },
+  {
+    "id": 206,
+    "text": "8.7) Krašto puolėjas BALTAS 4 turi aiškią galimybę mesti į vartus. JUODAS 7 bando žaisti į kamuolį neliesdamas rankos, bet užkliudo jam dilbį. Kamuolys nepataiko į vartus. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas BALTŲ komandai",
+      "b) 7 metrų metimas BALTŲ komandai",
+      "c) JUODAS 7 baudžiamas 2 min",
+      "d) JUODAS 7 įspėjamas",
+      "e) JUODAS 7 progresyviai nebaudžiamas"
+    ],
+    "correct": [1, 4]
+  },
+  {
+    "id": 207,
+    "text": "8.8) BALTAS 6 kontratakuoja, vartininkas JUODAS 12 išbėga iš vartų aikštelės perimti kamuolio, tačiau susiduria su BALTU 6. Visgi, gynėjas galimai galėjo leistinais būdais BALTĄ 6 sustabdyti. Teisingas sprendimas?",
+    "options": [
+      "a) JUODAS 12 šalinamas 2min",
+      "b) JUODAS 12 diskvalifikuojamas (teisėjai parodo raudoną kortelę)",
+      "c) BALTŲ komandai 7 metrų metimas",
+      "d) BALTŲ komandai laisvas metimas",
+      "e) JUODAS 12 diskvalifikuojamas, rašytinis raportas (teisėjai parodo raudoną ir mėlyną korteles)"
+    ],
+    "correct": [1, 2]
+  },
+  {
+    "id": 208,
+    "text": "8.9) BALTAS 2 nori atiduoti perdavimą komandos draugui kitoje aikštelės pusėje, bet jo komandos draugą laiko JUODAS 5. JUODAS 5 jau turi įspėjimą už priešininko stūmimą be kamuolio. Teisingas sprendimas?",
+    "options": [
+      "a) BALTŲ komandai laisvas metimas",
+      "b) JUODAS 5 baudžiamas 2 min",
+      "f) JUODAS 5 diskvalifikuojamas (teisėjai parodo raudoną kortelę)",
+      "g) Rašytinis raportas (teisėjai parodo mėlyną kortelę)"
+    ],
+    "correct": [0, 1]
+  },
+  {
+    "id": 209,
+    "text": "8.10) Kamuolys perduodamas linijos žaidėjui BALTAM 9, kuris stovi vienas prie JUODŲ komandos vartų aikštelės linijos. Jo metamą ranką iš už nugaros traukia JUODAS 2. Teisingas sprendimas?",
+    "options": [
+      "a) BALTŲ komandai laisvas metimas",
+      "b) BALTŲ komandai 7 metrų metimas",
+      "c) JUODAS 2 baudžiamas 2 min",
+      "d) JUODAS 2 diskvalifikuojamas (teisėjai parodo raudoną kortelę)",
+      "e) Rašytinis raportas (teisėjai parodo mėlyną kortelę)"
+    ],
+    "correct": [1, 3]
+  },
+  {
+    "id": 210,
+    "text": "8.11) Greitai po to, kai JUODAS 9 buvo įspėtas už stūmimą pirmąją rungtynių minutę, JUODAS 7 sulaiko BALTŲ komandos linijos žaidėją (žaidėjas aiškios galimybės pasiekti įvartį neturėjo). Teisingas sprendimas?",
+    "options": [
+      "a) BALTŲ komandai laisvas metimas",
+      "b) BALTŲ komandai 7 metrų metimas",
+      "c) JUODAS 7 įspėjamas",
+      "d) JUODAS 7 pašalinamas 2 min."
+    ],
+    "correct": [0, 2]
+  },
+  {
+    "id": 211,
+    "text": "8.12) BALTAS 4 kamuolį gauna prie priešininkų vartų aikštelės linijos ir yra vienas prieš vartininką. Prieš BALTAM 4 bandant mesti į vartus JUODAS 3 griauna jį žemyn ir BALTAS 4 pameta kamuolį. Teisingas sprendimas?",
+    "options": [
+      "a) JUODAS 3 įspėjamas",
+      "b) JUODAS 3 baudžiamas 2 min",
+      "c) JUODAS 3 diskvalifikuojamas (teisėjai parodo raudoną kortelę)",
+      "d) BALTŲ komandai laisvas metimas",
+      "e) BALTŲ komandai 7 metrų metimas"
+    ],
+    "correct": [1, 4]
+  },
+  {
+    "id": 212,
+    "text": "8.13) Kada žaidėjas turi būti diskvalifikuotas?",
+    "options": [
+      "a) Už pražangą pavojingą varžovo sveikatai",
+      "b) Už ypatingai nesportinį elgesį aikštelėje ar už jos ribų",
+      "c) Už pasikartojantį nesportinį elgesį aikštelėje",
+      "d) Už klaidingą keitimąsi pašalinimo metu (nesužlugdant aiškios galimybės pasiekti įvartį)"
+    ],
+    "correct": [0, 1]
+  },
+  {
+    "id": 213,
+    "text": "8.14) BALTAS 5 kontratakuoja, JUODŲ komandos oficialus asmuo C pakilęs nuo savo suolelio, bėga savo vartų aikštelės link. BALTAS 5 pasimeta ir nustoja bėgti. Teisėjo nuomone, BALTAS 5 turėjo aiškią galimybę pasiekti įvartį. Kaltasis oficialus asmuo C žaidėjo su kamuoliu nepalietė, arčiausias atstumas tarp jo ir BALTO 5 apytiksliai buvo 10 metrų. Teisingas sprendimas?",
+    "options": [
+      "a) Time-out",
+      "b) Laisvas metimas BALTŲ komandai",
+      "c) 7 metrų metimas BALTŲ komandai",
+      "d) JUODŲ komandos oficialus asmuo C yra diskvalifikuojamas be rašytinio raporto (teisėjai parodo raudoną kortelę)",
+      "e) JUODŲ komandos oficialus asmuo C yra diskvalifikuojamas, rašytinis raportas (teisėjai parodo raudoną ir mėlyną korteles)",
+      "f) JUODŲ komanda 2 min vienu žaidėju aikštelėje žaidžia mažumoje"
+    ],
+    "correct": [0, 2, 4, 5]
+  },
+  {
+    "id": 214,
+    "text": "8.15) BALTŲ komanda pradeda kontrataką. BALTAS nori perduoti kamuolį BALTAM 7, kuris vienas stovi prie JUODŲ komandos vartų aikštelės linijos. Kai BALTAS 5 meta kamuolį, JUODŲ komandos oficialus asmuo D įbėga į aikštelę ir pagauna kamuolį. Teisingas sprendimas?",
+    "options": [
+      "a) Laisvas metimas BALTŲ komandai",
+      "b) 7 metrų metimas BALTŲ komandai",
+      "c) JUODŲ komandos oficialus asmuo D pašalinamas 2 min.",
+      "d) JUODŲ komandos oficialus asmuo D yra diskvalifikuojamas be rašytinio raporto (teisėjai parodo raudoną kortelę)",
+      "e) JUODŲ komandos oficialus asmuo D yra diskvalifikuojamas, rašytinis raportas (teisėjai parodo raudoną ir mėlyną korteles)",
+      "f) JUODŲ komanda 2 min vienu žaidėju aikštelėje žaidžia mažumoje"
+    ],
+    "correct": [1, 4, 5]
+  },
+  {
+    "id": 215,
+    "text": "8.16) Kuris iš šių veiksmų turėtų būti vertinamas kaip ypatingai nesportiškas elgesys ir todėl baudžiamas diskvalifikacija su rašytiniu raportu (teisėjai parodo raudoną ir mėlyną korteles)?",
+    "options": [
+      "a) Pakartononė aikštės žaidėjo gynyba pėda arba blauzda",
+      "b) Kai komandos oficialus atstovas sužlugdo aiškią įvarčio pasiekimo galimybę",
+      "c) Kai yra spjaunama į kitą asmenį",
+      "d) Pakartotinas žaidimo vilkinimas su tikslu laimėti laiką"
+    ],
+    "correct": [1, 2]
+  },
+  {
+    "id": 216,
+    "text": "8.17) Įeidami į žaidimo salę, teisėjai sutinka žaidėją JUODĄ 4, kuris yra apsivilkęs žaidėjo uniformą, bet nėra įtrauktas į rungtynių protokolą. JUODAS 4 sušunka: „Tik ne šie idiotai vėl!“. Sužaidus 12 min., JUODAS 4 yra įtraukiamas į rungtynių protokolą 14 komandos žaidėju. Tai sužino ir teisėjai. Teisingas sprendimas?",
+    "options": [
+      "a) Diskvalifikacija JUODAM 4 be rašytinio raporto (teisėjai parodo raudoną kortelę)",
+      "b) JUODŲ komanda 2 min vienu žaidėju aikštelėje žaidžia mažumoje",
+      "c) JUODŲ komanda žaidžia be jokių pakitimų",
+      "d) Diskvalifikacija JUODAM 4, rašytinis raportas (teisėjai parodo raudoną ir mėlyną korteles)",
+      "e) JUODŲ komanda gali pasipildyti kitu žaidėju, kad turėtų leidžiamą 14 žaidėjų limitą"
+    ],
+    "correct": [3]
+  },
+  {
+    "id": 217,
+    "text": "8.18) Po paskirto laisvo metimo BALTŲ komandai, JUODŲ komandos oficialus asmuo C įbėga į aikštę ir pradeda šaukti: „Tai turėjo būti laisvas metimas mums!“. Oficialūs JUODŲ komandos asmenys nuobaudų šiose rungtynėse neturėjo. Teisingas sprendimas?",
+    "options": [
+      "a) Atsakingas oficialus JUODŲ komandos atstovas turi oficialų asmenį C pašalinti iš aikštės",
+      "b) Oficialus asmuo C baudžiamas 2 min. pašalinimu, JUODŲ komanda 2 min vienu žaidėju aikštelėje žaidžia mažumoje",
+      "c) Oficialus asmuo C yra įspėjamas",
+      "d) Laisvas metimas BALTŲ komandai"
+    ],
+    "correct": [2, 3]
+  },
+  {
+    "id": 218,
+    "text": "8.19) BALTAS 3 gauna įspėjimą už pražangą aikštelėję, už kurią baudžiama progresyvine nuobauda. Atnaujinus žaidimą ir po to, kai jis buvo pakeistas, BALTAS 3 nuo atsarginių suolelio įžeidžia teisėjus. Teisingas sprendimas?",
+    "options": [
+      "a) Diskvalifikacija BALTAM 3 be rašytinio raporto (teisėjai parodo raudoną kortelę) ir BALTŲ komanda 2 min vienu žaidėju aikštelėje žaidžia mažumoje",
+      "b) Diskvalifikacija BALTAM 3, rašytinis raportas (teisėjai parodo raudoną ir mėlyną korteles) ir BALTŲ komanda 2 min vienu žaidėju aikštelėje žaidžia mažumoje",
+      "c) 2min pašalinimas BALTAM 3 ir BALTŲ komanda 2 min vienu žaidėju aikštelėje žaidžia mažumoje",
+      "d) Time-out"
+    ],
+    "correct": [1]
+  },
+  {
+    "id": 219,
+    "text": "8.20) Kontratakos metu BALTAS 4, kuris jau buvo įspėtas, sugriebia JUODĄ 9 už marškinėlių. Nepaisant to, JUODAS 9 sugeba perduoti kamuolį JUODAM 8, kuris įmeta įvartį. Po to, teisėjai nori nubausti BALTĄ 4, tačiau jis jau sėdi ant keitimų suolelio. Teisingas sprendimas?",
+    "options": [
+      "a) BALTAS 4 pašalinamas 2 min., BALTŲ komanda 2 min vienu žaidėju aikštelėje žaidžia mažumoje",
+      "b) BALTAS 4 kitas 2 min. negali žaisti, bet komanda aikštelėje išlieka pilnos sudėties",
+      "c) Nuobauda jau nebeįmanoma",
+      "d) BALTAS 4 yra diskvalifikuojamas (teisėjai parodo raudoną kortelę), BALTŲ komanda 2 min vienu žaidėju aikštelėje žaidžia mažumoje"
+    ],
+    "correct": [0]
   }
 ]

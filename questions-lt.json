@@ -1418,12 +1418,14 @@
       "c) Kai papildomas žaidėjas įeina į aikštę (t.y. daugiau negu leidžiama)",
       "d) Kai žaidėjas, kuriam neleidžiama dalyvauti, įeina į aikštę",
       "e) Jei prasidėjus rungtynėms pastebima netaisyklinga žaidėjų apranga",
-      "f) Jei nusižengimai padaryti keitimo zonoje, kuriam nors atstovui negali būti priskirti individualiai"
+      "f) Jei nusižengimai padaryti keitimo zonoje, kuriam nors atstovui negali būti priskirti individualiai",
+      "g) Jei po rungtynių pradžios nustatoma, kad keitimo zonoje esantys žaidėjai dėvi netaisyklingą aprangą"
     ],
     "correct": [
       1,
-      2,
-      4
+      3,
+      4,
+      5,
     ],
     "_manually_fixed": true
   },
@@ -4754,7 +4756,7 @@
       "e) JUODAS 12 turi palikti žaidimo aikštelę ir į ją sugrįžti gali tik po trečios savo komandos atakos"
     ],
     "correct": [
-      0
+      2, 3
     ]
   },
   {
@@ -6138,7 +6140,7 @@
       "a) Taip",
       "b) Ne"
     ],
-    "correct": [1]
+    "correct": [0]
   },
   {
     "id": 374,

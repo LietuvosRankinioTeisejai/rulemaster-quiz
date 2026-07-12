@@ -452,7 +452,7 @@
     ],
     "correct": [
       0,
-      2,
+      1,
       3
     ]
   },
@@ -1366,14 +1366,14 @@
     "text": "4.31) Iš karto po JUODŲ pradedamojo metimo, teisėjai išsiaiškina, kad asmuo, kuris nėra įtrauktas į protokolą yra JUODŲ komandos keitimų zonoje. Pasirodo, kad tai yra vienas iš klubo valdybos narių, tačiau JUODŲ komanda rungtynių protokole jau yra užregistravusi keturis asmenis kaip komandos oficialius atstovus. Teisingas sprendimas?",
     "options": [
       "a) Asmuo turi palikti keitimų zoną",
-      "b) JUODŲ komandos atsakingas oficialus atstovas baudžiamas asmenine nuobauda",
+      "b) JUODŲ komandos atsakingas oficialus atstovas baudžiamas progresyvine nuobauda",
       "c) Papildomas komandos oficialus atstovas privalo palikti keitimų zoną",
       "d) Žaidimas atnaujinamas A komandos laisvu metimu"
     ],
     "correct": [
+      0,
       1,
-      2,
-      4
+      3
     ],
     "_manually_fixed": true
   },

@@ -263,6 +263,42 @@
     .badge-fail { color: #991b1b; background: #fee2e2; }
     .badge-time { color: #9a3412; background: #ffedd5; }
 
+    .resource-section {
+      border-top: 1px solid #e2e8f0;
+      padding: 22px 30px 30px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+    .resource-section h3 { margin: 0 0 6px; font-size: 22px; letter-spacing: -.03em; color: #0f172a; }
+    .resource-section p { margin: 0 0 18px; color: #475569; font-weight: 750; }
+    .resource-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .resource-card {
+      border: 1px solid #dbe3ee;
+      border-radius: 22px;
+      background: rgba(255,255,255,.92);
+      padding: 16px;
+      box-shadow: 0 16px 34px rgba(15,23,42,.07);
+    }
+    .resource-card strong { display: block; margin-bottom: 12px; color: #0f172a; font-size: 15px; letter-spacing: .02em; text-transform: uppercase; }
+    .resource-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+    .resource-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      border-radius: 14px;
+      padding: 10px 14px;
+      text-decoration: none;
+      font-weight: 950;
+      font-size: 14px;
+      background: #1d4ed8;
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(29,78,216,.16);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .resource-link.secondary { background: #fff; color: #0f172a; border: 1px solid #cbd5e1; box-shadow: none; }
+    .resource-link:hover { transform: translateY(-1px); box-shadow: 0 14px 26px rgba(29,78,216,.22); }
+    .resource-link.secondary:hover { box-shadow: 0 12px 24px rgba(15,23,42,.09); }
     .report-tools { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
     .report-area { padding: 0 30px 30px; }
     .report-placeholder {
@@ -352,7 +388,7 @@
     @page { size: A4; margin: 10mm; }
     @media print {
       body { background: #fff !important; }
-      body::before, .topbar, .result-top, .result-actions, .report-tools, #selection-screen, #quiz-screen { display: none !important; }
+      body::before, .topbar, .result-top, .result-actions, .report-tools, .resource-section, #selection-screen, #quiz-screen { display: none !important; }
       .app-shell { max-width: none; padding: 0; }
       .panel { margin: 0; box-shadow: none; border: 0; border-radius: 0; background: #fff; }
       .report-area { padding: 0; }
@@ -492,7 +528,30 @@
           <div id="pdf-report" class="hidden"></div>
         </div>
         <div class="result-actions">
+          <button class="blue-btn" type="button" onclick="restartSameTest()">Pradėti testą iš naujo</button>
           <button class="primary-btn" type="button" onclick="restartApp()">Grįžti į testus</button>
+        </div>
+        <div class="resource-section">
+          <h3>Naudingi dokumentai</h3>
+          <p>Po testo galite atsidaryti oficialius klausimyno, atsakymų ir rankinio žaidimo taisyklių PDF dokumentus.</p>
+          <div class="resource-grid">
+            <div class="resource-card">
+              <strong>Lietuvių kalba</strong>
+              <div class="resource-buttons">
+                <a class="resource-link" href="https://rankinioteisejas.lt/wp-content/uploads/2026/07/Rankinio-taisykles-2025-07-01_LT.pdf" target="_blank" rel="noopener">Rankinio žaidimo taisyklės</a>
+                <a class="resource-link secondary" href="https://rankinioteisejas.lt/wp-content/uploads/2025/07/IHF-Zaidimo-Taisykliu-Klausimynas-2025.07.01_www.pdf" target="_blank" rel="noopener">Taisyklių klausimynas</a>
+                <a class="resource-link secondary" href="https://rankinioteisejas.lt/wp-content/uploads/2025/07/IHF-Zaidimo-Taisykliu-Klausimyno_Atsakymai_07.2025_LT_www.pdf" target="_blank" rel="noopener">Klausimyno atsakymai</a>
+              </div>
+            </div>
+            <div class="resource-card">
+              <strong>English</strong>
+              <div class="resource-buttons">
+                <a class="resource-link" href="https://rankinioteisejas.lt/wp-content/uploads/2025/07/2025-Rules-of-the-Game_Indoor-Handball_E.pdf" target="_blank" rel="noopener">Rules of the Game</a>
+                <a class="resource-link secondary" href="https://rankinioteisejas.lt/wp-content/uploads/2025/07/Catalogue-of-Rules-Questions_2025.pdf" target="_blank" rel="noopener">Rules questionnaire</a>
+                <a class="resource-link secondary" href="https://rankinioteisejas.lt/wp-content/uploads/2025/07/Catalogue-of-Rules-Questions-Answers_2025.pdf" target="_blank" rel="noopener">Questionnaire answers</a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </main>
@@ -508,6 +567,7 @@
     let currentIndex = 0;
     let timerInterval = null;
     let timeLeft = 0;
+    let currentTestLength = 0;
     let participantName = 'Nenurodyta';
     let currentReportMode = 'summary';
     let lastResult = null;
@@ -558,30 +618,92 @@
       return code.includes('.') ? code.split('.')[0] : code;
     }
 
+    function getRuleNumber(question) {
+      const rule = Number(getRuleFamily(question));
+      return Number.isFinite(rule) ? rule : null;
+    }
+
+    function getQuestionComplexityScore(question) {
+      const textLength = String(question?.text || '').length;
+      const options = Array.isArray(question?.options) ? question.options : [];
+      const optionsLength = options.reduce((sum, option) => sum + String(option || '').length, 0);
+      const correctCount = Array.isArray(question?.correct) ? question.correct.length : 0;
+      return textLength + (optionsLength * 0.35) + (options.length * 18) + (correctCount * 35);
+    }
+
+    function addRandomQuestionFromPool(pool, selected, selectedSet) {
+      const available = pool.filter(question => !selectedSet.has(question));
+      if (!available.length) return false;
+      const question = available[Math.floor(Math.random() * available.length)];
+      selected.push(question);
+      selectedSet.add(question);
+      return true;
+    }
+
     function selectQuestionsForTest(numQuestions) {
       const shuffledBank = shuffleArray(questionBank);
       if (numQuestions !== 30) return shuffledBank.slice(0, numQuestions);
 
-      const requiredDifferentRules = Math.min(18, numQuestions);
+      const selected = [];
+      const selectedSet = new Set();
       const byRule = new Map();
+
       shuffledBank.forEach(question => {
-        const rule = getRuleFamily(question);
+        const rule = getRuleNumber(question);
+        if (rule === null) return;
         if (!byRule.has(rule)) byRule.set(rule, []);
         byRule.get(rule).push(question);
       });
 
-      const selected = [];
-      const selectedSet = new Set();
-      shuffleArray([...byRule.keys()]).slice(0, requiredDifferentRules).forEach(rule => {
-        const question = byRule.get(rule).shift();
-        if (question) {
-          selected.push(question);
-          selectedSet.add(question);
+      for (let rule = 1; rule <= 18; rule += 1) {
+        const candidates = byRule.get(rule) || [];
+        if (!candidates.length) {
+          console.warn(`Nerasta klausimų taisyklei ${rule}.`);
+          continue;
         }
+        addRandomQuestionFromPool(candidates, selected, selectedSet);
+      }
+
+      const bonusPool = shuffledBank.filter(question => {
+        const rule = getRuleNumber(question);
+        return rule !== null && rule >= 2 && rule <= 16 && !selectedSet.has(question);
       });
 
-      selected.push(...shuffledBank.filter(q => !selectedSet.has(q)).slice(0, numQuestions - selected.length));
-      return shuffleArray(selected);
+      const bonusQuestions = [];
+      const complexBiasEnabled = Math.random() < 0.7;
+      const complexTarget = complexBiasEnabled ? 5 + Math.floor(Math.random() * 2) : 0;
+
+      if (complexTarget > 0 && bonusPool.length > 0) {
+        const complexCandidateCount = Math.max(complexTarget, Math.ceil(bonusPool.length * 0.25));
+        const complexCandidates = shuffleArray(
+          [...bonusPool]
+            .sort((a, b) => getQuestionComplexityScore(b) - getQuestionComplexityScore(a))
+            .slice(0, complexCandidateCount)
+        );
+
+        while (bonusQuestions.length < complexTarget && complexCandidates.length) {
+          const question = complexCandidates.pop();
+          if (!selectedSet.has(question)) {
+            bonusQuestions.push(question);
+            selectedSet.add(question);
+          }
+        }
+      }
+
+      const randomBonusPool = shuffleArray(bonusPool.filter(question => !selectedSet.has(question)));
+      while (bonusQuestions.length < 12 && randomBonusPool.length) {
+        const question = randomBonusPool.pop();
+        bonusQuestions.push(question);
+        selectedSet.add(question);
+      }
+
+      selected.push(...bonusQuestions);
+
+      if (selected.length < numQuestions) {
+        selected.push(...shuffledBank.filter(question => !selectedSet.has(question)).slice(0, numQuestions - selected.length));
+      }
+
+      return shuffleArray(selected.slice(0, numQuestions));
     }
 
     async function startTest(numQuestions) {
@@ -589,6 +711,7 @@
       const firstName = document.getElementById('first-name').value.trim();
       const lastName = document.getElementById('last-name').value.trim();
       participantName = [firstName, lastName].filter(Boolean).join(' ') || 'Nenurodyta';
+      currentTestLength = numQuestions;
 
       const selected = selectQuestionsForTest(numQuestions);
       currentQuestions = selected.map(q => ({
@@ -940,12 +1063,18 @@
       }
     }
 
+    async function restartSameTest() {
+      const count = (lastResult && lastResult.totalQuestions) || currentTestLength || currentQuestions.length || 15;
+      await startTest(count);
+    }
+
     function restartApp() {
       clearInterval(timerInterval);
       currentQuestions = [];
       answers = [];
       currentIndex = 0;
       timeLeft = 0;
+      currentTestLength = 0;
       lastResult = null;
       testTerminated = false;
       document.getElementById('selection-screen').classList.remove('hidden');

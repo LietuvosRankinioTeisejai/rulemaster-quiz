@@ -973,7 +973,9 @@
     }
 
     function cleanQuestionText(text) {
-      return String(text || '').replace(/^\s*\d+\.\d+\)\s*/, '');
+      return String(text || '')
+        .replace(/^\s*\d+\.\d+\)\s*/, '')
+        .replace(/^\s*SAR\s*\d+\s*[\).:-]?\s*/i, '');
     }
 
     function cleanOptionText(text) {
@@ -981,8 +983,11 @@
     }
 
     function getRuleCode(question) {
-      const match = String(question?.text || '').match(/^\s*(\d+\.\d+)\)/);
-      return match ? match[1] : '-';
+      const rawText = String(question?.text || '');
+      const numberedMatch = rawText.match(/^\s*(\d+\.\d+)\)/);
+      if (numberedMatch) return numberedMatch[1];
+      const sarMatch = rawText.match(/^\s*(SAR\s*\d+)\s*[\).:-]?/i);
+      return sarMatch ? sarMatch[1].replace(/\s+/g, '').toUpperCase() : '-';
     }
 
     function getRuleFamily(question) {
@@ -993,6 +998,10 @@
     function getRuleNumber(question) {
       const rule = Number(getRuleFamily(question));
       return Number.isFinite(rule) ? rule : null;
+    }
+
+    function isSarQuestion(question) {
+      return /^SAR\d+$/i.test(getRuleCode(question));
     }
 
     function getQuestionComplexityScore(question) {
@@ -1038,15 +1047,23 @@
 
       const bonusPool = shuffledBank.filter(question => {
         const rule = getRuleNumber(question);
-        return rule !== null && rule >= 2 && rule <= 16 && !selectedSet.has(question);
+        const isStandardBonusRule = rule !== null && rule >= 2 && rule <= 16;
+        return (isStandardBonusRule || isSarQuestion(question)) && !selectedSet.has(question);
       });
 
       const bonusQuestions = [];
-      const complexBiasEnabled = Math.random() < 0.7;
-      const complexTarget = complexBiasEnabled ? 5 + Math.floor(Math.random() * 2) : 0;
+      const bonusNeeded = Math.max(0, numQuestions - selected.length);
+
+      // The 30-question test always keeps part of the additional 12-question block
+      // for longer and more complex questions. SAR1/SAR2 stay in the same random
+      // bonus pool and may appear naturally, but they are not forced.
+      const complexTarget = Math.min(bonusNeeded, 5 + Math.floor(Math.random() * 2));
 
       if (complexTarget > 0 && bonusPool.length > 0) {
-        const complexCandidateCount = Math.max(complexTarget, Math.ceil(bonusPool.length * 0.25));
+        const complexCandidateCount = Math.max(
+          complexTarget,
+          Math.ceil(bonusPool.length * 0.35)
+        );
         const complexCandidates = shuffleArray(
           [...bonusPool]
             .sort((a, b) => getQuestionComplexityScore(b) - getQuestionComplexityScore(a))
@@ -1063,7 +1080,7 @@
       }
 
       const randomBonusPool = shuffleArray(bonusPool.filter(question => !selectedSet.has(question)));
-      while (bonusQuestions.length < 12 && randomBonusPool.length) {
+      while (bonusQuestions.length < bonusNeeded && randomBonusPool.length) {
         const question = randomBonusPool.pop();
         bonusQuestions.push(question);
         selectedSet.add(question);

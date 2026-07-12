@@ -6186,5 +6186,17 @@
       1,
       4
     ]
-  }
+  },
+  {
+  "id": 433,
+  "text": "SAR3) Pagal taisyklių knygą, kur prasideda trenerių zona ir kur ji baigiasi?",
+  "options": [
+    "a) Ji prasideda ties vidurio linija ir baigiasi ties keitimo linija.",
+    "b) Ji prasideda 3,5 m nuo vidurio linijos ir baigiasi 8 m nuo galinės vartų linijos.",
+    "c) Ji prasideda 4,5 m nuo vidurio linijos ir baigiasi 8 m nuo vidurio linijos.",
+    "d) Ji prasideda ties išorine vartų linija ir baigiasi 3,5 m nuo vidurio linijos.",
+    "e) Ji prasideda 3,5 m nuo vidurio linijos ir baigiasi 9 m nuo nuo galinės vartų linijos."
+  ],
+  "correct": [1]
+}
 ]

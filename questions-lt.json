@@ -775,7 +775,7 @@
     "correct": [
       1,
       2,
-      3
+      4
     ]
   },
   {
@@ -2677,8 +2677,9 @@
       "d) Kai pasyvaus žaidimo signalas parodomas, teisėjas dėl pasyvaus žaidimo nusprendžia ne vėliau, kai po atlikų 4 perdavimų nebuvo metimo įvartus"
     ],
     "correct": [
-      0,
-      2
+      1,
+      2,
+      3
     ]
   },
   {

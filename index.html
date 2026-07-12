@@ -319,6 +319,8 @@
     .resource-section h3 { margin: 0 0 6px; font-size: 22px; letter-spacing: -.03em; color: #0f172a; }
     .resource-section p { margin: 0 0 18px; color: #475569; font-weight: 750; }
     .resource-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .resource-grid.single { grid-template-columns: minmax(0, 1fr); }
+    .resource-card.hidden-resource { display: none; }
     .resource-card {
       border: 1px solid #dbe3ee;
       border-radius: 22px;
@@ -591,8 +593,8 @@
         <div class="resource-section">
           <h3 id="resource-title">Naudingi dokumentai</h3>
           <p id="resource-description">Po testo galite atsidaryti oficialius klausimyno, atsakymų ir rankinio žaidimo taisyklių PDF dokumentus.</p>
-          <div class="resource-grid">
-            <div class="resource-card">
+          <div class="resource-grid" id="resource-grid">
+            <div class="resource-card" id="resource-card-lt" data-resource-lang="lt">
               <strong id="resource-lt-title">Lietuvių kalba</strong>
               <div class="resource-buttons">
                 <a class="resource-link" href="https://rankinioteisejas.lt/wp-content/uploads/2026/07/Rankinio-taisykles-2025-07-01_LT.pdf" target="_blank" rel="noopener" id="resource-lt-rules">Rankinio žaidimo taisyklės</a>
@@ -600,7 +602,7 @@
                 <a class="resource-link secondary" href="https://rankinioteisejas.lt/wp-content/uploads/2025/07/IHF-Zaidimo-Taisykliu-Klausimyno_Atsakymai_07.2025_LT_www.pdf" target="_blank" rel="noopener" id="resource-lt-answers">Klausimyno atsakymai</a>
               </div>
             </div>
-            <div class="resource-card">
+            <div class="resource-card" id="resource-card-en" data-resource-lang="en">
               <strong id="resource-en-title">English</strong>
               <div class="resource-buttons">
                 <a class="resource-link" href="https://rankinioteisejas.lt/wp-content/uploads/2025/07/2025-Rules-of-the-Game_Indoor-Handball_E.pdf" target="_blank" rel="noopener" id="resource-en-rules">Rules of the Game</a>
@@ -680,7 +682,7 @@
         restartSame: 'Pradėti testą iš naujo',
         backToTests: 'Grįžti į testus',
         resourceTitle: 'Naudingi dokumentai',
-        resourceDescription: 'Po testo galite atsidaryti oficialius klausimyno, atsakymų ir rankinio žaidimo taisyklių PDF dokumentus.',
+        resourceDescription: 'Po testo galite atsidaryti lietuviškus oficialius taisyklių, klausimyno ir atsakymų PDF dokumentus.',
         resourceLtTitle: 'Lietuvių kalba',
         resourceEnTitle: 'English',
         resourceLtRules: 'Rankinio žaidimo taisyklės',
@@ -777,7 +779,7 @@
         restartSame: 'Start the test again',
         backToTests: 'Back to tests',
         resourceTitle: 'Useful documents',
-        resourceDescription: 'After the test, you can open official questionnaire, answer and handball rules PDF documents.',
+        resourceDescription: 'After the test, you can open the English official rules, questionnaire and answers PDF documents.',
         resourceLtTitle: 'Lithuanian',
         resourceEnTitle: 'English',
         resourceLtRules: 'Handball rules in Lithuanian',
@@ -855,6 +857,17 @@
       if (element) element.placeholder = t(key);
     }
 
+    function updateResourceLinksForLanguage() {
+      const ltCard = document.getElementById('resource-card-lt');
+      const enCard = document.getElementById('resource-card-en');
+      const grid = document.getElementById('resource-grid');
+      if (!ltCard || !enCard) return;
+      const showEnglish = currentLang === 'en';
+      ltCard.classList.toggle('hidden-resource', showEnglish);
+      enCard.classList.toggle('hidden-resource', !showEnglish);
+      if (grid) grid.classList.add('single');
+    }
+
     function applyTranslations() {
       document.documentElement.lang = currentLang;
       document.title = t('pageTitle');
@@ -911,6 +924,7 @@
       setText('resource-en-rules', 'resourceEnRules');
       setText('resource-en-questionnaire', 'resourceEnQuestionnaire');
       setText('resource-en-answers', 'resourceEnAnswers');
+      updateResourceLinksForLanguage();
       const placeholder = document.getElementById('report-placeholder');
       if (placeholder && !lastResult) {
         placeholder.innerHTML = `<h3>${t('reportPlaceholderTitle')}</h3><p>${t('reportPlaceholderText')}</p>`;
@@ -987,7 +1001,9 @@
       const numberedMatch = rawText.match(/^\s*(\d+\.\d+)\)/);
       if (numberedMatch) return numberedMatch[1];
       const sarMatch = rawText.match(/^\s*(SAR\s*\d+)\s*[\).:-]?/i);
-      return sarMatch ? sarMatch[1].replace(/\s+/g, '').toUpperCase() : '-';
+      if (sarMatch) return sarMatch[1].replace(/\s+/g, '').toUpperCase();
+      const selfAssessmentMatch = rawText.match(/^\s*Self[-\s]?Assessment\s*(?:Rule\s*)?(\d+)\s*[\).:-]?/i);
+      return selfAssessmentMatch ? `SAR${selfAssessmentMatch[1]}` : '-';
     }
 
     function getRuleFamily(question) {
@@ -1024,6 +1040,11 @@
     function selectQuestionsForTest(numQuestions) {
       const shuffledBank = shuffleArray(questionBank);
       if (numQuestions !== 30) return shuffledBank.slice(0, numQuestions);
+
+      // Language-independent 30-question logic: works with Lithuanian and English JSON files.
+      // Questions must start with the normal rule code, e.g. 4.34), or with SAR1/SAR2.
+      // SAR questions are never part of the compulsory 1-per-rule block; they can appear only
+      // inside the additional random 12-question block together with Rules 2-16.
 
       const selected = [];
       const selectedSet = new Set();

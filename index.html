@@ -421,6 +421,87 @@
             .lrta-logo { border-radius: 16px; }
         }
 
+
+
+        /* Readability upgrade: questions and answers use high-contrast text */
+        #quiz-screen .p-6,
+        #quiz-screen .p-8,
+        #quiz-screen .bg-slate-50,
+        #results-screen .px-8,
+        #results-screen .p-8 {
+            color: #0f172a !important;
+        }
+
+        #question-text {
+            color: #020617 !important;
+            letter-spacing: -0.02em;
+            text-shadow: none !important;
+        }
+
+        #progress-text,
+        #question-counter,
+        #jump-title,
+        #answered-label,
+        #unanswered-label {
+            color: #1e293b !important;
+        }
+
+        #options .option {
+            color: #020617 !important;
+            background: #ffffff !important;
+            border: 2px solid #cbd5e1 !important;
+            box-shadow: 0 8px 20px rgba(15,23,42,.06) !important;
+            font-size: 1rem;
+            font-weight: 650;
+            line-height: 1.45;
+        }
+
+        #options .option .flex-1 {
+            color: #020617 !important;
+        }
+
+        #options .option:hover {
+            color: #020617 !important;
+            background: #f8fafc !important;
+            border-color: #0284c7 !important;
+            box-shadow: 0 14px 30px rgba(2,132,199,.14) !important;
+        }
+
+        #options .option.selected {
+            color: #082f49 !important;
+            background: linear-gradient(135deg, #e0f2fe, #fff7ed) !important;
+            border-color: #0284c7 !important;
+            box-shadow: 0 0 0 4px rgba(14,165,233,.18), 0 16px 34px rgba(14,165,233,.12) !important;
+        }
+
+        #options .option.selected .flex-1 {
+            color: #082f49 !important;
+        }
+
+        #options input[type="checkbox"] {
+            width: 1.35rem;
+            height: 1.35rem;
+            accent-color: #0284c7;
+        }
+
+        #review-section,
+        #review-section .font-medium,
+        #review-section .text-sm,
+        #results-title,
+        #score-text,
+        #percentage-text {
+            color: #0f172a !important;
+        }
+
+        #review-section .font-medium {
+            font-weight: 800;
+        }
+
+        #review-section .text-emerald-700 {
+            color: #047857 !important;
+            font-weight: 800;
+        }
+
     </style>
 </head>
 <body class="min-h-screen">

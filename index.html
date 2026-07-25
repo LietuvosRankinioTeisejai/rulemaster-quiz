@@ -466,18 +466,6 @@
       box-shadow: 0 18px 42px rgba(88, 28, 135, .10);
     }
     .ultramarathon-card:hover { border-color: #8b5cf6; box-shadow: 0 24px 58px rgba(88, 28, 135, .18); }
-    .ultra-features { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0 20px; }
-    .ultra-feature {
-      display: inline-flex;
-      align-items: center;
-      border: 1px solid #ddd6fe;
-      border-radius: 999px;
-      padding: 6px 9px;
-      background: rgba(255,255,255,.82);
-      color: #5b21b6;
-      font-size: 12px;
-      font-weight: 900;
-    }
     .ultra-achievement {
       display: inline-flex;
       margin-top: 10px;
@@ -782,11 +770,7 @@
             <span id="ultra-test-tag" class="test-card-tag">Visa klausim&#371; baz&#279;</span>
             <h3 id="ultra-test-title">Ultramarathon</h3>
             <p id="ultra-test-meta" class="test-meta">Visi unikal&#363;s klausimai - po 1 min kiekvienam</p>
-            <p id="ultra-test-description" class="test-description">Vienas bandymas per vis&#261; klausim&#371; bank&#261;, be pasikartojim&#371; ir su nauja tvarka kiekvien&#261; kart&#261;.</p>
-            <div class="ultra-features" aria-label="Ultramarathon savyb&#279;s">
-              <span id="ultra-no-repeat" class="ultra-feature">&#10003; Be pasikartojim&#371;</span>
-              <span id="ultra-fresh-order" class="ultra-feature">&#10003; Nauja tvarka</span>
-            </div>
+            <p id="ultra-test-description" class="test-description">Vienas bandymas per vis&#261; klausim&#371; bank&#261;.</p>
             <button id="ultra-start-button" class="start-btn" type="button" onclick="startUltramarathon()" aria-describedby="ultra-test-meta ultra-test-description">Prad&#279;ti</button>
           </article>
         </div>
@@ -985,9 +969,7 @@
         extremeTestTag: 'I\u0161tverm\u0117s i\u0161\u0161\u016bkis',
         extremeTestDescription: 'Dominuoja sunk\u016bs, ilgi, situaciniai ir keli\u0173 atsakym\u0173 klausimai.',
         ultraTestTag: 'Visa klausim\u0173 baz\u0117',
-        ultraTestDescription: 'Vienas bandymas per vis\u0105 klausim\u0173 bank\u0105, be pasikartojim\u0173 ir su nauja tvarka kiekvien\u0105 kart\u0105.',
-        ultraNoRepeat: '\u2713 Be pasikartojim\u0173',
-        ultraFreshOrder: '\u2713 Nauja tvarka',
+        ultraTestDescription: 'Vienas bandymas per vis\u0105 klausim\u0173 bank\u0105.',
         ultraFinisher: '\ud83c\udfc1 Ultramarathon Finisher — atsak\u0117te \u012f visus {count} klausimus.',
         startButton: 'Pradėti',
         timerLabel: 'LIKĘS LAIKAS',
@@ -1124,9 +1106,7 @@
         extremeTestTag: 'Endurance challenge',
         extremeTestDescription: 'Hard, long, scenario and multiple-answer questions dominate.',
         ultraTestTag: 'Complete question bank',
-        ultraTestDescription: 'One attempt through the entire question bank, with no repeats and a fresh order every time.',
-        ultraNoRepeat: '\u2713 No repeated questions',
-        ultraFreshOrder: '\u2713 Fresh order every run',
+        ultraTestDescription: 'One attempt through the entire question bank.',
         ultraFinisher: '\ud83c\udfc1 Ultramarathon Finisher — you answered all {count} questions.',
         startButton: 'Start',
         timerLabel: 'TIME LEFT',
@@ -1315,8 +1295,6 @@
       setText('extreme-test-description', 'extremeTestDescription');
       setText('ultra-test-tag', 'ultraTestTag');
       setText('ultra-test-description', 'ultraTestDescription');
-      setText('ultra-no-repeat', 'ultraNoRepeat');
-      setText('ultra-fresh-order', 'ultraFreshOrder');
       setText('short-start-button', 'startButton');
       setText('standard-start-button', 'startButton');
       setText('long-start-button', 'startButton');

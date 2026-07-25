@@ -213,7 +213,7 @@
     .name-card input::placeholder { color: #94a3b8; }
     .name-card input:focus { border-color: #38bdf8; box-shadow: 0 0 0 4px rgba(56,189,248,.18); }
 
-    .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 0 0 8px; margin-top: 22px; }
+    .test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 0 0 8px; margin-top: 22px; }
     .test-card {
       position: relative;
       overflow: hidden;
@@ -521,6 +521,12 @@
             <p id="long-test-meta">30 klausimų - 30 min</p>
             <button id="long-start-button" class="start-btn" type="button">Pradėti</button>
           </article>
+          <article class="test-card" onclick="startTest(100)">
+            <div class="test-icon" style="background:#f5f3ff;color:#7c3aed;">100</div>
+            <h3 id="extreme-test-title">Taisyklių ekstremalams</h3>
+            <p id="extreme-test-meta">100 klausimų - 100 min</p>
+            <button id="extreme-start-button" class="start-btn" type="button">Pradėti</button>
+          </article>
         </div>
       </section>
 
@@ -644,6 +650,8 @@
         standardTestMeta: '20 klausimų - 20 min',
         longTestTitle: 'Ilgas testas',
         longTestMeta: '30 klausimų - 30 min',
+        extremeTestTitle: 'Taisyklių ekstremalams',
+        extremeTestMeta: '100 klausimų - 100 min',
         startButton: 'Pradėti',
         timerLabel: 'LIKĘS LAIKAS',
         finishNow: 'Baigti dabar',
@@ -741,6 +749,8 @@
         standardTestMeta: '20 questions - 20 min',
         longTestTitle: 'Long test',
         longTestMeta: '30 questions - 30 min',
+        extremeTestTitle: 'Rules for extremists',
+        extremeTestMeta: '100 questions - 100 min',
         startButton: 'Start',
         timerLabel: 'TIME LEFT',
         finishNow: 'Finish now',
@@ -893,9 +903,12 @@
       setText('standard-test-meta', 'standardTestMeta');
       setText('long-test-title', 'longTestTitle');
       setText('long-test-meta', 'longTestMeta');
+      setText('extreme-test-title', 'extremeTestTitle');
+      setText('extreme-test-meta', 'extremeTestMeta');
       setText('short-start-button', 'startButton');
       setText('standard-start-button', 'startButton');
       setText('long-start-button', 'startButton');
+      setText('extreme-start-button', 'startButton');
       setText('timer-label', 'timerLabel');
       setText('finish-now-button', 'finishNow');
       setText('warning-banner', 'warningCheat');
@@ -982,13 +995,48 @@
       throw lastError || new Error(t('fileMissing', { file: files.join(' / ') }));
     }
 
+    const REQUIRED_RULES_30 = [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+    const THIRTY_ADDITIONAL_COUNT = 14;
+    const THIRTY_MIN_DIFFICULT_ADDITIONAL = 10;
+    const EXTREME_TEST_COUNT = 100;
+    const EXTREME_MIN_DIFFICULT = 70;
+    const DIFFICULT_SCORE_PERCENTILE = 0.55;
+    const questionKeyCache = new WeakMap();
+    const ruleCodeCache = new WeakMap();
+    const scenarioCache = new WeakMap();
+    const complexityScoreCache = new WeakMap();
+
+    function getSecureRandomNumber() {
+      try {
+        const cryptoObject = globalThis.crypto;
+        if (cryptoObject && typeof cryptoObject.getRandomValues === 'function') {
+          const values = new Uint32Array(1);
+          cryptoObject.getRandomValues(values);
+          return values[0] / 0x100000000;
+        }
+      } catch (error) {
+        console.warn('Secure random source unavailable; using Math.random().', error);
+      }
+      return Math.random();
+    }
+
+    function getRandomInteger(maxExclusive) {
+      if (!Number.isFinite(maxExclusive) || maxExclusive <= 0) return 0;
+      return Math.floor(getSecureRandomNumber() * maxExclusive);
+    }
+
     function shuffleArray(array) {
-      return [...array].sort(() => Math.random() - 0.5);
+      const shuffled = Array.isArray(array) ? [...array] : [];
+      for (let index = shuffled.length - 1; index > 0; index -= 1) {
+        const swapIndex = getRandomInteger(index + 1);
+        [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+      }
+      return shuffled;
     }
 
     function cleanQuestionText(text) {
       return String(text || '')
-        .replace(/^\s*\d+\.\d+\)\s*/, '')
+        .replace(/^\s*\d+[\.:]\d+\)?\s*/, '')
         .replace(/^\s*SAR\s*\d+\s*[\).:-]?\s*/i, '');
     }
 
@@ -997,13 +1045,23 @@
     }
 
     function getRuleCode(question) {
+      if (question && typeof question === 'object' && ruleCodeCache.has(question)) return ruleCodeCache.get(question);
       const rawText = String(question?.text || '');
-      const numberedMatch = rawText.match(/^\s*(\d+\.\d+)\)/);
-      if (numberedMatch) return numberedMatch[1];
-      const sarMatch = rawText.match(/^\s*(SAR\s*\d+)\s*[\).:-]?/i);
-      if (sarMatch) return sarMatch[1].replace(/\s+/g, '').toUpperCase();
-      const selfAssessmentMatch = rawText.match(/^\s*Self[-\s]?Assessment\s*(?:Rule\s*)?(\d+)\s*[\).:-]?/i);
-      return selfAssessmentMatch ? `SAR${selfAssessmentMatch[1]}` : '-';
+      const numberedMatch = rawText.match(/^\s*(\d+)[\.:](\d+)\)?/);
+      let code = '-';
+      if (numberedMatch) {
+        code = `${numberedMatch[1]}.${numberedMatch[2]}`;
+      } else {
+        const sarMatch = rawText.match(/^\s*(SAR\s*\d+)\s*[\).:-]?/i);
+        if (sarMatch) {
+          code = sarMatch[1].replace(/\s+/g, '').toUpperCase();
+        } else {
+          const selfAssessmentMatch = rawText.match(/^\s*Self[-\s]?Assessment\s*(?:Rule\s*)?(\d+)\s*[\).:-]?/i);
+          if (selfAssessmentMatch) code = `SAR${selfAssessmentMatch[1]}`;
+        }
+      }
+      if (question && typeof question === 'object') ruleCodeCache.set(question, code);
+      return code;
     }
 
     function getRuleFamily(question) {
@@ -1020,100 +1078,315 @@
       return /^SAR\d+$/i.test(getRuleCode(question));
     }
 
+    function getQuestionCategory(question) {
+      if (isSarQuestion(question)) return 'SAR';
+      const rule = getRuleNumber(question);
+      return rule === null ? 'OTHER' : `RULE_${rule}`;
+    }
+
+    function getQuestionKey(question) {
+      if (question && typeof question === 'object' && questionKeyCache.has(question)) return questionKeyCache.get(question);
+      const key = JSON.stringify([
+        String(question?.text || '').trim(),
+        Array.isArray(question?.options) ? question.options.map(option => String(option || '').trim()) : [],
+        Array.isArray(question?.correct) ? [...question.correct].sort((a, b) => a - b) : []
+      ]);
+      if (question && typeof question === 'object') questionKeyCache.set(question, key);
+      return key;
+    }
+
+    function getUniqueQuestionPool(pool) {
+      const unique = new Map();
+      (Array.isArray(pool) ? pool : []).forEach(question => {
+        const key = getQuestionKey(question);
+        if (!unique.has(key)) unique.set(key, question);
+      });
+      return [...unique.values()];
+    }
+
+    function isScenarioBased(question) {
+      if (question && typeof question === 'object' && scenarioCache.has(question)) return scenarioCache.get(question);
+      const text = String(question?.text || '');
+      const numericSignals = (text.match(/\d+/g) || []).length;
+      const result = question?.scenarioBased === true
+        || question?.isScenario === true
+        || text.length >= 220
+        || (text.length >= 145 && numericSignals >= 2);
+      if (question && typeof question === 'object') scenarioCache.set(question, result);
+      return result;
+    }
+
     function getQuestionComplexityScore(question) {
+      if (question && typeof question === 'object' && complexityScoreCache.has(question)) return complexityScoreCache.get(question);
+      const text = String(question?.text || '');
+      const textLength = text.length;
+      const options = Array.isArray(question?.options) ? question.options : [];
+      const optionsLength = options.reduce((sum, option) => sum + String(option || '').length, 0);
+      const correctCount = Array.isArray(question?.correct) ? question.correct.length : 0;
+      const multiAnswerBonus = Math.max(0, correctCount - 1) * 70;
+      const longTextBonus = Math.max(0, textLength - 150) * 0.45;
+      const longOptionsBonus = Math.max(0, optionsLength - 240) * 0.2;
+      const scenarioBonus = isScenarioBased(question) ? 80 : 0;
+      const explicitDifficulty = String(question?.difficulty || '').toLowerCase();
+      const explicitBonus = /hard|difficult|long|extreme/.test(explicitDifficulty) ? 120 : 0;
+
+      const score = textLength
+        + (optionsLength * 0.35)
+        + (options.length * 18)
+        + (correctCount * 35)
+        + multiAnswerBonus
+        + longTextBonus
+        + longOptionsBonus
+        + scenarioBonus
+        + explicitBonus;
+      if (question && typeof question === 'object') complexityScoreCache.set(question, score);
+      return score;
+    }
+
+    function getDifficultyThreshold(pool = questionBank) {
+      const scores = getUniqueQuestionPool(pool)
+        .map(getQuestionComplexityScore)
+        .sort((a, b) => a - b);
+      if (!scores.length) return 0;
+      const index = Math.min(scores.length - 1, Math.floor((scores.length - 1) * DIFFICULT_SCORE_PERCENTILE));
+      return scores[index];
+    }
+
+    function isDifficultOrLong(question, difficultyThreshold = getDifficultyThreshold()) {
+      const explicitDifficulty = String(question?.difficulty || '').toLowerCase();
+      if (question?.isDifficult === true || question?.isLong === true || /hard|difficult|long|extreme/.test(explicitDifficulty)) {
+        return true;
+      }
+
       const textLength = String(question?.text || '').length;
       const options = Array.isArray(question?.options) ? question.options : [];
       const optionsLength = options.reduce((sum, option) => sum + String(option || '').length, 0);
       const correctCount = Array.isArray(question?.correct) ? question.correct.length : 0;
-      return textLength + (optionsLength * 0.35) + (options.length * 18) + (correctCount * 35);
+      const score = getQuestionComplexityScore(question);
+
+      return score >= difficultyThreshold
+        || textLength >= 230
+        || (textLength + optionsLength) >= 680
+        || (correctCount > 1 && score >= difficultyThreshold * 0.82)
+        || (isScenarioBased(question) && score >= difficultyThreshold * 0.85);
     }
 
-    function addRandomQuestionFromPool(pool, selected, selectedSet) {
-      const available = pool.filter(question => !selectedSet.has(question));
-      if (!available.length) return false;
-      const question = available[Math.floor(Math.random() * available.length)];
-      selected.push(question);
-      selectedSet.add(question);
-      return true;
+    function getCategoryCounts(questions) {
+      const counts = new Map();
+      (Array.isArray(questions) ? questions : []).forEach(question => {
+        const category = getQuestionCategory(question);
+        counts.set(category, (counts.get(category) || 0) + 1);
+      });
+      return counts;
+    }
+
+    function chooseWeightedCandidate(candidates, weights) {
+      const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+      if (!(totalWeight > 0)) return candidates[getRandomInteger(candidates.length)];
+
+      let target = getSecureRandomNumber() * totalWeight;
+      for (let index = 0; index < candidates.length; index += 1) {
+        target -= weights[index];
+        if (target < 0) return candidates[index];
+      }
+      return candidates[candidates.length - 1];
+    }
+
+    function weightedRandomSelection(pool, count, options = {}) {
+      const requestedCount = Math.max(0, Math.floor(count));
+      if (!requestedCount) return [];
+
+      const existingQuestions = Array.isArray(options.existingQuestions) ? options.existingQuestions : [];
+      const excludedKeys = new Set(existingQuestions.map(getQuestionKey));
+      const categoryCounts = getCategoryCounts(existingQuestions);
+      const uniqueCandidates = getUniqueQuestionPool(pool).filter(question => !excludedKeys.has(getQuestionKey(question)));
+      const candidates = shuffleArray(uniqueCandidates);
+      const selected = [];
+      const preferComplexity = options.preferComplexity !== false;
+      let categoryCap = Number.isFinite(options.maxPerCategory) ? Math.max(1, options.maxPerCategory) : Infinity;
+      const allowCapRelaxation = options.allowCapRelaxation !== false;
+      const scores = candidates.map(getQuestionComplexityScore);
+      const minScore = scores.length ? Math.min(...scores) : 0;
+      const maxScore = scores.length ? Math.max(...scores) : 1;
+      const scoreRange = Math.max(1, maxScore - minScore);
+
+      while (selected.length < requestedCount && candidates.length) {
+        let eligible = candidates.filter(question => {
+          const category = getQuestionCategory(question);
+          return (categoryCounts.get(category) || 0) < categoryCap;
+        });
+
+        if (!eligible.length && allowCapRelaxation && categoryCap !== Infinity) {
+          categoryCap += 1;
+          continue;
+        }
+        if (!eligible.length) break;
+
+        eligible = shuffleArray(eligible);
+        const weights = eligible.map(question => {
+          const score = getQuestionComplexityScore(question);
+          const normalizedComplexity = (score - minScore) / scoreRange;
+          const complexityWeight = preferComplexity
+            ? 0.65 + (Math.pow(Math.max(0, normalizedComplexity), 1.35) * 2.6)
+            : 1;
+          const categoryCount = categoryCounts.get(getQuestionCategory(question)) || 0;
+          const balanceWeight = 1 / (1 + (categoryCount * 0.58));
+          return Math.max(0.0001, complexityWeight * balanceWeight);
+        });
+
+        const chosen = chooseWeightedCandidate(eligible, weights);
+        const chosenKey = getQuestionKey(chosen);
+        selected.push(chosen);
+        excludedKeys.add(chosenKey);
+        const category = getQuestionCategory(chosen);
+        categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
+
+        for (let index = candidates.length - 1; index >= 0; index -= 1) {
+          if (getQuestionKey(candidates[index]) === chosenKey) candidates.splice(index, 1);
+        }
+      }
+
+      return selected;
+    }
+
+    function selectUniqueQuestions(pool, count, existingQuestions = []) {
+      return weightedRandomSelection(pool, count, {
+        existingQuestions,
+        preferComplexity: false,
+        maxPerCategory: Infinity,
+        allowCapRelaxation: false
+      });
+    }
+
+    function getThirtyQuestionCategoryCap() {
+      return 4;
+    }
+
+    function buildThirtyQuestionSet() {
+      const bank = getUniqueQuestionPool(questionBank);
+      const requiredQuestions = [];
+
+      REQUIRED_RULES_30.forEach(rule => {
+        const candidates = bank.filter(question => getRuleNumber(question) === rule);
+        const selected = selectUniqueQuestions(candidates, 1, requiredQuestions)[0];
+        if (!selected) throw new Error(`No question available for required Rule ${rule}.`);
+        requiredQuestions.push(selected);
+      });
+
+      const difficultyThreshold = getDifficultyThreshold(bank);
+      const difficultPool = bank.filter(question => isDifficultOrLong(question, difficultyThreshold));
+      const categoryCap = getThirtyQuestionCategoryCap();
+      const difficultAdditional = weightedRandomSelection(difficultPool, THIRTY_MIN_DIFFICULT_ADDITIONAL, {
+        existingQuestions: requiredQuestions,
+        preferComplexity: true,
+        maxPerCategory: categoryCap
+      });
+
+      if (difficultAdditional.length < THIRTY_MIN_DIFFICULT_ADDITIONAL) {
+        throw new Error('The question bank does not contain enough unique difficult/long questions for the 30-question test.');
+      }
+
+      const additionalQuestions = [...difficultAdditional];
+      const remainingAdditionalCount = THIRTY_ADDITIONAL_COUNT - additionalQuestions.length;
+      additionalQuestions.push(...weightedRandomSelection(bank, remainingAdditionalCount, {
+        existingQuestions: [...requiredQuestions, ...additionalQuestions],
+        preferComplexity: true,
+        maxPerCategory: categoryCap
+      }));
+
+      if (additionalQuestions.length !== THIRTY_ADDITIONAL_COUNT) {
+        throw new Error('The question bank does not contain enough unique questions for the 30-question test.');
+      }
+
+      return {
+        requiredQuestions,
+        additionalQuestions,
+        questions: shuffleArray([...requiredQuestions, ...additionalQuestions]),
+        difficultyThreshold
+      };
+    }
+
+    function getExtremeCategoryCap(pool = questionBank) {
+      const categories = new Set(getUniqueQuestionPool(pool).map(getQuestionCategory));
+      const categoryCount = Math.max(1, categories.size);
+      return Math.max(8, Math.ceil((EXTREME_TEST_COUNT / categoryCount) * 1.8));
+    }
+
+    function buildExtremeQuestionSet() {
+      const bank = getUniqueQuestionPool(questionBank);
+      if (bank.length < EXTREME_TEST_COUNT) {
+        throw new Error(`The question bank contains only ${bank.length} unique questions; ${EXTREME_TEST_COUNT} are required.`);
+      }
+
+      const difficultyThreshold = getDifficultyThreshold(bank);
+      const difficultPool = bank.filter(question => isDifficultOrLong(question, difficultyThreshold));
+      if (difficultPool.length < EXTREME_MIN_DIFFICULT) {
+        throw new Error(`The question bank contains only ${difficultPool.length} difficult/long questions; ${EXTREME_MIN_DIFFICULT} are required.`);
+      }
+
+      const categoryCap = getExtremeCategoryCap(bank);
+      const variableDifficultTarget = Math.min(
+        difficultPool.length,
+        EXTREME_MIN_DIFFICULT + getRandomInteger(9)
+      );
+      const difficultQuestions = weightedRandomSelection(difficultPool, variableDifficultTarget, {
+        preferComplexity: true,
+        maxPerCategory: categoryCap
+      });
+
+      if (difficultQuestions.length < EXTREME_MIN_DIFFICULT) {
+        throw new Error('Unable to satisfy the difficult/long quota for the 100-question test.');
+      }
+
+      const remainingCount = EXTREME_TEST_COUNT - difficultQuestions.length;
+      const generalQuestions = weightedRandomSelection(bank, remainingCount, {
+        existingQuestions: difficultQuestions,
+        preferComplexity: true,
+        maxPerCategory: categoryCap
+      });
+      const selected = [...difficultQuestions, ...generalQuestions];
+
+      if (selected.length !== EXTREME_TEST_COUNT) {
+        throw new Error('Unable to select 100 unique balanced questions from the current question bank.');
+      }
+
+      return {
+        difficultQuestions,
+        generalQuestions,
+        questions: shuffleArray(selected),
+        difficultyThreshold,
+        categoryCap
+      };
     }
 
     function selectQuestionsForTest(numQuestions) {
-      const shuffledBank = shuffleArray(questionBank);
-      if (numQuestions !== 30) return shuffledBank.slice(0, numQuestions);
+      if (numQuestions === 30) return buildThirtyQuestionSet().questions;
+      if (numQuestions === EXTREME_TEST_COUNT) return buildExtremeQuestionSet().questions;
 
-      // Language-independent 30-question logic: works with Lithuanian and English JSON files.
-      // Questions must start with the normal rule code, e.g. 4.34), or with SAR1/SAR2.
-      // SAR questions are never part of the compulsory 1-per-rule block; they can appear only
-      // inside the additional random 12-question block together with Rules 2-16.
-
-      const selected = [];
-      const selectedSet = new Set();
-      const byRule = new Map();
-
-      shuffledBank.forEach(question => {
-        const rule = getRuleNumber(question);
-        if (rule === null) return;
-        if (!byRule.has(rule)) byRule.set(rule, []);
-        byRule.get(rule).push(question);
-      });
-
-      for (let rule = 1; rule <= 18; rule += 1) {
-        const candidates = byRule.get(rule) || [];
-        if (!candidates.length) {
-          console.warn(`Nerasta klausimų taisyklei ${rule}.`);
-          continue;
-        }
-        addRandomQuestionFromPool(candidates, selected, selectedSet);
+      const bank = getUniqueQuestionPool(questionBank);
+      if (bank.length < numQuestions) {
+        throw new Error(`The question bank contains only ${bank.length} unique questions; ${numQuestions} are required.`);
       }
+      return shuffleArray(selectUniqueQuestions(bank, numQuestions));
+    }
 
-      const bonusPool = shuffledBank.filter(question => {
-        const rule = getRuleNumber(question);
-        const isStandardBonusRule = rule !== null && rule >= 2 && rule <= 16;
-        return (isStandardBonusRule || isSarQuestion(question)) && !selectedSet.has(question);
-      });
+    function shuffleQuestionAnswers(question) {
+      const originalOptions = Array.isArray(question?.options) ? question.options : [];
+      const correctIndexes = new Set(Array.isArray(question?.correct) ? question.correct : []);
+      const answerEntries = originalOptions.map((text, originalIndex) => ({
+        text: cleanOptionText(text),
+        isCorrect: correctIndexes.has(originalIndex)
+      }));
+      const shuffledEntries = shuffleArray(answerEntries);
 
-      const bonusQuestions = [];
-      const bonusNeeded = Math.max(0, numQuestions - selected.length);
-
-      // The 30-question test always keeps part of the additional 12-question block
-      // for longer and more complex questions. SAR1/SAR2 stay in the same random
-      // bonus pool and may appear naturally, but they are not forced.
-      const complexTarget = Math.min(bonusNeeded, 5 + Math.floor(Math.random() * 2));
-
-      if (complexTarget > 0 && bonusPool.length > 0) {
-        const complexCandidateCount = Math.max(
-          complexTarget,
-          Math.ceil(bonusPool.length * 0.35)
-        );
-        const complexCandidates = shuffleArray(
-          [...bonusPool]
-            .sort((a, b) => getQuestionComplexityScore(b) - getQuestionComplexityScore(a))
-            .slice(0, complexCandidateCount)
-        );
-
-        while (bonusQuestions.length < complexTarget && complexCandidates.length) {
-          const question = complexCandidates.pop();
-          if (!selectedSet.has(question)) {
-            bonusQuestions.push(question);
-            selectedSet.add(question);
-          }
-        }
-      }
-
-      const randomBonusPool = shuffleArray(bonusPool.filter(question => !selectedSet.has(question)));
-      while (bonusQuestions.length < bonusNeeded && randomBonusPool.length) {
-        const question = randomBonusPool.pop();
-        bonusQuestions.push(question);
-        selectedSet.add(question);
-      }
-
-      selected.push(...bonusQuestions);
-
-      if (selected.length < numQuestions) {
-        selected.push(...shuffledBank.filter(question => !selectedSet.has(question)).slice(0, numQuestions - selected.length));
-      }
-
-      return shuffleArray(selected.slice(0, numQuestions));
+      return {
+        ...question,
+        options: shuffledEntries.map(entry => entry.text),
+        correct: shuffledEntries.reduce((indexes, entry, index) => {
+          if (entry.isCorrect) indexes.push(index);
+          return indexes;
+        }, [])
+      };
     }
 
     async function startTest(numQuestions) {
@@ -1124,10 +1397,7 @@
       currentTestLength = numQuestions;
 
       const selected = selectQuestionsForTest(numQuestions);
-      currentQuestions = selected.map(q => ({
-        ...q,
-        shuffledOptions: shuffleArray(q.options.map((text, idx) => ({ text: cleanOptionText(text), originalIndex: idx })))
-      }));
+      currentQuestions = selected.map(shuffleQuestionAnswers);
       answers = Array.from({ length: currentQuestions.length }, () => []);
       currentIndex = 0;
       timeLeft = numQuestions * 60;
@@ -1179,12 +1449,12 @@
 
       const options = document.getElementById('options');
       options.innerHTML = '';
-      q.shuffledOptions.forEach(opt => {
-        const selected = answers[currentIndex].includes(opt.originalIndex);
+      q.options.forEach((text, optionIndex) => {
+        const selected = answers[currentIndex].includes(optionIndex);
         const div = document.createElement('div');
         div.className = `option ${selected ? 'selected' : ''}`;
-        div.innerHTML = `<span class="fake-check">${selected ? '✓' : ''}</span><span>${escapeHTML(opt.text)}</span>`;
-        div.onclick = () => toggleAnswer(opt.originalIndex);
+        div.innerHTML = `<span class="fake-check">${selected ? '✓' : ''}</span><span>${escapeHTML(text)}</span>`;
+        div.onclick = () => toggleAnswer(optionIndex);
         options.appendChild(div);
       });
 
@@ -1192,11 +1462,11 @@
       updateNavButtons();
     }
 
-    function toggleAnswer(originalIndex) {
+    function toggleAnswer(optionIndex) {
       const answer = answers[currentIndex];
-      const position = answer.indexOf(originalIndex);
+      const position = answer.indexOf(optionIndex);
       if (position >= 0) answer.splice(position, 1);
-      else answer.push(originalIndex);
+      else answer.push(optionIndex);
       renderQuestion();
     }
 

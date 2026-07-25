@@ -411,6 +411,216 @@
     .watermark-band strong { font-size: 30px; letter-spacing: -.04em; }
     .watermark-band span { color: #cbd5e1; font-weight: 800; }
 
+
+
+    /* Quiz usability and accessibility enhancements */
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    .option:focus-within {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    .test-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 330px;
+    }
+    .test-card .start-btn { margin-top: auto; }
+    .test-card-tag {
+      display: inline-flex;
+      align-self: flex-start;
+      margin-top: 18px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+    .test-card h3 { margin-top: 14px; }
+    .test-meta { color: #334155 !important; }
+    .test-description { margin-top: 10px !important; color: #64748b !important; line-height: 1.45; font-size: 14px; }
+    .optional-label { color: #94a3b8; font-weight: 800; text-transform: none; letter-spacing: 0; }
+
+    body.quiz-active .topbar { display: none; }
+    body.quiz-active .app-shell { padding-top: 10px; }
+    #quiz-screen { overflow: visible; }
+    .quiz-header {
+      position: sticky;
+      top: 8px;
+      z-index: 30;
+      border-radius: 28px 28px 0 0;
+      box-shadow: 0 18px 40px rgba(2, 6, 23, .24);
+    }
+    .quiz-header-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
+    .timer strong { font-size: 32px; transition: color .2s ease, transform .2s ease; }
+    .timer.urgent strong { color: #fb923c; transform: scale(1.04); }
+    .timer.critical strong { color: #fca5a5; }
+
+    .quiz-progress { margin: -4px 0 22px; }
+    .progress-track {
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e2e8f0;
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, .10);
+    }
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #1d4ed8, #38bdf8);
+      transition: width .25s ease;
+    }
+    .progress-summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 8px;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    #question-text:focus { outline: none; }
+
+    .answer-instruction {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      border-radius: 12px;
+      padding: 8px 11px;
+      background: #f8fafc;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .answer-instruction::before { content: "i"; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 999px; background: #dbeafe; color: #1d4ed8; font-size: 12px; }
+
+    .option { position: relative; }
+    .option-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .option.single .fake-check { border-radius: 999px; }
+    .option.single.selected .fake-check { background: #fff; }
+    .option.single.selected .fake-check::after { content: ""; width: 11px; height: 11px; border-radius: 999px; background: #1d4ed8; }
+
+    .compact-navigator {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 22px;
+      border: 1px solid #cbd5e1;
+      border-radius: 18px;
+      padding: 13px 14px;
+      background: #f8fafc;
+    }
+    .compact-navigator strong { display: block; color: #0f172a; }
+    .compact-navigator span { display: block; margin-top: 3px; color: #64748b; font-size: 13px; font-weight: 800; }
+    .large-test .question-map-wrap { display: none; }
+    .large-test .compact-navigator { display: flex; }
+
+    .question-map button { position: relative; }
+    .question-map button.reviewed { background: #ffedd5; color: #9a3412; border-color: #fdba74; }
+    .question-map button.current { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+    .question-map button .review-flag { position: absolute; right: 3px; top: 1px; font-size: 10px; line-height: 1; }
+    .map-legend { flex-wrap: wrap; }
+
+    .review-btn.marked { background: #ffedd5; color: #9a3412; border-color: #fb923c; }
+
+    .quiz-actions {
+      position: sticky;
+      bottom: 8px;
+      z-index: 25;
+      border: 1px solid #e2e8f0;
+      border-radius: 0 0 28px 28px;
+      box-shadow: 0 -12px 35px rgba(15,23,42,.12);
+    }
+
+    dialog.quiz-dialog {
+      width: min(720px, calc(100vw - 28px));
+      max-height: min(82vh, 760px);
+      border: 0;
+      border-radius: 24px;
+      padding: 0;
+      color: #0f172a;
+      background: #fff;
+      box-shadow: 0 34px 90px rgba(2, 6, 23, .42);
+    }
+    dialog.quiz-dialog::backdrop { background: rgba(2, 6, 23, .66); backdrop-filter: blur(4px); }
+    .dialog-shell { padding: 22px; }
+    .dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+    .dialog-head h3 { margin: 0; font-size: 24px; letter-spacing: -.03em; }
+    .dialog-head p { margin: 6px 0 0; color: #64748b; font-weight: 750; }
+    .dialog-close { min-width: 42px; min-height: 42px; border: 1px solid #cbd5e1; border-radius: 13px; background: #fff; color: #0f172a; font-size: 21px; font-weight: 900; }
+    .dialog-map { max-height: 52vh; overflow-y: auto; padding: 4px 4px 10px; grid-template-columns: repeat(10, minmax(42px, 1fr)); }
+    .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 20px; }
+    .dialog-actions button { min-width: 150px; }
+
+    @media (max-width: 640px) {
+      body.quiz-active .app-shell { padding: 6px 8px 24px; }
+      #quiz-screen { margin-top: 0; }
+      .quiz-header {
+        top: 4px;
+        padding: 11px 13px;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 20px 20px 0 0;
+      }
+      .quiz-title { gap: 8px; }
+      .quiz-title .bubble { display: none; }
+      .quiz-title h3 { font-size: 16px; }
+      .quiz-title p { margin-top: 2px; font-size: 11px; }
+      .quiz-header-actions { gap: 8px; margin-left: auto; }
+      #finish-now-button { display: none; }
+      .timer small { font-size: 9px; }
+      .timer strong { font-size: 25px; }
+      .quiz-body { padding: 18px 16px 24px; }
+      .quiz-meta { margin-bottom: 14px; font-size: 13px; }
+      .progress-summary { flex-direction: column; gap: 2px; }
+      #question-text { font-size: 23px; }
+      .option { padding: 14px; font-size: 16px; }
+      .question-map-wrap { display: none; }
+      .compact-navigator { display: flex; }
+      .quiz-actions {
+        bottom: 4px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 9px;
+        gap: 8px;
+        border-radius: 0 0 20px 20px;
+      }
+      .quiz-actions .wide { min-width: 0; padding: 12px 8px; }
+      #review-button, #finish-early-button { grid-column: auto; font-size: 13px; }
+      .dialog-map { grid-template-columns: repeat(5, minmax(42px, 1fr)); }
+      .dialog-actions { display: grid; grid-template-columns: 1fr; }
+      .dialog-actions button { width: 100%; }
+      .test-card { min-height: auto; }
+    }
+
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; }
       .test-grid { grid-template-columns: 1fr; }
@@ -491,11 +701,11 @@
             <p id="participant-info-text">Įveskite testą atliekančio asmens vardą ir pavardę.</p>
             <div class="name-grid">
               <div>
-                <label id="first-name-label" for="first-name">Vardas</label>
+                <label id="first-name-label" for="first-name">Vardas <span class="optional-label">(neprivaloma)</span></label>
                 <input id="first-name" type="text" placeholder="Vardas" autocomplete="given-name" />
               </div>
               <div>
-                <label id="last-name-label" for="last-name">Pavardė</label>
+                <label id="last-name-label" for="last-name">Pavard&#279; <span class="optional-label">(neprivaloma)</span></label>
                 <input id="last-name" type="text" placeholder="Pavardė" autocomplete="family-name" />
               </div>
             </div>
@@ -503,69 +713,130 @@
         </div>
 
         <div class="test-grid" style="padding: 0 34px 34px;">
-          <article class="test-card" onclick="startTest(15)">
+          <article class="test-card" aria-labelledby="short-test-title">
             <div class="test-icon" style="background:#fff7ed;color:#ea580c;">15</div>
+            <span id="short-test-tag" class="test-card-tag">Greita praktika</span>
             <h3 id="short-test-title">Trumpas testas</h3>
-            <p id="short-test-meta">15 klausimų - 15 min</p>
-            <button id="short-start-button" class="start-btn" type="button">Pradėti</button>
+            <p id="short-test-meta" class="test-meta">15 klausim&#371; - 15 min</p>
+            <p id="short-test-description" class="test-description">Greitam taisykli&#371; pasikartojimui arba ap&#353;ilimui.</p>
+            <button id="short-start-button" class="start-btn" type="button" onclick="startTest(15)" aria-describedby="short-test-meta short-test-description">Prad&#279;ti</button>
           </article>
-          <article class="test-card" onclick="startTest(20)">
+          <article class="test-card" aria-labelledby="standard-test-title">
             <div class="test-icon" style="background:#eff6ff;color:#1d4ed8;">20</div>
+            <span id="standard-test-tag" class="test-card-tag">Standartin&#279; praktika</span>
             <h3 id="standard-test-title">Standartinis testas</h3>
-            <p id="standard-test-meta">20 klausimų - 20 min</p>
-            <button id="standard-start-button" class="start-btn" type="button">Pradėti</button>
+            <p id="standard-test-meta" class="test-meta">20 klausim&#371; - 20 min</p>
+            <p id="standard-test-description" class="test-description">Subalansuota kasdien&#279; &#382;ini&#371; patikra.</p>
+            <button id="standard-start-button" class="start-btn" type="button" onclick="startTest(20)" aria-describedby="standard-test-meta standard-test-description">Prad&#279;ti</button>
           </article>
-          <article class="test-card" onclick="startTest(30)">
+          <article class="test-card" aria-labelledby="long-test-title">
             <div class="test-icon" style="background:#ecfdf5;color:#059669;">30</div>
+            <span id="long-test-tag" class="test-card-tag">Sud&#279;tingas testas</span>
             <h3 id="long-test-title">Ilgas testas</h3>
-            <p id="long-test-meta">30 klausimų - 30 min</p>
-            <button id="long-start-button" class="start-btn" type="button">Pradėti</button>
+            <p id="long-test-meta" class="test-meta">30 klausim&#371; - 30 min</p>
+            <p id="long-test-description" class="test-description">Sud&#279;tingesni, ilgesni ir atsitiktinai subalansuoti klausimai.</p>
+            <button id="long-start-button" class="start-btn" type="button" onclick="startTest(30)" aria-describedby="long-test-meta long-test-description">Prad&#279;ti</button>
           </article>
-          <article class="test-card" onclick="startTest(100)">
+          <article class="test-card" aria-labelledby="extreme-test-title">
             <div class="test-icon" style="background:#f5f3ff;color:#7c3aed;">100</div>
-            <h3 id="extreme-test-title">Taisyklių ekstremalams</h3>
-            <p id="extreme-test-meta">100 klausimų - 100 min</p>
-            <button id="extreme-start-button" class="start-btn" type="button">Pradėti</button>
+            <span id="extreme-test-tag" class="test-card-tag">I&#353;tverm&#279;s i&#353;&#353;&#363;kis</span>
+            <h3 id="extreme-test-title">Taisykli&#371; ekstremalams</h3>
+            <p id="extreme-test-meta" class="test-meta">100 klausim&#371; - 100 min</p>
+            <p id="extreme-test-description" class="test-description">Dominuoja sunk&#363;s, ilgi, situaciniai ir keli&#371; atsakym&#371; klausimai.</p>
+            <button id="extreme-start-button" class="start-btn" type="button" onclick="startTest(100)" aria-describedby="extreme-test-meta extreme-test-description">Prad&#279;ti</button>
           </article>
         </div>
       </section>
 
-      <section id="quiz-screen" class="panel hidden">
+      <section id="quiz-screen" class="panel hidden" aria-labelledby="quiz-name">
         <div class="quiz-header">
           <div class="quiz-title">
-            <div class="bubble">●</div>
+            <div class="bubble" aria-hidden="true">&#9679;</div>
             <div>
               <h3 id="quiz-name">Testas</h3>
               <p id="quiz-info">Klausimai ir laikas</p>
             </div>
           </div>
-          <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <div class="quiz-header-actions">
             <button id="finish-now-button" class="danger-btn" type="button" onclick="confirmFinish()">Baigti dabar</button>
-            <div class="timer"><small id="timer-label">LIKĘS LAIKAS</small><strong id="timer">15:00</strong></div>
+            <div id="timer-wrap" class="timer"><small id="timer-label">LIK&#280;S LAIKAS</small><strong id="timer" role="timer" aria-live="off">15:00</strong></div>
           </div>
         </div>
-        <div id="warning-banner" class="warning">Nesukčiauk - perjungėte langą. Liko viena gyvybė.</div>
+        <div id="warning-banner" class="warning" role="alert">Nesuk&#269;iauk - perjung&#279;te lang&#261;. Liko viena gyvyb&#279;.</div>
         <div class="quiz-body">
           <div class="quiz-meta">
-            <span id="progress-text">0 iš 15 atsakyta</span>
-            <span id="question-counter">Klausimas 1 iš 15</span>
+            <span id="progress-text">0 i&#353; 15 atsakyta</span>
+            <span id="question-counter">Klausimas 1 i&#353; 15</span>
+          </div>
+          <div class="quiz-progress">
+            <div id="progress-track" class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <div class="progress-summary">
+              <span id="progress-detail">0 atsakyta, 15 liko</span>
+              <span id="review-detail">0 pa&#382;ym&#279;ta per&#382;i&#363;rai</span>
+            </div>
           </div>
           <div class="rule-chip hidden" id="rule-chip" aria-hidden="true"></div>
-          <h2 id="question-text">Klausimas</h2>
-          <div id="options"></div>
+          <div id="compact-navigator" class="compact-navigator">
+            <div>
+              <strong id="compact-progress">0 atsakyta, 15 liko</strong>
+              <span id="compact-review">0 pa&#382;ym&#279;ta per&#382;i&#363;rai</span>
+            </div>
+            <button id="open-navigator-button" class="ghost-btn" type="button" onclick="openQuestionNavigator()">Atidaryti navigacij&#261;</button>
+          </div>
+
+          <h2 id="question-text" tabindex="-1">Klausimas</h2>
+          <div id="answer-instruction" class="answer-instruction">Pasirinkite vien&#261; atsakym&#261;</div>
+          <div id="options" role="group" aria-labelledby="question-text answer-instruction"></div>
+
           <div class="question-map-wrap">
             <div class="map-head">
-              <h4 id="map-title">Klausimų navigacija</h4>
-              <div class="map-legend"><span id="answered-legend">Žalia - atsakyta</span><span id="unanswered-legend">Pilka - neatsakyta</span></div>
+              <h4 id="map-title">Klausim&#371; navigacija</h4>
+              <div class="map-legend">
+                <span id="answered-legend">&#381;alia - atsakyta</span>
+                <span id="reviewed-legend">Oran&#382;in&#279; - per&#382;i&#363;r&#279;ti</span>
+                <span id="unanswered-legend">Pilka - neatsakyta</span>
+              </div>
             </div>
             <div id="question-map" class="question-map"></div>
           </div>
         </div>
-        <div class="quiz-actions">
-          <button id="prev-button" class="ghost-btn wide" type="button" onclick="prevQuestion()">← Ankstesnis</button>
-          <button id="next-button" class="blue-btn wide" type="button" onclick="nextQuestion()">Kitas →</button>
-          <button id="finish-early-button" class="danger-btn wide" type="button" onclick="confirmFinish()">Baigti testą anksčiau</button>
+        <div class="quiz-actions" aria-label="Testo valdymas">
+          <button id="prev-button" class="ghost-btn wide" type="button" onclick="prevQuestion()">&#8592; Ankstesnis</button>
+          <button id="next-button" class="blue-btn wide" type="button" onclick="nextQuestion()">Kitas &#8594;</button>
+          <button id="review-button" class="ghost-btn review-btn wide" type="button" onclick="toggleReview()" aria-pressed="false">&#9873; Pa&#382;ym&#279;ti per&#382;i&#363;rai</button>
+          <button id="finish-early-button" class="danger-btn wide" type="button" onclick="confirmFinish()">Baigti test&#261; anks&#269;iau</button>
         </div>
+
+        <dialog id="question-navigator-dialog" class="quiz-dialog" aria-labelledby="navigator-dialog-title">
+          <div class="dialog-shell">
+            <div class="dialog-head">
+              <div>
+                <h3 id="navigator-dialog-title">Klausim&#371; navigacija</h3>
+                <p id="navigator-dialog-summary">Pasirinkite klausim&#261;, prie kurio norite pereiti.</p>
+              </div>
+              <button id="close-navigator-button" class="dialog-close" type="button" onclick="closeQuestionNavigator()" aria-label="U&#382;daryti">&#215;</button>
+            </div>
+            <div id="question-map-dialog" class="question-map dialog-map"></div>
+          </div>
+        </dialog>
+
+        <dialog id="finish-dialog" class="quiz-dialog" aria-labelledby="finish-dialog-title">
+          <div class="dialog-shell">
+            <div class="dialog-head">
+              <div>
+                <h3 id="finish-dialog-title">Baigti test&#261;?</h3>
+                <p id="finish-dialog-text">Patikrinkite neatsakytus klausimus prie&#353; pateikdami test&#261;.</p>
+              </div>
+              <button id="close-finish-dialog-button" class="dialog-close" type="button" onclick="closeFinishDialog()" aria-label="U&#382;daryti">&#215;</button>
+            </div>
+            <div class="dialog-actions">
+              <button id="cancel-finish-button" class="ghost-btn" type="button" onclick="closeFinishDialog()">T&#281;sti test&#261;</button>
+              <button id="submit-test-button" class="danger-btn" type="button" onclick="finishConfirmed()">Pateikti test&#261;</button>
+            </div>
+          </div>
+        </dialog>
       </section>
 
       <section id="results-screen" class="panel hidden">
@@ -638,12 +909,15 @@
         languageLabel: 'Kalba',
         heroKicker: '● Teisėjų mokymosi platforma',
         selectionTitle: 'Pasirinkite testą',
-        selectionDescription: 'Pasirinkite testo formatą ir įveskite dalyvio vardą bei pavardę, kad rezultatai būtų priskirti konkrečiam asmeniui.',
+        selectionDescription: 'Pasirinkite testo formatą. Dalyvio vardą ir pavardę galite įvesti, jei norite rezultatą priskirti konkrečiam asmeniui.',
         finishHint: '✓ Testą galima baigti bet kuriame klausime; neatsakyti klausimai skaičiuojami kaip neteisingi.',
         participantInfoTitle: 'Dalyvio informacija',
-        participantInfoText: 'Įveskite testą atliekančio asmens vardą ir pavardę.',
+        participantInfoText: 'Vardas ir pavardė neprivalomi, tačiau bus rodomi rezultatų ataskaitoje.',
         firstName: 'Vardas',
         lastName: 'Pavardė',
+
+        firstNameLabel: 'Vardas (neprivaloma)',
+        lastNameLabel: 'Pavard\u0117 (neprivaloma)',
         shortTestTitle: 'Trumpas testas',
         shortTestMeta: '15 klausimų - 15 min',
         standardTestTitle: 'Standartinis testas',
@@ -652,6 +926,15 @@
         longTestMeta: '30 klausimų - 30 min',
         extremeTestTitle: 'Taisyklių ekstremalams',
         extremeTestMeta: '100 klausimų - 100 min',
+
+        shortTestTag: 'Greita praktika',
+        shortTestDescription: 'Greitam taisykli\u0173 pasikartojimui arba ap\u0161ilimui.',
+        standardTestTag: 'Standartin\u0117 praktika',
+        standardTestDescription: 'Subalansuota kasdien\u0117 \u017eini\u0173 patikra.',
+        longTestTag: 'Sud\u0117tingas testas',
+        longTestDescription: 'Sud\u0117tingesni, ilgesni ir atsitiktinai subalansuoti klausimai.',
+        extremeTestTag: 'I\u0161tverm\u0117s i\u0161\u0161\u016bkis',
+        extremeTestDescription: 'Dominuoja sunk\u016bs, ilgi, situaciniai ir keli\u0173 atsakym\u0173 klausimai.',
         startButton: 'Pradėti',
         timerLabel: 'LIKĘS LAIKAS',
         finishNow: 'Baigti dabar',
@@ -659,6 +942,26 @@
         mapTitle: 'Klausimų navigacija',
         answeredLegend: 'Žalia - atsakyta',
         unansweredLegend: 'Pilka - neatsakyta',
+
+        reviewedLegend: 'Oran\u017ein\u0117 - per\u017ei\u016br\u0117ti',
+        progressDetail: '{answered} atsakyta, {remaining} liko',
+        reviewDetail: '{reviewed} pa\u017eym\u0117ta per\u017ei\u016brai',
+        singleAnswerInstruction: 'Pasirinkite vien\u0105 atsakym\u0105',
+        multipleAnswerInstruction: 'Pasirinkite visus teisingus atsakymus',
+        markForReview: '\u2691 Pa\u017eym\u0117ti per\u017ei\u016brai',
+        markedForReview: '\u2691 Pa\u017eym\u0117ta per\u017ei\u016brai',
+        openNavigator: 'Atidaryti navigacij\u0105',
+        navigatorTitle: 'Klausim\u0173 navigacija',
+        navigatorSummary: 'Pasirinkite klausim\u0105, prie kurio norite pereiti.',
+        closeDialog: 'U\u017edaryti',
+        finishDialogTitle: 'Baigti test\u0105?',
+        finishDialogUnanswered: 'Liko {count} neatsakyt\u0173 klausim\u0173. Jie bus skai\u010diuojami kaip neteisingi.',
+        finishDialogAllAnswered: 'Atsak\u0117te \u012f visus klausimus. Ar norite pateikti test\u0105?',
+        continueTest: 'T\u0119sti test\u0105',
+        submitTest: 'Pateikti test\u0105',
+        questionStatusAnswered: 'atsakyta',
+        questionStatusReviewed: 'pa\u017eym\u0117ta per\u017ei\u016brai',
+        questionStatusUnanswered: 'neatsakyta',
         prevButton: '← Ankstesnis',
         nextButton: 'Kitas →',
         finishLast: 'Baigti testą',
@@ -737,12 +1040,15 @@
         languageLabel: 'Language',
         heroKicker: '● Referee learning platform',
         selectionTitle: 'Choose a test',
-        selectionDescription: 'Choose a test format and enter the participant name so the result is assigned to the correct person.',
+        selectionDescription: 'Choose a test format. Add the participant name only when you want the result assigned to a specific person.',
         finishHint: '✓ You can finish the test from any question; unanswered questions are counted as incorrect.',
         participantInfoTitle: 'Participant information',
-        participantInfoText: 'Enter the first and last name of the person taking the test.',
+        participantInfoText: 'First and last name are optional, but will appear in the result report.',
         firstName: 'First name',
         lastName: 'Last name',
+
+        firstNameLabel: 'First name (optional)',
+        lastNameLabel: 'Last name (optional)',
         shortTestTitle: 'Short test',
         shortTestMeta: '15 questions - 15 min',
         standardTestTitle: 'Standard test',
@@ -751,6 +1057,15 @@
         longTestMeta: '30 questions - 30 min',
         extremeTestTitle: 'Rules for extremists',
         extremeTestMeta: '100 questions - 100 min',
+
+        shortTestTag: 'Quick practice',
+        shortTestDescription: 'A quick rules refresher or warm-up.',
+        standardTestTag: 'Standard practice',
+        standardTestDescription: 'A balanced everyday knowledge check.',
+        longTestTag: 'Difficult balanced test',
+        longTestDescription: 'Harder, longer and randomly balanced questions.',
+        extremeTestTag: 'Endurance challenge',
+        extremeTestDescription: 'Hard, long, scenario and multiple-answer questions dominate.',
         startButton: 'Start',
         timerLabel: 'TIME LEFT',
         finishNow: 'Finish now',
@@ -758,6 +1073,26 @@
         mapTitle: 'Question navigation',
         answeredLegend: 'Green - answered',
         unansweredLegend: 'Grey - unanswered',
+
+        reviewedLegend: 'Orange - review later',
+        progressDetail: '{answered} answered, {remaining} remaining',
+        reviewDetail: '{reviewed} marked for review',
+        singleAnswerInstruction: 'Select one answer',
+        multipleAnswerInstruction: 'Select all correct answers',
+        markForReview: '\u2691 Mark for review',
+        markedForReview: '\u2691 Marked for review',
+        openNavigator: 'Open question navigator',
+        navigatorTitle: 'Question navigation',
+        navigatorSummary: 'Choose a question to jump to.',
+        closeDialog: 'Close',
+        finishDialogTitle: 'Finish the test?',
+        finishDialogUnanswered: '{count} questions are unanswered. They will be counted as incorrect.',
+        finishDialogAllAnswered: 'You answered every question. Do you want to submit the test?',
+        continueTest: 'Continue test',
+        submitTest: 'Submit test',
+        questionStatusAnswered: 'answered',
+        questionStatusReviewed: 'marked for review',
+        questionStatusUnanswered: 'unanswered',
         prevButton: '← Previous',
         nextButton: 'Next →',
         finishLast: 'Finish test',
@@ -836,6 +1171,7 @@
     let questionBank = [];
     let currentQuestions = [];
     let answers = [];
+    let reviewedQuestions = [];
     let currentIndex = 0;
     let timerInterval = null;
     let timeLeft = 0;
@@ -893,8 +1229,8 @@
       setText('finish-anytime-hint', 'finishHint');
       setText('participant-info-title', 'participantInfoTitle');
       setText('participant-info-text', 'participantInfoText');
-      setText('first-name-label', 'firstName');
-      setText('last-name-label', 'lastName');
+      setText('first-name-label', 'firstNameLabel');
+      setText('last-name-label', 'lastNameLabel');
       setPlaceholder('first-name', 'firstName');
       setPlaceholder('last-name', 'lastName');
       setText('short-test-title', 'shortTestTitle');
@@ -905,6 +1241,14 @@
       setText('long-test-meta', 'longTestMeta');
       setText('extreme-test-title', 'extremeTestTitle');
       setText('extreme-test-meta', 'extremeTestMeta');
+      setText('short-test-tag', 'shortTestTag');
+      setText('short-test-description', 'shortTestDescription');
+      setText('standard-test-tag', 'standardTestTag');
+      setText('standard-test-description', 'standardTestDescription');
+      setText('long-test-tag', 'longTestTag');
+      setText('long-test-description', 'longTestDescription');
+      setText('extreme-test-tag', 'extremeTestTag');
+      setText('extreme-test-description', 'extremeTestDescription');
       setText('short-start-button', 'startButton');
       setText('standard-start-button', 'startButton');
       setText('long-start-button', 'startButton');
@@ -915,6 +1259,17 @@
       setText('map-title', 'mapTitle');
       setText('answered-legend', 'answeredLegend');
       setText('unanswered-legend', 'unansweredLegend');
+      setText('reviewed-legend', 'reviewedLegend');
+      setText('open-navigator-button', 'openNavigator');
+      setText('navigator-dialog-title', 'navigatorTitle');
+      setText('navigator-dialog-summary', 'navigatorSummary');
+      setText('finish-dialog-title', 'finishDialogTitle');
+      setText('cancel-finish-button', 'continueTest');
+      setText('submit-test-button', 'submitTest');
+      const closeNavigatorButton = document.getElementById('close-navigator-button');
+      const closeFinishButton = document.getElementById('close-finish-dialog-button');
+      if (closeNavigatorButton) closeNavigatorButton.setAttribute('aria-label', t('closeDialog'));
+      if (closeFinishButton) closeFinishButton.setAttribute('aria-label', t('closeDialog'));
       setText('prev-button', 'prevButton');
       setText('finish-early-button', 'finishEarly');
       setText('results-title', 'resultsTitle');
@@ -964,6 +1319,7 @@
       questionBank = [];
       currentQuestions = [];
       answers = [];
+      reviewedQuestions = [];
       currentIndex = 0;
       lastResult = null;
       currentReportMode = 'summary';
@@ -1417,6 +1773,7 @@
       const selected = selectQuestionsForTest(numQuestions);
       currentQuestions = selected.map(shuffleQuestionAnswers);
       answers = Array.from({ length: currentQuestions.length }, () => []);
+      reviewedQuestions = Array.from({ length: currentQuestions.length }, () => false);
       currentIndex = 0;
       timeLeft = numQuestions * 60;
       lives = 1;
@@ -1425,15 +1782,20 @@
       lastResult = null;
       currentReportMode = 'summary';
 
+      document.body.classList.add('quiz-active');
+      const quizScreen = document.getElementById('quiz-screen');
+      quizScreen.classList.toggle('large-test', numQuestions >= 100);
       document.getElementById('selection-screen').classList.add('hidden');
-      document.getElementById('quiz-screen').classList.remove('hidden');
+      quizScreen.classList.remove('hidden');
       document.getElementById('results-screen').classList.add('hidden');
       document.getElementById('warning-banner').classList.remove('show');
       document.getElementById('quiz-name').textContent = t('quizName', { count: numQuestions });
       document.getElementById('quiz-info').textContent = t('quizInfo', { participant: participantName, minutes: numQuestions });
+      closeQuestionNavigator();
+      closeFinishDialog();
 
       startTimer();
-      renderQuestion();
+      renderQuestion(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -1454,52 +1816,129 @@
       const safe = Math.max(0, timeLeft);
       const min = Math.floor(safe / 60);
       const sec = safe % 60;
-      document.getElementById('timer').textContent = `${min}:${String(sec).padStart(2, '0')}`;
+      const timer = document.getElementById('timer');
+      const timerWrap = document.getElementById('timer-wrap');
+      timer.textContent = `${min}:${String(sec).padStart(2, '0')}`;
+      timerWrap.classList.toggle('urgent', safe <= 300);
+      timerWrap.classList.toggle('critical', safe <= 60);
     }
 
-    function renderQuestion() {
+    function renderQuestion(focusHeading = false) {
       const q = currentQuestions[currentIndex];
+      if (!q) return;
       const answeredCount = answers.filter(item => item && item.length > 0).length;
+      const remainingCount = currentQuestions.length - answeredCount;
+      const reviewedCount = reviewedQuestions.filter(Boolean).length;
+      const progressPercent = currentQuestions.length ? (answeredCount / currentQuestions.length) * 100 : 0;
+      const isMultipleAnswer = Array.isArray(q.correct) && q.correct.length > 1;
+
       document.getElementById('progress-text').textContent = t('progressText', { answered: answeredCount, total: currentQuestions.length });
       document.getElementById('question-counter').textContent = t('questionCounter', { current: currentIndex + 1, total: currentQuestions.length });
-      // Rule number is intentionally hidden during the active test so it does not act as a hint.
-      document.getElementById('question-text').textContent = cleanQuestionText(q.text);
+      document.getElementById('progress-detail').textContent = t('progressDetail', { answered: answeredCount, remaining: remainingCount });
+      document.getElementById('review-detail').textContent = t('reviewDetail', { reviewed: reviewedCount });
+      document.getElementById('compact-progress').textContent = t('progressDetail', { answered: answeredCount, remaining: remainingCount });
+      document.getElementById('compact-review').textContent = t('reviewDetail', { reviewed: reviewedCount });
+      document.getElementById('navigator-dialog-summary').textContent = `${t('progressDetail', { answered: answeredCount, remaining: remainingCount })} \u2022 ${t('reviewDetail', { reviewed: reviewedCount })}`;
+
+      const progressTrack = document.getElementById('progress-track');
+      const progressFill = document.getElementById('progress-fill');
+      progressTrack.setAttribute('aria-valuemax', String(currentQuestions.length));
+      progressTrack.setAttribute('aria-valuenow', String(answeredCount));
+      progressTrack.setAttribute('aria-label', t('progressDetail', { answered: answeredCount, remaining: remainingCount }));
+      progressFill.style.width = `${progressPercent}%`;
+
+      const questionHeading = document.getElementById('question-text');
+      questionHeading.textContent = cleanQuestionText(q.text);
+      document.getElementById('answer-instruction').textContent = isMultipleAnswer ? t('multipleAnswerInstruction') : t('singleAnswerInstruction');
+
+      const reviewButton = document.getElementById('review-button');
+      const isReviewed = Boolean(reviewedQuestions[currentIndex]);
+      reviewButton.textContent = isReviewed ? t('markedForReview') : t('markForReview');
+      reviewButton.classList.toggle('marked', isReviewed);
+      reviewButton.setAttribute('aria-pressed', String(isReviewed));
 
       const options = document.getElementById('options');
       options.innerHTML = '';
       q.options.forEach((text, optionIndex) => {
         const selected = answers[currentIndex].includes(optionIndex);
-        const div = document.createElement('div');
-        div.className = `option ${selected ? 'selected' : ''}`;
-        div.innerHTML = `<span class="fake-check">${selected ? '✓' : ''}</span><span>${escapeHTML(text)}</span>`;
-        div.onclick = () => toggleAnswer(optionIndex);
-        options.appendChild(div);
+        const label = document.createElement('label');
+        label.className = `option ${isMultipleAnswer ? 'multiple' : 'single'} ${selected ? 'selected' : ''}`;
+
+        const input = document.createElement('input');
+        input.className = 'option-input';
+        input.type = isMultipleAnswer ? 'checkbox' : 'radio';
+        input.name = `question-${currentIndex}`;
+        input.checked = selected;
+        input.setAttribute('aria-label', text);
+        input.onchange = () => selectAnswer(optionIndex, isMultipleAnswer);
+
+        const fakeCheck = document.createElement('span');
+        fakeCheck.className = 'fake-check';
+        fakeCheck.setAttribute('aria-hidden', 'true');
+        fakeCheck.textContent = selected && isMultipleAnswer ? '\u2713' : '';
+
+        const optionText = document.createElement('span');
+        optionText.textContent = text;
+
+        label.appendChild(input);
+        label.appendChild(fakeCheck);
+        label.appendChild(optionText);
+        options.appendChild(label);
       });
 
       renderQuestionMap();
       updateNavButtons();
+      if (focusHeading) questionHeading.focus({ preventScroll: true });
     }
 
-    function toggleAnswer(optionIndex) {
-      const answer = answers[currentIndex];
-      const position = answer.indexOf(optionIndex);
-      if (position >= 0) answer.splice(position, 1);
-      else answer.push(optionIndex);
-      renderQuestion();
+    function selectAnswer(optionIndex, isMultipleAnswer) {
+      if (isMultipleAnswer) {
+        const answer = answers[currentIndex];
+        const position = answer.indexOf(optionIndex);
+        if (position >= 0) answer.splice(position, 1);
+        else answer.push(optionIndex);
+      } else {
+        answers[currentIndex] = [optionIndex];
+      }
+      renderQuestion(false);
     }
 
-    function renderQuestionMap() {
-      const map = document.getElementById('question-map');
-      map.innerHTML = '';
+    function toggleReview() {
+      reviewedQuestions[currentIndex] = !reviewedQuestions[currentIndex];
+      renderQuestion(false);
+    }
+
+    function buildQuestionMap(container) {
+      if (!container) return;
+      container.innerHTML = '';
       currentQuestions.forEach((_, index) => {
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = index + 1;
         const answered = answers[index] && answers[index].length > 0;
-        button.className = `${answered ? 'answered' : ''} ${index === currentIndex ? 'current' : ''}`;
+        const reviewed = Boolean(reviewedQuestions[index]);
+        const statuses = [];
+        if (answered) statuses.push(t('questionStatusAnswered'));
+        if (reviewed) statuses.push(t('questionStatusReviewed'));
+        if (!answered && !reviewed) statuses.push(t('questionStatusUnanswered'));
+        button.className = `${answered ? 'answered' : ''} ${reviewed ? 'reviewed' : ''} ${index === currentIndex ? 'current' : ''}`.trim();
+        button.setAttribute('aria-label', `${t('questionCounter', { current: index + 1, total: currentQuestions.length })}: ${statuses.join(', ')}`);
+        button.setAttribute('aria-current', index === currentIndex ? 'step' : 'false');
+        button.textContent = index + 1;
+        if (reviewed) {
+          const flag = document.createElement('span');
+          flag.className = 'review-flag';
+          flag.setAttribute('aria-hidden', 'true');
+          flag.textContent = '\u2691';
+          button.appendChild(flag);
+        }
         button.onclick = () => jumpToQuestion(index);
-        map.appendChild(button);
+        container.appendChild(button);
       });
+    }
+
+    function renderQuestionMap() {
+      buildQuestionMap(document.getElementById('question-map'));
+      buildQuestionMap(document.getElementById('question-map-dialog'));
     }
 
     function updateNavButtons() {
@@ -1509,16 +1948,44 @@
       next.textContent = currentIndex === currentQuestions.length - 1 ? t('finishLast') : t('nextButton');
     }
 
+    function openDialogElement(dialog) {
+      if (!dialog) return;
+      if (typeof dialog.showModal === 'function') {
+        if (!dialog.open) dialog.showModal();
+      } else {
+        dialog.setAttribute('open', '');
+      }
+    }
+
+    function closeDialogElement(dialog) {
+      if (!dialog) return;
+      if (typeof dialog.close === 'function' && dialog.open) dialog.close();
+      else dialog.removeAttribute('open');
+    }
+
+    function openQuestionNavigator() {
+      const dialog = document.getElementById('question-navigator-dialog');
+      renderQuestionMap();
+      openDialogElement(dialog);
+      const currentButton = dialog.querySelector('button[aria-current="step"]');
+      if (currentButton) currentButton.focus();
+    }
+
+    function closeQuestionNavigator() {
+      closeDialogElement(document.getElementById('question-navigator-dialog'));
+    }
+
     function jumpToQuestion(index) {
       currentIndex = index;
-      renderQuestion();
+      closeQuestionNavigator();
+      renderQuestion(true);
       document.getElementById('question-text').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     function nextQuestion() {
       if (currentIndex < currentQuestions.length - 1) {
         currentIndex += 1;
-        renderQuestion();
+        renderQuestion(true);
       } else {
         confirmFinish();
       }
@@ -1527,12 +1994,42 @@
     function prevQuestion() {
       if (currentIndex > 0) {
         currentIndex -= 1;
-        renderQuestion();
+        renderQuestion(true);
       }
     }
 
     function confirmFinish() {
-      if (confirm(t('confirmFinish'))) finishQuiz(false);
+      const unansweredCount = answers.filter(item => !item || item.length === 0).length;
+      document.getElementById('finish-dialog-text').textContent = unansweredCount > 0
+        ? t('finishDialogUnanswered', { count: unansweredCount })
+        : t('finishDialogAllAnswered');
+      openDialogElement(document.getElementById('finish-dialog'));
+      document.getElementById('cancel-finish-button').focus();
+    }
+
+    function closeFinishDialog() {
+      closeDialogElement(document.getElementById('finish-dialog'));
+    }
+
+    function finishConfirmed() {
+      closeFinishDialog();
+      finishQuiz(false);
+    }
+
+    function handleQuizKeyboard(event) {
+      const quizScreen = document.getElementById('quiz-screen');
+      if (!quizScreen || quizScreen.classList.contains('hidden') || event.altKey || event.ctrlKey || event.metaKey) return;
+      const targetTag = String(event.target?.tagName || '').toLowerCase();
+      if (['input', 'select', 'textarea', 'button'].includes(targetTag)) return;
+      const anyDialogOpen = ['question-navigator-dialog', 'finish-dialog'].some(id => document.getElementById(id)?.open);
+      if (anyDialogOpen) return;
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        nextQuestion();
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        prevQuestion();
+      }
     }
 
     function isQuestionCorrect(question, userAnswers) {
@@ -1563,6 +2060,9 @@
     function finishQuiz(timeExpired = false) {
       if (testTerminated) return;
       clearInterval(timerInterval);
+      closeQuestionNavigator();
+      closeFinishDialog();
+      document.body.classList.remove('quiz-active');
       lastResult = calculateResult(timeExpired);
       document.getElementById('quiz-screen').classList.add('hidden');
       document.getElementById('results-screen').classList.remove('hidden');
@@ -1770,11 +2270,15 @@
       clearInterval(timerInterval);
       currentQuestions = [];
       answers = [];
+      reviewedQuestions = [];
       currentIndex = 0;
       timeLeft = 0;
       currentTestLength = 0;
       lastResult = null;
       testTerminated = false;
+      document.body.classList.remove('quiz-active');
+      closeQuestionNavigator();
+      closeFinishDialog();
       document.getElementById('selection-screen').classList.remove('hidden');
       document.getElementById('quiz-screen').classList.add('hidden');
       document.getElementById('results-screen').classList.add('hidden');
@@ -1815,6 +2319,7 @@
     window.addEventListener('load', () => {
       applyTranslations();
       document.addEventListener('visibilitychange', handleVisibilityChange);
+      document.addEventListener('keydown', handleQuizKeyboard);
     });
   </script>
 </body>

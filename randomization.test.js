@@ -5,7 +5,7 @@ const assert = require('assert');
 const html = fs.readFileSync('index.html', 'utf8');
 const scriptMatches = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)];
 const appScript = scriptMatches[scriptMatches.length - 1][1];
-const requiredRules = [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+const requiredRules = [2, 4, 6, 7, 8, 13, 14, 15, 16];
 
 function createSeededCrypto(seed) {
   let state = seed >>> 0;
@@ -72,6 +72,7 @@ function auditThirty(context) {
     const requiredKeys = new Set(audit.requiredQuestions.map(getQuestionKey));
     return {
       requiredRules: audit.requiredQuestions.map(getRuleNumber),
+      requiredScores: audit.requiredQuestions.map(getQuestionComplexityScore),
       requiredLength: audit.requiredQuestions.length,
       additionalLength: audit.additionalQuestions.length,
       difficultAdditional: audit.additionalQuestions.filter(q => isDifficultOrLong(q, audit.difficultyThreshold)).length,
@@ -143,27 +144,48 @@ function runBankTests(filename) {
   const context = makeContext(filename.includes('-en') ? 0x13579bdf : 0x2468ace0);
   setQuestionBank(context, bank);
 
+  const requiredPoolMeanScores = JSON.parse(evaluate(context, `JSON.stringify(Object.fromEntries(${JSON.stringify(requiredRules)}.map(rule => {
+    const scores = getUniqueQuestionPool(questionBank)
+      .filter(question => getRuleNumber(question) === rule)
+      .map(getQuestionComplexityScore);
+    return [rule, scores.reduce((sum, score) => sum + score, 0) / scores.length];
+  })))`));
+  const requiredSelectedScores = Object.fromEntries(requiredRules.map(rule => [rule, []]));
   const thirtySelections = new Set();
   const thirtyOrders = new Set();
   const thirtySarCounts = new Set();
-  let requiredQuestionSeenAfterPosition16 = false;
+  let requiredQuestionSeenAfterRequiredBlock = false;
 
   for (let attempt = 0; attempt < 80; attempt += 1) {
     const audit = auditThirty(context);
-    assert.strictEqual(audit.requiredLength, 16);
-    assert.strictEqual(audit.additionalLength, 14);
+    assert.strictEqual(audit.requiredLength, 9);
+    assert.strictEqual(audit.additionalLength, 21);
     assert.strictEqual(audit.keys.length, 30);
     assert.strictEqual(new Set(audit.keys).size, 30);
     assert.deepStrictEqual(audit.requiredRules, requiredRules);
-    assert(audit.difficultAdditional >= 10);
-    assert(audit.requiredPositions.some(position => position >= 16));
-    requiredQuestionSeenAfterPosition16 ||= audit.requiredPositions.some(position => position >= 16);
+    audit.requiredRules.forEach((rule, index) => requiredSelectedScores[rule].push(audit.requiredScores[index]));
+    assert(audit.difficultAdditional >= 15);
+    assert(audit.requiredPositions.some(position => position >= requiredRules.length));
+    requiredQuestionSeenAfterRequiredBlock ||= audit.requiredPositions.some(position => position >= requiredRules.length);
     thirtySelections.add([...audit.keys].sort().join('\n'));
     thirtyOrders.add(audit.keys.join('\n'));
     thirtySarCounts.add(audit.sarAdditional);
   }
 
-  assert(requiredQuestionSeenAfterPosition16, 'Required questions appear confined to the first 16 positions.');
+  assert(requiredQuestionSeenAfterRequiredBlock, 'Required questions appear confined to an initial required-rule block.');
+  requiredRules.forEach(rule => {
+    const selectedScores = requiredSelectedScores[rule];
+    const selectedMean = selectedScores.reduce((sum, score) => sum + score, 0) / selectedScores.length;
+    assert(
+      selectedMean > requiredPoolMeanScores[rule],
+      `Required Rule ${rule} questions are not showing a measurable difficult/long-question preference.`
+    );
+  });
+  const ruleTwoSelectedMean = requiredSelectedScores[2].reduce((sum, score) => sum + score, 0) / requiredSelectedScores[2].length;
+  assert(
+    ruleTwoSelectedMean > requiredPoolMeanScores[2] * 1.15,
+    'Rule 2 does not show the intended stronger preference for its longest and most complex questions.'
+  );
   assert(thirtySelections.size > 1, 'The 30-question selection did not vary.');
   assert(thirtyOrders.size > 1, 'The 30-question order did not vary.');
   assert(thirtySarCounts.has(0), 'SAR questions became mandatory in the 30-question test.');

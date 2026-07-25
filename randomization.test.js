@@ -104,6 +104,20 @@ function auditHundred(context) {
   })())`));
 }
 
+function auditUltramarathon(context) {
+  return JSON.parse(evaluate(context, `JSON.stringify((() => {
+    const bank = getUniqueQuestionPool(questionBank);
+    const questions = selectQuestionsForTest(bank.length, ULTRAMARATHON_MODE);
+    return {
+      expectedTotal: bank.length,
+      total: questions.length,
+      expectedKeys: bank.map(getQuestionKey).sort(),
+      selectedKeys: questions.map(getQuestionKey).sort(),
+      order: questions.map(getQuestionKey)
+    };
+  })())`));
+}
+
 function testAnswerShuffling(context, bank) {
   const source = bank.find(question => Array.isArray(question.correct) && question.correct.length > 1 && question.options.length >= 4);
   assert(source, 'A multiple-answer question is required for this test.');
@@ -210,6 +224,16 @@ function runBankTests(filename) {
   assert(hundredSarCounts.size > 1, 'The 100-question test always selected the same SAR count.');
   assert(Math.max(...hundredSarCounts) < 10, 'SAR questions dominate the 100-question test.');
 
+  const ultramarathonOrders = new Set();
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    const audit = auditUltramarathon(context);
+    assert.strictEqual(audit.total, audit.expectedTotal, 'Ultramarathon did not select the full unique bank.');
+    assert.strictEqual(new Set(audit.selectedKeys).size, audit.expectedTotal, 'Ultramarathon contains duplicate questions.');
+    assert.deepStrictEqual(audit.selectedKeys, audit.expectedKeys, 'Ultramarathon omitted or added questions.');
+    ultramarathonOrders.add(audit.order.join('\n'));
+  }
+  assert(ultramarathonOrders.size > 1, 'Ultramarathon order did not vary across attempts.');
+
   testAnswerShuffling(context, bank);
 
   return {
@@ -219,7 +243,8 @@ function runBankTests(filename) {
     thirtySarCounts: [...thirtySarCounts].sort((a, b) => a - b),
     hundredUniqueSelections: hundredSelections.size,
     hundredUniqueOrders: hundredOrders.size,
-    hundredSarCounts: [...hundredSarCounts].sort((a, b) => a - b)
+    hundredSarCounts: [...hundredSarCounts].sort((a, b) => a - b),
+    ultramarathonUniqueOrders: ultramarathonOrders.size
   };
 }
 

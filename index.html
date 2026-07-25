@@ -458,6 +458,38 @@
     .test-description { margin-top: 10px !important; color: #64748b !important; line-height: 1.45; font-size: 14px; }
     .optional-label { color: #94a3b8; font-weight: 800; text-transform: none; letter-spacing: 0; }
 
+    .ultramarathon-card {
+      border-color: #c4b5fd;
+      background:
+        radial-gradient(circle at 92% 8%, rgba(168, 85, 247, .18), transparent 11rem),
+        linear-gradient(145deg, #ffffff 0%, #faf5ff 100%);
+      box-shadow: 0 18px 42px rgba(88, 28, 135, .10);
+    }
+    .ultramarathon-card:hover { border-color: #8b5cf6; box-shadow: 0 24px 58px rgba(88, 28, 135, .18); }
+    .ultra-features { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0 20px; }
+    .ultra-feature {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #ddd6fe;
+      border-radius: 999px;
+      padding: 6px 9px;
+      background: rgba(255,255,255,.82);
+      color: #5b21b6;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .ultra-achievement {
+      display: inline-flex;
+      margin-top: 10px;
+      border: 1px solid #c4b5fd;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: #f5f3ff;
+      color: #5b21b6;
+      font-size: 13px;
+      font-weight: 950;
+    }
+
     body.quiz-active .topbar { display: none; }
     body.quiz-active .app-shell { padding-top: 10px; }
     #quiz-screen { overflow: visible; }
@@ -745,6 +777,18 @@
             <p id="extreme-test-description" class="test-description">Dominuoja sunk&#363;s, ilgi, situaciniai ir keli&#371; atsakym&#371; klausimai.</p>
             <button id="extreme-start-button" class="start-btn" type="button" onclick="startTest(100)" aria-describedby="extreme-test-meta extreme-test-description">Prad&#279;ti</button>
           </article>
+          <article class="test-card ultramarathon-card" aria-labelledby="ultra-test-title">
+            <div class="test-icon" style="background:#ede9fe;color:#6d28d9;">&#8734;</div>
+            <span id="ultra-test-tag" class="test-card-tag">Visa klausim&#371; baz&#279;</span>
+            <h3 id="ultra-test-title">Ultramarathon</h3>
+            <p id="ultra-test-meta" class="test-meta">Visi unikal&#363;s klausimai - po 1 min kiekvienam</p>
+            <p id="ultra-test-description" class="test-description">Vienas bandymas per vis&#261; klausim&#371; bank&#261;, be pasikartojim&#371; ir su nauja tvarka kiekvien&#261; kart&#261;.</p>
+            <div class="ultra-features" aria-label="Ultramarathon savyb&#279;s">
+              <span id="ultra-no-repeat" class="ultra-feature">&#10003; Be pasikartojim&#371;</span>
+              <span id="ultra-fresh-order" class="ultra-feature">&#10003; Nauja tvarka</span>
+            </div>
+            <button id="ultra-start-button" class="start-btn" type="button" onclick="startUltramarathon()" aria-describedby="ultra-test-meta ultra-test-description">Prad&#279;ti</button>
+          </article>
         </div>
       </section>
 
@@ -846,6 +890,7 @@
             <div id="result-badge" class="status-badge badge-fail">NEIŠLAIKYTA</div>
             <h2 id="results-title">Testo rezultatai</h2>
             <p id="result-subtitle">Rezultatai bus parodyti čia.</p>
+            <div id="ultra-achievement" class="ultra-achievement hidden"></div>
           </div>
           <div class="report-tools">
             <button id="generate-summary-report" class="blue-btn" type="button" onclick="generateReport('summary')">Generuoti ataskaitą</button>
@@ -926,6 +971,10 @@
         longTestMeta: '30 klausimų - 30 min',
         extremeTestTitle: 'Taisyklių ekstremalams',
         extremeTestMeta: '100 klausimų - 100 min',
+        ultraTestTitle: 'Ultramarathon',
+        ultraTestMeta: 'Visi unikalūs klausimai - po 1 min kiekvienam',
+        ultraTestMetaDynamic: '{count} unikalūs klausimai - {minutes} min',
+        ultraQuizName: 'Ultramarathon • {count} klausimų',
 
         shortTestTag: 'Greita praktika',
         shortTestDescription: 'Greitam taisykli\u0173 pasikartojimui arba ap\u0161ilimui.',
@@ -935,6 +984,11 @@
         longTestDescription: 'Sud\u0117tingesni, ilgesni ir atsitiktinai subalansuoti klausimai.',
         extremeTestTag: 'I\u0161tverm\u0117s i\u0161\u0161\u016bkis',
         extremeTestDescription: 'Dominuoja sunk\u016bs, ilgi, situaciniai ir keli\u0173 atsakym\u0173 klausimai.',
+        ultraTestTag: 'Visa klausim\u0173 baz\u0117',
+        ultraTestDescription: 'Vienas bandymas per vis\u0105 klausim\u0173 bank\u0105, be pasikartojim\u0173 ir su nauja tvarka kiekvien\u0105 kart\u0105.',
+        ultraNoRepeat: '\u2713 Be pasikartojim\u0173',
+        ultraFreshOrder: '\u2713 Nauja tvarka',
+        ultraFinisher: '\ud83c\udfc1 Ultramarathon Finisher — atsak\u0117te \u012f visus {count} klausimus.',
         startButton: 'Pradėti',
         timerLabel: 'LIKĘS LAIKAS',
         finishNow: 'Baigti dabar',
@@ -946,8 +1000,7 @@
         reviewedLegend: 'Oran\u017ein\u0117 - per\u017ei\u016br\u0117ti',
         progressDetail: '{answered} atsakyta, {remaining} liko',
         reviewDetail: '{reviewed} pa\u017eym\u0117ta per\u017ei\u016brai',
-        singleAnswerInstruction: 'Pasirinkite vien\u0105 atsakym\u0105',
-        multipleAnswerInstruction: 'Pasirinkite visus teisingus atsakymus',
+        answerInstruction: 'Pasirinkite vien\u0105 ar kelis atsakymus. Taškai skiriami tik pasirinkus tikslų teisingą derinį.',
         markForReview: '\u2691 Pa\u017eym\u0117ti per\u017ei\u016brai',
         markedForReview: '\u2691 Pa\u017eym\u0117ta per\u017ei\u016brai',
         openNavigator: 'Atidaryti navigacij\u0105',
@@ -1057,6 +1110,10 @@
         longTestMeta: '30 questions - 30 min',
         extremeTestTitle: 'Rules for extremists',
         extremeTestMeta: '100 questions - 100 min',
+        ultraTestTitle: 'Ultramarathon',
+        ultraTestMeta: 'Every unique question - 1 min each',
+        ultraTestMetaDynamic: '{count} unique questions - {minutes} min',
+        ultraQuizName: 'Ultramarathon • {count} questions',
 
         shortTestTag: 'Quick practice',
         shortTestDescription: 'A quick rules refresher or warm-up.',
@@ -1066,6 +1123,11 @@
         longTestDescription: 'Harder, longer and randomly balanced questions.',
         extremeTestTag: 'Endurance challenge',
         extremeTestDescription: 'Hard, long, scenario and multiple-answer questions dominate.',
+        ultraTestTag: 'Complete question bank',
+        ultraTestDescription: 'One attempt through the entire question bank, with no repeats and a fresh order every time.',
+        ultraNoRepeat: '\u2713 No repeated questions',
+        ultraFreshOrder: '\u2713 Fresh order every run',
+        ultraFinisher: '\ud83c\udfc1 Ultramarathon Finisher — you answered all {count} questions.',
         startButton: 'Start',
         timerLabel: 'TIME LEFT',
         finishNow: 'Finish now',
@@ -1077,8 +1139,7 @@
         reviewedLegend: 'Orange - review later',
         progressDetail: '{answered} answered, {remaining} remaining',
         reviewDetail: '{reviewed} marked for review',
-        singleAnswerInstruction: 'Select one answer',
-        multipleAnswerInstruction: 'Select all correct answers',
+        answerInstruction: 'Select one or more answers. Points are awarded only for the exact correct combination.',
         markForReview: '\u2691 Mark for review',
         markedForReview: '\u2691 Marked for review',
         openNavigator: 'Open question navigator',
@@ -1176,6 +1237,7 @@
     let timerInterval = null;
     let timeLeft = 0;
     let currentTestLength = 0;
+    let currentTestMode = 'standard';
     let participantName = t('participantUnknown');
     let currentReportMode = 'summary';
     let lastResult = null;
@@ -1241,6 +1303,8 @@
       setText('long-test-meta', 'longTestMeta');
       setText('extreme-test-title', 'extremeTestTitle');
       setText('extreme-test-meta', 'extremeTestMeta');
+      setText('ultra-test-title', 'ultraTestTitle');
+      setText('ultra-test-meta', 'ultraTestMeta');
       setText('short-test-tag', 'shortTestTag');
       setText('short-test-description', 'shortTestDescription');
       setText('standard-test-tag', 'standardTestTag');
@@ -1249,10 +1313,16 @@
       setText('long-test-description', 'longTestDescription');
       setText('extreme-test-tag', 'extremeTestTag');
       setText('extreme-test-description', 'extremeTestDescription');
+      setText('ultra-test-tag', 'ultraTestTag');
+      setText('ultra-test-description', 'ultraTestDescription');
+      setText('ultra-no-repeat', 'ultraNoRepeat');
+      setText('ultra-fresh-order', 'ultraFreshOrder');
       setText('short-start-button', 'startButton');
       setText('standard-start-button', 'startButton');
       setText('long-start-button', 'startButton');
       setText('extreme-start-button', 'startButton');
+      setText('ultra-start-button', 'startButton');
+      updateUltramarathonCard();
       setText('timer-label', 'timerLabel');
       setText('finish-now-button', 'finishNow');
       setText('warning-banner', 'warningCheat');
@@ -1328,6 +1398,7 @@
       lives = 1;
       restartApp();
       applyTranslations();
+      await refreshUltramarathonCard();
     }
 
 
@@ -1351,6 +1422,25 @@
       throw lastError || new Error(t('fileMissing', { file: files.join(' / ') }));
     }
 
+    function updateUltramarathonCard() {
+      if (!questionBank.length) return;
+      const count = getUniqueQuestionPool(questionBank).length;
+      const meta = document.getElementById('ultra-test-meta');
+      if (meta) meta.textContent = t('ultraTestMetaDynamic', { count, minutes: count });
+      const button = document.getElementById('ultra-start-button');
+      if (button) button.setAttribute('aria-label', `${t('startButton')}: ${t('ultraQuizName', { count })}`);
+    }
+
+    async function refreshUltramarathonCard() {
+      try {
+        await loadQuestions();
+        updateUltramarathonCard();
+      } catch (error) {
+        console.error('Unable to prepare Ultramarathon question count.', error);
+      }
+    }
+
+    const ULTRAMARATHON_MODE = 'ultramarathon';
     const REQUIRED_RULES_30 = [2, 4, 6, 7, 8, 13, 14, 15, 16];
     const THIRTY_ADDITIONAL_COUNT = 21;
     const THIRTY_MIN_DIFFICULT_ADDITIONAL = 15;
@@ -1733,11 +1823,12 @@
       };
     }
 
-    function selectQuestionsForTest(numQuestions) {
+    function selectQuestionsForTest(numQuestions, mode = 'standard') {
+      const bank = getUniqueQuestionPool(questionBank);
+      if (mode === ULTRAMARATHON_MODE) return shuffleArray(bank);
       if (numQuestions === 30) return buildThirtyQuestionSet().questions;
       if (numQuestions === EXTREME_TEST_COUNT) return buildExtremeQuestionSet().questions;
 
-      const bank = getUniqueQuestionPool(questionBank);
       if (bank.length < numQuestions) {
         throw new Error(`The question bank contains only ${bank.length} unique questions; ${numQuestions} are required.`);
       }
@@ -1763,14 +1854,22 @@
       };
     }
 
-    async function startTest(numQuestions) {
+    async function startUltramarathon() {
+      await loadQuestions();
+      const count = getUniqueQuestionPool(questionBank).length;
+      if (!count) throw new Error('The Ultramarathon question bank is empty.');
+      return startTest(count, ULTRAMARATHON_MODE);
+    }
+
+    async function startTest(numQuestions, mode = 'standard') {
       await loadQuestions();
       const firstName = document.getElementById('first-name').value.trim();
       const lastName = document.getElementById('last-name').value.trim();
       participantName = [firstName, lastName].filter(Boolean).join(' ') || t('participantUnknown');
       currentTestLength = numQuestions;
+      currentTestMode = mode;
 
-      const selected = selectQuestionsForTest(numQuestions);
+      const selected = selectQuestionsForTest(numQuestions, mode);
       currentQuestions = selected.map(shuffleQuestionAnswers);
       answers = Array.from({ length: currentQuestions.length }, () => []);
       reviewedQuestions = Array.from({ length: currentQuestions.length }, () => false);
@@ -1789,7 +1888,9 @@
       quizScreen.classList.remove('hidden');
       document.getElementById('results-screen').classList.add('hidden');
       document.getElementById('warning-banner').classList.remove('show');
-      document.getElementById('quiz-name').textContent = t('quizName', { count: numQuestions });
+      document.getElementById('quiz-name').textContent = mode === ULTRAMARATHON_MODE
+        ? t('ultraQuizName', { count: numQuestions })
+        : t('quizName', { count: numQuestions });
       document.getElementById('quiz-info').textContent = t('quizInfo', { participant: participantName, minutes: numQuestions });
       closeQuestionNavigator();
       closeFinishDialog();
@@ -1830,7 +1931,6 @@
       const remainingCount = currentQuestions.length - answeredCount;
       const reviewedCount = reviewedQuestions.filter(Boolean).length;
       const progressPercent = currentQuestions.length ? (answeredCount / currentQuestions.length) * 100 : 0;
-      const isMultipleAnswer = Array.isArray(q.correct) && q.correct.length > 1;
 
       document.getElementById('progress-text').textContent = t('progressText', { answered: answeredCount, total: currentQuestions.length });
       document.getElementById('question-counter').textContent = t('questionCounter', { current: currentIndex + 1, total: currentQuestions.length });
@@ -1849,7 +1949,7 @@
 
       const questionHeading = document.getElementById('question-text');
       questionHeading.textContent = cleanQuestionText(q.text);
-      document.getElementById('answer-instruction').textContent = isMultipleAnswer ? t('multipleAnswerInstruction') : t('singleAnswerInstruction');
+      document.getElementById('answer-instruction').textContent = t('answerInstruction');
 
       const reviewButton = document.getElementById('review-button');
       const isReviewed = Boolean(reviewedQuestions[currentIndex]);
@@ -1862,20 +1962,20 @@
       q.options.forEach((text, optionIndex) => {
         const selected = answers[currentIndex].includes(optionIndex);
         const label = document.createElement('label');
-        label.className = `option ${isMultipleAnswer ? 'multiple' : 'single'} ${selected ? 'selected' : ''}`;
+        label.className = `option multiple ${selected ? 'selected' : ''}`;
 
         const input = document.createElement('input');
         input.className = 'option-input';
-        input.type = isMultipleAnswer ? 'checkbox' : 'radio';
+        input.type = 'checkbox';
         input.name = `question-${currentIndex}`;
         input.checked = selected;
         input.setAttribute('aria-label', text);
-        input.onchange = () => selectAnswer(optionIndex, isMultipleAnswer);
+        input.onchange = () => selectAnswer(optionIndex);
 
         const fakeCheck = document.createElement('span');
         fakeCheck.className = 'fake-check';
         fakeCheck.setAttribute('aria-hidden', 'true');
-        fakeCheck.textContent = selected && isMultipleAnswer ? '\u2713' : '';
+        fakeCheck.textContent = selected ? '\u2713' : '';
 
         const optionText = document.createElement('span');
         optionText.textContent = text;
@@ -1891,15 +1991,11 @@
       if (focusHeading) questionHeading.focus({ preventScroll: true });
     }
 
-    function selectAnswer(optionIndex, isMultipleAnswer) {
-      if (isMultipleAnswer) {
-        const answer = answers[currentIndex];
-        const position = answer.indexOf(optionIndex);
-        if (position >= 0) answer.splice(position, 1);
-        else answer.push(optionIndex);
-      } else {
-        answers[currentIndex] = [optionIndex];
-      }
+    function selectAnswer(optionIndex) {
+      const answer = answers[currentIndex];
+      const position = answer.indexOf(optionIndex);
+      if (position >= 0) answer.splice(position, 1);
+      else answer.push(optionIndex);
       renderQuestion(false);
     }
 
@@ -1936,9 +2032,20 @@
       });
     }
 
-    function renderQuestionMap() {
-      buildQuestionMap(document.getElementById('question-map'));
-      buildQuestionMap(document.getElementById('question-map-dialog'));
+    function renderQuestionMap(forceDialog = false) {
+      const inlineMap = document.getElementById('question-map');
+      const dialogMap = document.getElementById('question-map-dialog');
+      const dialog = document.getElementById('question-navigator-dialog');
+      const isLargeTest = currentQuestions.length >= 100;
+
+      if (isLargeTest) {
+        if (inlineMap) inlineMap.innerHTML = '';
+        if (forceDialog || dialog?.open) buildQuestionMap(dialogMap);
+        return;
+      }
+
+      buildQuestionMap(inlineMap);
+      if (forceDialog || dialog?.open) buildQuestionMap(dialogMap);
     }
 
     function updateNavButtons() {
@@ -1965,7 +2072,7 @@
 
     function openQuestionNavigator() {
       const dialog = document.getElementById('question-navigator-dialog');
-      renderQuestionMap();
+      renderQuestionMap(true);
       openDialogElement(dialog);
       const currentButton = dialog.querySelector('button[aria-current="step"]');
       if (currentButton) currentButton.focus();
@@ -2052,9 +2159,11 @@
       const maxPoints = items.reduce((sum, item) => sum + item.maxPoints, 0);
       const percent = maxPoints > 0 ? Math.round((earnedPoints / maxPoints) * 10000) / 100 : 0;
       const questionPercent = totalQuestions > 0 ? Math.round((correctQuestions / totalQuestions) * 10000) / 100 : 0;
+      const answeredQuestions = answers.filter(item => item && item.length > 0).length;
+      const completedAll = answeredQuestions === totalQuestions;
       const passed = percent >= PASS_PERCENT;
       const createdAt = new Date();
-      return { items, correctQuestions, totalQuestions, earnedPoints, maxPoints, percent, questionPercent, passed, timeExpired, createdAt };
+      return { items, correctQuestions, totalQuestions, answeredQuestions, completedAll, earnedPoints, maxPoints, percent, questionPercent, passed, timeExpired, createdAt, testMode: currentTestMode };
     }
 
     function finishQuiz(timeExpired = false) {
@@ -2075,6 +2184,12 @@
       const badge = document.getElementById('result-badge');
       document.getElementById('score-main').textContent = `${lastResult.percent}%`;
       document.getElementById('result-subtitle').textContent = t('resultSubtitle', { earned: lastResult.earnedPoints, max: lastResult.maxPoints, correct: lastResult.correctQuestions, total: lastResult.totalQuestions });
+      const achievement = document.getElementById('ultra-achievement');
+      const isUltramarathonFinisher = lastResult.testMode === ULTRAMARATHON_MODE && lastResult.completedAll;
+      if (achievement) {
+        achievement.classList.toggle('hidden', !isUltramarathonFinisher);
+        achievement.textContent = isUltramarathonFinisher ? t('ultraFinisher', { count: lastResult.totalQuestions }) : '';
+      }
       if (lastResult.timeExpired) {
         badge.className = 'status-badge badge-time';
         badge.textContent = t('timeExpired');
@@ -2262,6 +2377,11 @@
     }
 
     async function restartSameTest() {
+      const mode = (lastResult && lastResult.testMode) || currentTestMode || 'standard';
+      if (mode === ULTRAMARATHON_MODE) {
+        await startUltramarathon();
+        return;
+      }
       const count = (lastResult && lastResult.totalQuestions) || currentTestLength || currentQuestions.length || 15;
       await startTest(count);
     }
@@ -2274,6 +2394,7 @@
       currentIndex = 0;
       timeLeft = 0;
       currentTestLength = 0;
+      currentTestMode = 'standard';
       lastResult = null;
       testTerminated = false;
       document.body.classList.remove('quiz-active');
@@ -2318,6 +2439,7 @@
 
     window.addEventListener('load', () => {
       applyTranslations();
+      refreshUltramarathonCard();
       document.addEventListener('visibilitychange', handleVisibilityChange);
       document.addEventListener('keydown', handleQuizKeyboard);
     });

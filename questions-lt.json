@@ -46,7 +46,7 @@
       "b) Ji sudaryta iš 4 m apskritimo",
       "c) Pradedamojo metimo zona gali būti skirtingos spalvos nei žaidimo aikštė",
       "d) Pradedamojo metimo zona gali būti tiesiog apskritimo linija",
-      "e) Pradedamojo metimo zona yra privaloma visiems rankinio varžyboms"
+      "e) Pradedamojo metimo zona yra privaloma visoms rankinio varžyboms"
     ],
     "correct": [
       1,
@@ -1393,7 +1393,7 @@
       "a) Asmuo turi palikti keitimų zoną",
       "b) JUODŲ komandos atsakingas oficialus atstovas baudžiamas asmenine nuobauda",
       "c) Papildomas komandos oficialus atstovas privalo palikti keitimų zoną",
-      "d) Žaidimas atnaujinamas A komandos laisvu metimu"
+      "d) Žaidimas atnaujinamas BALTŲ komandos laisvu metimu"
     ],
     "correct": [
       0,
@@ -3348,8 +3348,8 @@
     "options": [
       "a) Papildomas 2 minučių pašalinimas JUODAM 8",
       "b) Diskvalifikacija JUODAM 8 be rašytinio raporto (teisėjai parodo raudoną kortelę)",
-      "c) JUODŲ komanda 1 minutę 58 sekundės žaidžia 1 minutę žaidžia dviem žaidėjais mažumoje ir tada 2 minutes vienu žaidėju mažiau",
-      "d) JUODŲ komanda 2 minutes žaidžia dviem žaidėjais mažumoje",
+      "c) JUODŲ komanda 1 minutę 58 sekundes žaidžia dviem žaidėjais mažiau, o likusias 2 sekundes – vienu žaidėju mažiau.",
+      "d) JUODŲ komanda 2 minutes žaidžia dviem žaidėjais mažiau.",
       "e) Laisvas metimas BALTŲ komandai",
       "f) Time-out"
     ],

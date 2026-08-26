@@ -1421,7 +1421,10 @@
     const ULTRAMARATHON_MODE = 'ultramarathon';
     const THIRTY_QUESTION_COUNT = 30;
     const THIRTY_MAX_PER_CATEGORY = 3;
-    const THIRTY_SINGLE_QUESTION_RULES = new Set([1, 3]);
+    const THIRTY_RULE_ONLY_CODES = new Map([[1, '1.4'], [3, '3.4']]);
+    const THIRTY_HISTORY_DEPTH = 12;
+    const THIRTY_HARD_BIAS_MIN = 4.2;
+    const THIRTY_HARD_BIAS_RANGE = 4.8;
     const EXTREME_TEST_COUNT = 100;
     const EXTREME_MIN_DIFFICULT = 70;
     const DIFFICULT_SCORE_PERCENTILE = 0.55;
@@ -1429,6 +1432,12 @@
     const ruleCodeCache = new WeakMap();
     const scenarioCache = new WeakMap();
     const complexityScoreCache = new WeakMap();
+    let thirtyQuestionHistory = [];
+    let thirtyCategoryHistory = [];
+    let thirtyQuestionUsageCounts = new Map();
+    let thirtyCategoryUsageCounts = new Map();
+    let thirtyHistoryBankSignature = '';
+    let thirtyDifficultyThreshold = null;
 
     function getSecureRandomNumber() {
       try {
@@ -1508,10 +1517,16 @@
       return rule === null ? 'OTHER' : `RULE_${rule}`;
     }
 
+    function isEligibleForThirtyQuestionTest(question) {
+      const rule = getRuleNumber(question);
+      const onlyAllowedCode = THIRTY_RULE_ONLY_CODES.get(rule);
+      return !onlyAllowedCode || getRuleCode(question) === onlyAllowedCode;
+    }
+
     function getThirtyQuestionCategoryLimit(category) {
       const match = String(category || '').match(/^RULE_(\d+)$/);
       const rule = match ? Number(match[1]) : null;
-      return THIRTY_SINGLE_QUESTION_RULES.has(rule) ? 1 : THIRTY_MAX_PER_CATEGORY;
+      return THIRTY_RULE_ONLY_CODES.has(rule) ? 1 : THIRTY_MAX_PER_CATEGORY;
     }
 
     function getQuestionKey(question) {
@@ -1697,8 +1712,193 @@
       });
     }
 
+    function getThirtyBankSignature(bank) {
+      if (!bank.length) return 'empty';
+      const middleIndex = Math.floor(bank.length / 2);
+      return [
+        bank.length,
+        getQuestionKey(bank[0]),
+        getQuestionKey(bank[middleIndex]),
+        getQuestionKey(bank[bank.length - 1])
+      ].join('::');
+    }
+
+    function syncThirtyRandomizationState(bank) {
+      const signature = getThirtyBankSignature(bank);
+      if (signature === thirtyHistoryBankSignature) return;
+      thirtyHistoryBankSignature = signature;
+      thirtyQuestionHistory = [];
+      thirtyCategoryHistory = [];
+      thirtyQuestionUsageCounts = new Map();
+      thirtyCategoryUsageCounts = new Map();
+      thirtyDifficultyThreshold = null;
+    }
+
+    function getThirtyCategoryFreshnessWeight(category) {
+      if (!thirtyCategoryHistory.length) return 1;
+      let recentUse = 0;
+      thirtyCategoryHistory.forEach((counts, index) => {
+        if (!counts.has(category)) return;
+        const recency = (index + 1) / thirtyCategoryHistory.length;
+        recentUse += recency * (counts.get(category) || 1);
+      });
+
+      const latestCounts = thirtyCategoryHistory[thirtyCategoryHistory.length - 1];
+      const latestUse = latestCounts?.get(category) || 0;
+      const immediateRepeatPenalty = latestUse ? 0.09 / Math.max(1, latestUse) : 1.24;
+      const lifetimeUse = thirtyCategoryUsageCounts.get(category) || 0;
+      const lifetimeBalance = 1 / Math.sqrt(1 + (lifetimeUse * 0.018));
+      return Math.max(0.0001, immediateRepeatPenalty * lifetimeBalance / (1 + (recentUse * 0.38)));
+    }
+
+    function chooseThirtyQuestionBuckets(buckets, targetCount) {
+      const available = [...buckets];
+      const selected = [];
+
+      while (selected.length < targetCount && available.length) {
+        const latestQuestionSet = thirtyQuestionHistory.length
+          ? thirtyQuestionHistory[thirtyQuestionHistory.length - 1]
+          : null;
+        const weights = available.map(bucket => {
+          const freshnessWeight = getThirtyCategoryFreshnessWeight(bucket.category);
+          const latestFreshCount = latestQuestionSet
+            ? bucket.questions.filter(question => !latestQuestionSet.has(getQuestionKey(question))).length
+            : bucket.questions.length;
+          const immediateQuestionWeight = latestFreshCount >= bucket.capacity
+            ? 1.3
+            : latestFreshCount > 0 ? 0.62 : 0.035;
+          const randomJitter = 0.55 + (getSecureRandomNumber() * 0.9);
+          return Math.max(0.0001, freshnessWeight * immediateQuestionWeight * randomJitter);
+        });
+        const chosen = chooseWeightedCandidate(available, weights);
+        selected.push(chosen);
+        available.splice(available.indexOf(chosen), 1);
+      }
+
+      return { selected, available };
+    }
+
+    function getThirtyQuestionRecencyIndex(question) {
+      const key = getQuestionKey(question);
+      for (let index = thirtyQuestionHistory.length - 1; index >= 0; index -= 1) {
+        if (thirtyQuestionHistory[index].has(key)) return index;
+      }
+      return -1;
+    }
+
+    function getThirtyQuestionCandidatePool(questions, remainingCount) {
+      const available = [...questions];
+      if (!thirtyQuestionHistory.length || available.length <= remainingCount) return available;
+
+      // Exclude as much recent history as possible. If a rule has enough alternatives,
+      // questions from the immediately previous tests cannot compete for the same slots.
+      for (let recentDepth = thirtyQuestionHistory.length; recentDepth >= 1; recentDepth -= 1) {
+        const blocked = new Set();
+        for (let offset = 0; offset < recentDepth; offset += 1) {
+          const historyIndex = thirtyQuestionHistory.length - 1 - offset;
+          thirtyQuestionHistory[historyIndex].forEach(key => blocked.add(key));
+        }
+        const outsideRecentWindow = available.filter(question => !blocked.has(getQuestionKey(question)));
+        if (outsideRecentWindow.length >= remainingCount) return outsideRecentWindow;
+      }
+
+      return available;
+    }
+
+    function selectThirtyQuestionsFromPool(pool, count, difficultyThreshold, hardBias) {
+      const remainingQuestions = shuffleArray(pool);
+      const selected = [];
+      const complexityScores = remainingQuestions.map(getQuestionComplexityScore);
+      const minScore = complexityScores.length ? Math.min(...complexityScores) : 0;
+      const maxScore = complexityScores.length ? Math.max(...complexityScores) : 1;
+      const scoreRange = Math.max(1, maxScore - minScore);
+
+      while (selected.length < count && remainingQuestions.length) {
+        const remainingTarget = count - selected.length;
+        let candidates = getThirtyQuestionCandidatePool(remainingQuestions, remainingTarget);
+        if (!candidates.length) candidates = [...remainingQuestions];
+
+        const minUsage = Math.min(...candidates.map(question => thirtyQuestionUsageCounts.get(getQuestionKey(question)) || 0));
+        const weights = candidates.map(question => {
+          const key = getQuestionKey(question);
+          const usageCount = thirtyQuestionUsageCounts.get(key) || 0;
+          const usageGap = Math.max(0, usageCount - minUsage);
+          const usageWeight = 1 / Math.pow(1 + usageGap, 1.75);
+
+          const recencyIndex = getThirtyQuestionRecencyIndex(question);
+          const age = recencyIndex < 0 ? thirtyQuestionHistory.length + 2 : thirtyQuestionHistory.length - recencyIndex;
+          const recencyWeight = recencyIndex < 0
+            ? 1.4
+            : 0.055 + Math.pow(age / Math.max(2, thirtyQuestionHistory.length + 1), 2.35);
+
+          const complexity = (getQuestionComplexityScore(question) - minScore) / scoreRange;
+          const difficultWeight = isDifficultOrLong(question, difficultyThreshold) ? hardBias : 0.68;
+          const scenarioWeight = isScenarioBased(question) ? 1.34 : 1;
+          const multiAnswerWeight = Array.isArray(question?.correct) && question.correct.length > 1 ? 1.24 : 1;
+          const complexityWeight = 0.8 + (Math.pow(Math.max(0, complexity), 1.18) * 2.15);
+          const randomJitter = 0.56 + (getSecureRandomNumber() * 0.88);
+
+          return Math.max(0.0001,
+            usageWeight
+            * recencyWeight
+            * difficultWeight
+            * scenarioWeight
+            * multiAnswerWeight
+            * complexityWeight
+            * randomJitter
+          );
+        });
+
+        const chosen = chooseWeightedCandidate(candidates, weights);
+        selected.push(chosen);
+        const chosenKey = getQuestionKey(chosen);
+        for (let index = remainingQuestions.length - 1; index >= 0; index -= 1) {
+          if (getQuestionKey(remainingQuestions[index]) === chosenKey) remainingQuestions.splice(index, 1);
+        }
+      }
+
+      return selected;
+    }
+
+    function selectThirtyBucketQuestions(bucket, target, requiredDifficult, difficultyThreshold, hardBias) {
+      const difficultPool = bucket.questions.filter(question => isDifficultOrLong(question, difficultyThreshold));
+      const difficultQuestions = selectThirtyQuestionsFromPool(
+        difficultPool,
+        Math.min(requiredDifficult, target, difficultPool.length),
+        difficultyThreshold,
+        hardBias
+      );
+      const difficultKeys = new Set(difficultQuestions.map(getQuestionKey));
+      const remainingPool = bucket.questions.filter(question => !difficultKeys.has(getQuestionKey(question)));
+      const remainingQuestions = selectThirtyQuestionsFromPool(
+        remainingPool,
+        target - difficultQuestions.length,
+        difficultyThreshold,
+        1.65 + (getSecureRandomNumber() * 1.35)
+      );
+      return [...difficultQuestions, ...remainingQuestions];
+    }
+
+    function rememberThirtyQuestionSet(questions, categoryCounts) {
+      const questionKeys = new Set();
+      questions.forEach(question => {
+        const key = getQuestionKey(question);
+        questionKeys.add(key);
+        thirtyQuestionUsageCounts.set(key, (thirtyQuestionUsageCounts.get(key) || 0) + 1);
+      });
+      categoryCounts.forEach((count, category) => {
+        thirtyCategoryUsageCounts.set(category, (thirtyCategoryUsageCounts.get(category) || 0) + count);
+      });
+
+      thirtyQuestionHistory.push(questionKeys);
+      thirtyCategoryHistory.push(new Map(categoryCounts));
+      while (thirtyQuestionHistory.length > THIRTY_HISTORY_DEPTH) thirtyQuestionHistory.shift();
+      while (thirtyCategoryHistory.length > THIRTY_HISTORY_DEPTH) thirtyCategoryHistory.shift();
+    }
+
     function buildThirtyQuestionSet() {
-      const bank = getUniqueQuestionPool(questionBank);
+      const bank = getUniqueQuestionPool(questionBank).filter(isEligibleForThirtyQuestionTest);
+      syncThirtyRandomizationState(bank);
       if (bank.length < THIRTY_QUESTION_COUNT) {
         throw new Error(`The question bank contains only ${bank.length} unique questions; ${THIRTY_QUESTION_COUNT} are required.`);
       }
@@ -1724,7 +1924,7 @@
         throw new Error(`The question bank can provide only ${totalCapacity} questions while respecting the hard 30-question category limits; ${THIRTY_QUESTION_COUNT} are required.`);
       }
 
-      // SAR is independently optional when the numbered-rule buckets already have enough capacity.
+      // SAR is independently optional whenever the numbered rules alone can still supply all 30 questions.
       let eligibleBuckets = allBuckets;
       const nonSarBuckets = allBuckets.filter(bucket => bucket.category !== 'SAR');
       const nonSarCapacity = nonSarBuckets.reduce((sum, bucket) => sum + bucket.capacity, 0);
@@ -1732,24 +1932,34 @@
         eligibleBuckets = nonSarBuckets;
       }
 
+      // Randomize how many rule families participate, then bias selection softly toward recently unused families.
       const minimumCategoryCount = Math.ceil(THIRTY_QUESTION_COUNT / THIRTY_MAX_PER_CATEGORY);
       const targetCategoryCount = Math.min(
         eligibleBuckets.length,
         minimumCategoryCount + getRandomInteger(Math.max(1, eligibleBuckets.length - minimumCategoryCount + 1))
       );
-      const randomizedBuckets = shuffleArray(eligibleBuckets);
-      const selectedBuckets = randomizedBuckets.slice(0, targetCategoryCount);
+      const bucketChoice = chooseThirtyQuestionBuckets(eligibleBuckets, targetCategoryCount);
+      const selectedBuckets = bucketChoice.selected;
       let selectedCapacity = selectedBuckets.reduce((sum, bucket) => sum + bucket.capacity, 0);
 
-      // Uneven future banks may need extra categories beyond the randomized target to remain feasible.
-      for (let index = targetCategoryCount; selectedCapacity < THIRTY_QUESTION_COUNT && index < randomizedBuckets.length; index += 1) {
-        selectedBuckets.push(randomizedBuckets[index]);
-        selectedCapacity += randomizedBuckets[index].capacity;
+      // If low-capacity categories such as Rule 1 or Rule 3 were drawn, add more randomized buckets until 30 is feasible.
+      while (selectedCapacity < THIRTY_QUESTION_COUNT && bucketChoice.available.length) {
+        const extraChoice = chooseThirtyQuestionBuckets(bucketChoice.available, 1);
+        if (!extraChoice.selected.length) break;
+        const extra = extraChoice.selected[0];
+        selectedBuckets.push(extra);
+        bucketChoice.available.splice(bucketChoice.available.indexOf(extra), 1);
+        selectedCapacity += extra.capacity;
       }
       if (selectedCapacity < THIRTY_QUESTION_COUNT) {
         throw new Error(`The question bank cannot produce ${THIRTY_QUESTION_COUNT} questions without exceeding the hard 30-question category limits.`);
       }
 
+      // Vary the per-rule distribution itself. Different runs can be broad, neutral, or more concentrated (still capped at 3).
+      const allocationProfile = getRandomInteger(3);
+      const previousCounts = thirtyCategoryHistory.length
+        ? thirtyCategoryHistory[thirtyCategoryHistory.length - 1]
+        : new Map();
       const categoryTargets = new Map(selectedBuckets.map(bucket => [bucket.category, 1]));
       let plannedTotal = selectedBuckets.length;
       while (plannedTotal < THIRTY_QUESTION_COUNT) {
@@ -1757,23 +1967,76 @@
         if (!expandableBuckets.length) {
           throw new Error(`The question bank cannot produce ${THIRTY_QUESTION_COUNT} questions without exceeding the hard 30-question category limits.`);
         }
-        const bucket = expandableBuckets[getRandomInteger(expandableBuckets.length)];
+
+        const weights = expandableBuckets.map(bucket => {
+          const current = categoryTargets.get(bucket.category) || 0;
+          const proposed = current + 1;
+          let shapeWeight = 1;
+          if (allocationProfile === 0) shapeWeight = 1 / Math.pow(Math.max(1, current), 1.25);
+          if (allocationProfile === 2) shapeWeight = Math.pow(Math.max(1, current), 1.15);
+          const previous = previousCounts.get(bucket.category) || 0;
+          const distributionNovelty = proposed === previous ? 0.46 : 1.18;
+          const latestSet = thirtyQuestionHistory.length ? thirtyQuestionHistory[thirtyQuestionHistory.length - 1] : null;
+          const freshFromLatest = latestSet
+            ? bucket.questions.filter(question => !latestSet.has(getQuestionKey(question))).length
+            : bucket.questions.length;
+          const immediateOverlapWeight = proposed <= freshFromLatest ? 1.22 : 0.075;
+          const randomJitter = 0.62 + (getSecureRandomNumber() * 0.76);
+          return Math.max(0.0001, shapeWeight * distributionNovelty * immediateOverlapWeight * randomJitter);
+        });
+
+        const bucket = chooseWeightedCandidate(expandableBuckets, weights);
         categoryTargets.set(bucket.category, (categoryTargets.get(bucket.category) || 0) + 1);
         plannedTotal += 1;
+      }
+
+      const difficultyThreshold = thirtyDifficultyThreshold ?? (thirtyDifficultyThreshold = getDifficultyThreshold(bank));
+      const hardBias = THIRTY_HARD_BIAS_MIN + (getSecureRandomNumber() * THIRTY_HARD_BIAS_RANGE);
+      const latestQuestionSet = thirtyQuestionHistory.length ? thirtyQuestionHistory[thirtyQuestionHistory.length - 1] : null;
+      const hardTargets = new Map(selectedBuckets.map(bucket => [bucket.category, 0]));
+      const hardCapacities = new Map(selectedBuckets.map(bucket => {
+        const target = categoryTargets.get(bucket.category) || 0;
+        const difficultCount = bucket.questions.filter(question => isDifficultOrLong(question, difficultyThreshold)).length;
+        return [bucket.category, Math.min(target, difficultCount)];
+      }));
+      const totalHardCapacity = [...hardCapacities.values()].reduce((sum, count) => sum + count, 0);
+      const desiredHardMinimum = Math.min(totalHardCapacity, 20 + getRandomInteger(5));
+      let plannedHard = 0;
+      while (plannedHard < desiredHardMinimum) {
+        const expandableHardBuckets = selectedBuckets.filter(bucket =>
+          (hardTargets.get(bucket.category) || 0) < (hardCapacities.get(bucket.category) || 0)
+        );
+        if (!expandableHardBuckets.length) break;
+
+        const weights = expandableHardBuckets.map(bucket => {
+          const currentHard = hardTargets.get(bucket.category) || 0;
+          const proposedHard = currentHard + 1;
+          const freshHardCount = latestQuestionSet
+            ? bucket.questions.filter(question =>
+              isDifficultOrLong(question, difficultyThreshold)
+              && !latestQuestionSet.has(getQuestionKey(question))
+            ).length
+            : hardCapacities.get(bucket.category) || 0;
+          const freshnessWeight = proposedHard <= freshHardCount ? 1.3 : 0.11;
+          const spreadWeight = 1 / (1 + currentHard * 0.4);
+          const randomJitter = 0.65 + (getSecureRandomNumber() * 0.7);
+          return Math.max(0.0001, freshnessWeight * spreadWeight * randomJitter);
+        });
+        const bucket = chooseWeightedCandidate(expandableHardBuckets, weights);
+        hardTargets.set(bucket.category, (hardTargets.get(bucket.category) || 0) + 1);
+        plannedHard += 1;
       }
 
       const selectedQuestions = [];
       selectedBuckets.forEach(bucket => {
         const target = categoryTargets.get(bucket.category) || 0;
-        const preferComplexity = getSecureRandomNumber() < 0.6;
-        const selected = weightedRandomSelection(bucket.questions, target, {
-          preferComplexity,
-          maxPerCategory: bucket.categoryLimit,
-          allowCapRelaxation: false,
-          complexityBaseWeight: 0.8,
-          complexityBoost: 1.4,
-          complexityExponent: 1.2
-        });
+        const selected = selectThirtyBucketQuestions(
+          bucket,
+          target,
+          hardTargets.get(bucket.category) || 0,
+          difficultyThreshold,
+          hardBias
+        );
         if (selected.length !== target) {
           throw new Error(`Not enough unique questions are available in ${bucket.category} for the 30-question test.`);
         }
@@ -1787,9 +2050,12 @@
         throw new Error('Unable to build a valid 30-question test while respecting uniqueness and the hard rule/category caps.');
       }
 
+      const randomizedQuestions = shuffleArray(selectedQuestions);
+      rememberThirtyQuestionSet(randomizedQuestions, categoryCounts);
       return {
-        questions: shuffleArray(selectedQuestions),
-        categoryCap: THIRTY_MAX_PER_CATEGORY
+        questions: randomizedQuestions,
+        categoryCap: THIRTY_MAX_PER_CATEGORY,
+        difficultyThreshold
       };
     }
 
@@ -1805,7 +2071,7 @@
         throw new Error(`The question bank contains only ${bank.length} unique questions; ${EXTREME_TEST_COUNT} are required.`);
       }
 
-      const difficultyThreshold = getDifficultyThreshold(bank);
+      const difficultyThreshold = thirtyDifficultyThreshold ?? (thirtyDifficultyThreshold = getDifficultyThreshold(bank));
       const difficultPool = bank.filter(question => isDifficultOrLong(question, difficultyThreshold));
       if (difficultPool.length < EXTREME_MIN_DIFFICULT) {
         throw new Error(`The question bank contains only ${difficultPool.length} difficult/long questions; ${EXTREME_MIN_DIFFICULT} are required.`);

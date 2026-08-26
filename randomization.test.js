@@ -6,7 +6,7 @@ const html = fs.readFileSync('index.html', 'utf8');
 const scriptMatches = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)];
 const appScript = scriptMatches[scriptMatches.length - 1][1];
 const formerRequiredRules = [2, 4, 6, 7, 8, 13, 14, 15, 16];
-const THIRTY_ATTEMPTS = 300;
+const THIRTY_ATTEMPTS = 600;
 
 function createSeededCrypto(seed) {
   let state = seed >>> 0;
@@ -78,6 +78,12 @@ function auditThirty(context) {
       if (!questionKeysByCategory[category]) questionKeysByCategory[category] = [];
       questionKeysByCategory[category].push(getQuestionKey(question));
     });
+    const ruleCodesByCategory = {};
+    audit.questions.forEach(question => {
+      const category = getQuestionCategory(question);
+      if (!ruleCodesByCategory[category]) ruleCodesByCategory[category] = [];
+      ruleCodesByCategory[category].push(getRuleCode(question));
+    });
     const numberedRules = Object.keys(categoryCounts)
       .filter(category => category.startsWith('RULE_'))
       .map(category => Number(category.slice(5)))
@@ -87,9 +93,14 @@ function auditThirty(context) {
       categoryCap: audit.categoryCap,
       categoryCounts,
       questionKeysByCategory,
+      ruleCodesByCategory,
       keys: audit.questions.map(getQuestionKey),
       numberedRules,
-      sarCount: audit.questions.filter(isSarQuestion).length
+      sarCount: audit.questions.filter(isSarQuestion).length,
+      difficult: audit.questions.filter(question => isDifficultOrLong(question, audit.difficultyThreshold)).length,
+      scenario: audit.questions.filter(isScenarioBased).length,
+      multipleAnswer: audit.questions.filter(question => Array.isArray(question.correct) && question.correct.length > 1).length,
+      averageComplexity: audit.questions.reduce((sum, question) => sum + getQuestionComplexityScore(question), 0) / audit.questions.length
     };
   })())`));
 }
@@ -199,7 +210,7 @@ function runBankTests(filename) {
 
   const sourceCountsByCategory = JSON.parse(evaluate(context, `JSON.stringify((() => {
     const counts = {};
-    getUniqueQuestionPool(questionBank).forEach(question => {
+    getUniqueQuestionPool(questionBank).filter(isEligibleForThirtyQuestionTest).forEach(question => {
       const category = getQuestionCategory(question);
       counts[category] = (counts[category] || 0) + 1;
     });
@@ -216,6 +227,19 @@ function runBankTests(filename) {
   const formerRuleWasMissing = Object.fromEntries(formerRequiredRules.map(rule => [rule, false]));
   let minCategoryCount = Infinity;
   let maxCategoryCount = 0;
+  let previousThirtyKeys = null;
+  let previousRuleCombinationSignature = null;
+  let previousRuleDistributionSignature = null;
+  let totalConsecutiveQuestionOverlap = 0;
+  let maxConsecutiveQuestionOverlap = 0;
+  let consecutiveRuleCombinationRepeats = 0;
+  let consecutiveRuleDistributionRepeats = 0;
+  let difficultTotal = 0;
+  let difficultMin = Infinity;
+  let difficultMax = 0;
+  let scenarioTotal = 0;
+  let multipleAnswerTotal = 0;
+  let complexityTotal = 0;
 
   for (let attempt = 0; attempt < THIRTY_ATTEMPTS; attempt += 1) {
     const audit = auditThirty(context);
@@ -229,16 +253,40 @@ function runBankTests(filename) {
     assert(Math.max(...counts) <= 3, 'A top-level rule/category exceeded the hard maximum of 3.');
     assert((audit.categoryCounts.RULE_1 || 0) <= 1, 'Rule 1 exceeded its hard maximum of 1 question.');
     assert((audit.categoryCounts.RULE_3 || 0) <= 1, 'Rule 3 exceeded its hard maximum of 1 question.');
+    assert((audit.ruleCodesByCategory.RULE_1 || []).every(code => code === '1.4'), 'A Rule 1 question other than Rule 1.4 appeared in the 30-question test.');
+    assert((audit.ruleCodesByCategory.RULE_3 || []).every(code => code === '3.4'), 'A Rule 3 question other than Rule 3.4 appeared in the 30-question test.');
 
     minCategoryCount = Math.min(minCategoryCount, categories.length);
     maxCategoryCount = Math.max(maxCategoryCount, categories.length);
-    selectionSignatures.add([...audit.keys].sort().join('\n'));
-    orderSignatures.add(audit.keys.join('\n'));
-    ruleCombinationSignatures.add(audit.numberedRules.join(','));
-    ruleDistributionSignatures.add(categories.map(category => `${category}:${audit.categoryCounts[category]}`).join('|'));
+    const selectionSignature = [...audit.keys].sort().join('\n');
+    const orderSignature = audit.keys.join('\n');
+    const ruleCombinationSignature = audit.numberedRules.join(',');
+    const ruleDistributionSignature = categories.map(category => `${category}:${audit.categoryCounts[category]}`).join('|');
+
+    if (previousThirtyKeys) {
+      const overlap = audit.keys.filter(key => previousThirtyKeys.has(key)).length;
+      totalConsecutiveQuestionOverlap += overlap;
+      maxConsecutiveQuestionOverlap = Math.max(maxConsecutiveQuestionOverlap, overlap);
+      if (ruleCombinationSignature === previousRuleCombinationSignature) consecutiveRuleCombinationRepeats += 1;
+      if (ruleDistributionSignature === previousRuleDistributionSignature) consecutiveRuleDistributionRepeats += 1;
+    }
+    previousThirtyKeys = new Set(audit.keys);
+    previousRuleCombinationSignature = ruleCombinationSignature;
+    previousRuleDistributionSignature = ruleDistributionSignature;
+
+    selectionSignatures.add(selectionSignature);
+    orderSignatures.add(orderSignature);
+    ruleCombinationSignatures.add(ruleCombinationSignature);
+    ruleDistributionSignatures.add(ruleDistributionSignature);
     sarCounts.add(audit.sarCount);
     specialRuleCounts[1].add(audit.categoryCounts.RULE_1 || 0);
     specialRuleCounts[3].add(audit.categoryCounts.RULE_3 || 0);
+    difficultTotal += audit.difficult;
+    difficultMin = Math.min(difficultMin, audit.difficult);
+    difficultMax = Math.max(difficultMax, audit.difficult);
+    scenarioTotal += audit.scenario;
+    multipleAnswerTotal += audit.multipleAnswer;
+    complexityTotal += audit.averageComplexity;
 
     formerRequiredRules.forEach(rule => {
       if (!audit.numberedRules.includes(rule)) formerRuleWasMissing[rule] = true;
@@ -250,12 +298,18 @@ function runBankTests(filename) {
     });
   }
 
-  assert(selectionSignatures.size >= 240, 'The 30-question selections do not vary enough across 300 generations.');
-  assert(orderSignatures.size >= 270, 'The final 30-question order does not vary enough across 300 generations.');
-  assert(ruleCombinationSignatures.size >= 120, 'Too few distinct numbered-rule combinations were generated.');
-  assert(ruleDistributionSignatures.size >= 240, 'Too few distinct rule/category distributions were generated.');
+  assert.strictEqual(selectionSignatures.size, THIRTY_ATTEMPTS, 'A full 30-question selection repeated during the long consecutive stress run.');
+  assert.strictEqual(orderSignatures.size, THIRTY_ATTEMPTS, 'A final 30-question order repeated during the long consecutive stress run.');
+  assert(ruleCombinationSignatures.size >= Math.floor(THIRTY_ATTEMPTS * 0.4), 'Too few distinct numbered-rule combinations were generated.');
+  assert(ruleDistributionSignatures.size >= Math.floor(THIRTY_ATTEMPTS * 0.95), 'Too few distinct rule/category distributions were generated.');
   assert(minCategoryCount >= 10, 'A 30-question test used too few rule/category families to respect the cap of 3.');
   assert(maxCategoryCount > minCategoryCount, 'The number of represented rule/category families never changes.');
+
+  const averageConsecutiveQuestionOverlap = totalConsecutiveQuestionOverlap / Math.max(1, THIRTY_ATTEMPTS - 1);
+  assert(maxConsecutiveQuestionOverlap <= 5, 'Consecutive 30-question tests repeated too many exact questions.');
+  assert(averageConsecutiveQuestionOverlap <= 1.25, 'Consecutive 30-question tests repeat too much of the immediately previous test on average.');
+  assert(consecutiveRuleCombinationRepeats <= Math.ceil(THIRTY_ATTEMPTS * 0.04), 'Consecutive 30-question tests repeat the same numbered-rule combination too often.');
+  assert(consecutiveRuleDistributionRepeats <= Math.ceil(THIRTY_ATTEMPTS * 0.01), 'Consecutive 30-question tests repeat the same full rule distribution too often.');
 
   formerRequiredRules.forEach(rule => {
     assert(formerRuleWasMissing[rule], `Former required Rule ${rule} still appeared mandatory across all generated tests.`);
@@ -271,14 +325,29 @@ function runBankTests(filename) {
     assert(![...specialRuleCounts[rule]].some(count => count > 1), `Rule ${rule} exceeded its hard maximum of 1.`);
   }
 
+  const averageDifficult = difficultTotal / THIRTY_ATTEMPTS;
+  const averageScenario = scenarioTotal / THIRTY_ATTEMPTS;
+  const averageMultipleAnswer = multipleAnswerTotal / THIRTY_ATTEMPTS;
+  assert(difficultMin >= 18, 'The strengthened 30-question mode produced a test with too few difficult/long questions.');
+  assert(averageDifficult >= 22, 'The strengthened 30-question mode is not challenging enough on average.');
+  assert(averageScenario >= 21, 'Scenario-based questions are not represented strongly enough in the challenge mix.');
+  assert(averageMultipleAnswer >= 12, 'Multiple-answer questions are not represented strongly enough in the challenge mix.');
+
   Object.entries(sourceCountsByCategory).forEach(([category, sourceCount]) => {
     if (!category.startsWith('RULE_') || sourceCount < 4) return;
     const seenCount = seenQuestionKeysByCategory.get(category)?.size || 0;
     assert(
-      seenCount >= 4,
+      seenCount >= Math.min(sourceCount, 6),
       `${category} did not vary the selected questions enough across repeated 30-question tests.`
     );
   });
+
+  const eligibleQuestionCount = Object.values(sourceCountsByCategory).reduce((sum, count) => sum + count, 0);
+  const seenEligibleQuestionCount = [...seenQuestionKeysByCategory.values()].reduce((sum, keys) => sum + keys.size, 0);
+  assert(
+    seenEligibleQuestionCount >= Math.floor(eligibleQuestionCount * 0.9),
+    'The long stress run did not rotate through enough of the eligible 30-question pool.'
+  );
 
   testThirtyCapFailure(context, bank);
   testStandardModes(context);
@@ -323,9 +392,19 @@ function runBankTests(filename) {
     thirtyRuleCombinations: ruleCombinationSignatures.size,
     thirtyRuleDistributions: ruleDistributionSignatures.size,
     thirtyCategoryCountRange: [minCategoryCount, maxCategoryCount],
+    thirtyAverageConsecutiveQuestionOverlap: Number((totalConsecutiveQuestionOverlap / Math.max(1, THIRTY_ATTEMPTS - 1)).toFixed(2)),
+    thirtyMaxConsecutiveQuestionOverlap: maxConsecutiveQuestionOverlap,
+    thirtyConsecutiveRuleCombinationRepeats: consecutiveRuleCombinationRepeats,
+    thirtyConsecutiveRuleDistributionRepeats: consecutiveRuleDistributionRepeats,
     thirtySarCounts: [...sarCounts].sort((a, b) => a - b),
     thirtyRule1Counts: [...specialRuleCounts[1]].sort((a, b) => a - b),
     thirtyRule3Counts: [...specialRuleCounts[3]].sort((a, b) => a - b),
+    thirtyDifficultRange: [difficultMin, difficultMax],
+    thirtyAverageDifficult: Number((difficultTotal / THIRTY_ATTEMPTS).toFixed(2)),
+    thirtyAverageScenario: Number((scenarioTotal / THIRTY_ATTEMPTS).toFixed(2)),
+    thirtyAverageMultipleAnswer: Number((multipleAnswerTotal / THIRTY_ATTEMPTS).toFixed(2)),
+    thirtyAverageComplexity: Number((complexityTotal / THIRTY_ATTEMPTS).toFixed(2)),
+    thirtyEligibleQuestionCoverage: `${seenEligibleQuestionCount}/${eligibleQuestionCount}`,
     hundredUniqueSelections: hundredSelections.size,
     hundredUniqueOrders: hundredOrders.size,
     hundredSarCounts: [...hundredSarCounts].sort((a, b) => a - b),
@@ -337,8 +416,16 @@ assert(!appScript.includes('.sort(() => Math.random() - 0.5)'), 'Prohibited rand
 assert(!appScript.includes('REQUIRED_RULES_30'), 'Legacy fixed required-rule behavior remains in the app.');
 assert(!appScript.includes('THIRTY_MIN_DIFFICULT_ADDITIONAL'), 'Legacy hard difficult-question quota remains in the app.');
 assert(!appScript.includes('THIRTY_ADDITIONAL_COUNT'), 'Legacy required/additional split remains in the app.');
-assert(appScript.includes('THIRTY_SINGLE_QUESTION_RULES = new Set([1, 3])'), 'Rule 1/3 one-question cap configuration is missing.');
+assert(appScript.includes("THIRTY_RULE_ONLY_CODES = new Map([[1, '1.4'], [3, '3.4']])"), 'Rule 1.4/3.4 eligibility configuration is missing.');
+assert(appScript.includes('isEligibleForThirtyQuestionTest'), '30-question Rule 1.4/3.4 eligibility helper is missing.');
 assert(appScript.includes('getThirtyQuestionCategoryLimit'), '30-question category-specific cap helper is missing.');
+assert(appScript.includes('THIRTY_HISTORY_DEPTH = 12'), 'Deep 30-question recent-history rotation is missing.');
+assert(appScript.includes('THIRTY_HARD_BIAS_MIN = 4.2'), 'Stronger randomized difficulty bias is missing.');
+assert(appScript.includes('getThirtyQuestionCandidatePool'), 'Recent-question exclusion helper is missing.');
+assert(appScript.includes('thirtyQuestionUsageCounts'), 'Long-sequence question usage tracking is missing.');
+assert(appScript.includes('desiredHardMinimum'), 'Randomized difficult-question target is missing.');
+assert(appScript.includes('selectThirtyBucketQuestions'), '30-question recency-aware question selection is missing.');
+assert(appScript.includes('rememberThirtyQuestionSet'), '30-question recent-set memory is missing.');
 assert(!appScript.includes('shuffledOptions'), 'Legacy answer-order storage remains in the app.');
 assert(appScript.includes('q.options.map((raw, optionIndex)'), 'Detailed reports must use the attempt-specific option order.');
 

@@ -5,7 +5,8 @@ const assert = require('assert');
 const html = fs.readFileSync('index.html', 'utf8');
 const scriptMatches = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)];
 const appScript = scriptMatches[scriptMatches.length - 1][1];
-const requiredRules = [2, 4, 6, 7, 8, 13, 14, 15, 16];
+const formerRequiredRules = [2, 4, 6, 7, 8, 13, 14, 15, 16];
+const THIRTY_ATTEMPTS = 300;
 
 function createSeededCrypto(seed) {
   let state = seed >>> 0;
@@ -69,17 +70,26 @@ function setQuestionBank(context, bank) {
 function auditThirty(context) {
   return JSON.parse(evaluate(context, `JSON.stringify((() => {
     const audit = buildThirtyQuestionSet();
-    const requiredKeys = new Set(audit.requiredQuestions.map(getQuestionKey));
+    const categoryCounts = {};
+    const questionKeysByCategory = {};
+    audit.questions.forEach(question => {
+      const category = getQuestionCategory(question);
+      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+      if (!questionKeysByCategory[category]) questionKeysByCategory[category] = [];
+      questionKeysByCategory[category].push(getQuestionKey(question));
+    });
+    const numberedRules = Object.keys(categoryCounts)
+      .filter(category => category.startsWith('RULE_'))
+      .map(category => Number(category.slice(5)))
+      .sort((a, b) => a - b);
     return {
-      requiredRules: audit.requiredQuestions.map(getRuleNumber),
-      requiredScores: audit.requiredQuestions.map(getQuestionComplexityScore),
-      requiredLength: audit.requiredQuestions.length,
-      additionalLength: audit.additionalQuestions.length,
-      difficultAdditional: audit.additionalQuestions.filter(q => isDifficultOrLong(q, audit.difficultyThreshold)).length,
-      sarAdditional: audit.additionalQuestions.filter(isSarQuestion).length,
+      total: audit.questions.length,
+      categoryCap: audit.categoryCap,
+      categoryCounts,
+      questionKeysByCategory,
       keys: audit.questions.map(getQuestionKey),
-      orderedIds: audit.questions.map(q => q.id),
-      requiredPositions: audit.questions.map((q, index) => requiredKeys.has(getQuestionKey(q)) ? index : -1).filter(index => index >= 0)
+      numberedRules,
+      sarCount: audit.questions.filter(isSarQuestion).length
     };
   })())`));
 }
@@ -98,8 +108,7 @@ function auditHundred(context) {
       sarCount: audit.questions.filter(isSarQuestion).length,
       categoryCap: audit.categoryCap,
       categoryCounts,
-      keys: audit.questions.map(getQuestionKey),
-      orderedIds: audit.questions.map(q => q.id)
+      keys: audit.questions.map(getQuestionKey)
     };
   })())`));
 }
@@ -116,6 +125,35 @@ function auditUltramarathon(context) {
       order: questions.map(getQuestionKey)
     };
   })())`));
+}
+
+function testStandardModes(context) {
+  for (const count of [15, 20]) {
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const audit = JSON.parse(evaluate(context, `JSON.stringify((() => {
+        const questions = selectQuestionsForTest(${count});
+        return { total: questions.length, keys: questions.map(getQuestionKey) };
+      })())`));
+      assert.strictEqual(audit.total, count, `${count}-question mode returned the wrong number of questions.`);
+      assert.strictEqual(new Set(audit.keys).size, count, `${count}-question mode contains duplicate questions.`);
+    }
+  }
+}
+
+function testThirtyCapFailure(context, bank) {
+  context.__LIMITED_BANK__ = bank;
+  evaluate(context, `questionBank = __LIMITED_BANK__.filter(question => {
+    const rule = getRuleNumber(question);
+    return rule !== null && rule >= 1 && rule <= 9;
+  })`);
+  const limitedUniqueCount = evaluate(context, 'getUniqueQuestionPool(questionBank).length');
+  assert(limitedUniqueCount >= 30, 'The cap-failure fixture must contain at least 30 unique raw questions.');
+  assert.throws(
+    () => evaluate(context, 'buildThirtyQuestionSet()'),
+    /hard maximum|cannot produce/i,
+    'The 30-question generator relaxed the category cap instead of failing clearly.'
+  );
+  setQuestionBank(context, bank);
 }
 
 function testAnswerShuffling(context, bank) {
@@ -155,55 +193,84 @@ function testAnswerShuffling(context, bank) {
 
 function runBankTests(filename) {
   const bank = JSON.parse(fs.readFileSync(filename, 'utf8'));
+  const originalBankSnapshot = JSON.stringify(bank);
   const context = makeContext(filename.includes('-en') ? 0x13579bdf : 0x2468ace0);
   setQuestionBank(context, bank);
 
-  const requiredPoolMeanScores = JSON.parse(evaluate(context, `JSON.stringify(Object.fromEntries(${JSON.stringify(requiredRules)}.map(rule => {
-    const scores = getUniqueQuestionPool(questionBank)
-      .filter(question => getRuleNumber(question) === rule)
-      .map(getQuestionComplexityScore);
-    return [rule, scores.reduce((sum, score) => sum + score, 0) / scores.length];
-  })))`));
-  const requiredSelectedScores = Object.fromEntries(requiredRules.map(rule => [rule, []]));
-  const thirtySelections = new Set();
-  const thirtyOrders = new Set();
-  const thirtySarCounts = new Set();
-  let requiredQuestionSeenAfterRequiredBlock = false;
+  const sourceCountsByCategory = JSON.parse(evaluate(context, `JSON.stringify((() => {
+    const counts = {};
+    getUniqueQuestionPool(questionBank).forEach(question => {
+      const category = getQuestionCategory(question);
+      counts[category] = (counts[category] || 0) + 1;
+    });
+    return counts;
+  })())`));
 
-  for (let attempt = 0; attempt < 80; attempt += 1) {
+  const selectionSignatures = new Set();
+  const orderSignatures = new Set();
+  const ruleCombinationSignatures = new Set();
+  const ruleDistributionSignatures = new Set();
+  const sarCounts = new Set();
+  const seenQuestionKeysByCategory = new Map();
+  const formerRuleWasMissing = Object.fromEntries(formerRequiredRules.map(rule => [rule, false]));
+  let minCategoryCount = Infinity;
+  let maxCategoryCount = 0;
+
+  for (let attempt = 0; attempt < THIRTY_ATTEMPTS; attempt += 1) {
     const audit = auditThirty(context);
-    assert.strictEqual(audit.requiredLength, 9);
-    assert.strictEqual(audit.additionalLength, 21);
+    const counts = Object.values(audit.categoryCounts);
+    const categories = Object.keys(audit.categoryCounts).sort();
+
+    assert.strictEqual(audit.total, 30, 'The 30-question test returned the wrong number of questions.');
     assert.strictEqual(audit.keys.length, 30);
-    assert.strictEqual(new Set(audit.keys).size, 30);
-    assert.deepStrictEqual(audit.requiredRules, requiredRules);
-    audit.requiredRules.forEach((rule, index) => requiredSelectedScores[rule].push(audit.requiredScores[index]));
-    assert(audit.difficultAdditional >= 15);
-    assert(audit.requiredPositions.some(position => position >= requiredRules.length));
-    requiredQuestionSeenAfterRequiredBlock ||= audit.requiredPositions.some(position => position >= requiredRules.length);
-    thirtySelections.add([...audit.keys].sort().join('\n'));
-    thirtyOrders.add(audit.keys.join('\n'));
-    thirtySarCounts.add(audit.sarAdditional);
+    assert.strictEqual(new Set(audit.keys).size, 30, 'The 30-question test contains duplicate questions.');
+    assert.strictEqual(audit.categoryCap, 3, 'The 30-question category cap is not 3.');
+    assert(Math.max(...counts) <= 3, 'A top-level rule/category exceeded the hard maximum of 3.');
+
+    minCategoryCount = Math.min(minCategoryCount, categories.length);
+    maxCategoryCount = Math.max(maxCategoryCount, categories.length);
+    selectionSignatures.add([...audit.keys].sort().join('\n'));
+    orderSignatures.add(audit.keys.join('\n'));
+    ruleCombinationSignatures.add(audit.numberedRules.join(','));
+    ruleDistributionSignatures.add(categories.map(category => `${category}:${audit.categoryCounts[category]}`).join('|'));
+    sarCounts.add(audit.sarCount);
+
+    formerRequiredRules.forEach(rule => {
+      if (!audit.numberedRules.includes(rule)) formerRuleWasMissing[rule] = true;
+    });
+
+    Object.entries(audit.questionKeysByCategory).forEach(([category, keys]) => {
+      if (!seenQuestionKeysByCategory.has(category)) seenQuestionKeysByCategory.set(category, new Set());
+      keys.forEach(key => seenQuestionKeysByCategory.get(category).add(key));
+    });
   }
 
-  assert(requiredQuestionSeenAfterRequiredBlock, 'Required questions appear confined to an initial required-rule block.');
-  requiredRules.forEach(rule => {
-    const selectedScores = requiredSelectedScores[rule];
-    const selectedMean = selectedScores.reduce((sum, score) => sum + score, 0) / selectedScores.length;
+  assert(selectionSignatures.size >= 240, 'The 30-question selections do not vary enough across 300 generations.');
+  assert(orderSignatures.size >= 270, 'The final 30-question order does not vary enough across 300 generations.');
+  assert(ruleCombinationSignatures.size >= 120, 'Too few distinct numbered-rule combinations were generated.');
+  assert(ruleDistributionSignatures.size >= 240, 'Too few distinct rule/category distributions were generated.');
+  assert(minCategoryCount >= 10, 'A 30-question test used too few rule/category families to respect the cap of 3.');
+  assert(maxCategoryCount > minCategoryCount, 'The number of represented rule/category families never changes.');
+
+  formerRequiredRules.forEach(rule => {
+    assert(formerRuleWasMissing[rule], `Former required Rule ${rule} still appeared mandatory across all generated tests.`);
+  });
+
+  assert(sarCounts.has(0), 'SAR questions became mandatory in the 30-question test.');
+  assert([...sarCounts].some(count => count > 0), 'SAR questions never participated in the 30-question test.');
+  assert(Math.max(...sarCounts) <= 3, 'SAR exceeded the same hard category cap of 3.');
+
+  Object.entries(sourceCountsByCategory).forEach(([category, sourceCount]) => {
+    if (!category.startsWith('RULE_') || sourceCount < 4) return;
+    const seenCount = seenQuestionKeysByCategory.get(category)?.size || 0;
     assert(
-      selectedMean > requiredPoolMeanScores[rule],
-      `Required Rule ${rule} questions are not showing a measurable difficult/long-question preference.`
+      seenCount >= 4,
+      `${category} did not vary the selected questions enough across repeated 30-question tests.`
     );
   });
-  const ruleTwoSelectedMean = requiredSelectedScores[2].reduce((sum, score) => sum + score, 0) / requiredSelectedScores[2].length;
-  assert(
-    ruleTwoSelectedMean > requiredPoolMeanScores[2] * 1.15,
-    'Rule 2 does not show the intended stronger preference for its longest and most complex questions.'
-  );
-  assert(thirtySelections.size > 1, 'The 30-question selection did not vary.');
-  assert(thirtyOrders.size > 1, 'The 30-question order did not vary.');
-  assert(thirtySarCounts.has(0), 'SAR questions became mandatory in the 30-question test.');
-  assert([...thirtySarCounts].some(count => count > 0), 'SAR questions never participated in the 30-question test.');
+
+  testThirtyCapFailure(context, bank);
+  testStandardModes(context);
 
   const hundredSelections = new Set();
   const hundredOrders = new Set();
@@ -235,12 +302,17 @@ function runBankTests(filename) {
   assert(ultramarathonOrders.size > 1, 'Ultramarathon order did not vary across attempts.');
 
   testAnswerShuffling(context, bank);
+  assert.strictEqual(JSON.stringify(bank), originalBankSnapshot, 'Question-bank objects were mutated by randomization tests.');
 
   return {
     filename,
-    thirtyUniqueSelections: thirtySelections.size,
-    thirtyUniqueOrders: thirtyOrders.size,
-    thirtySarCounts: [...thirtySarCounts].sort((a, b) => a - b),
+    thirtyAttempts: THIRTY_ATTEMPTS,
+    thirtyUniqueSelections: selectionSignatures.size,
+    thirtyUniqueOrders: orderSignatures.size,
+    thirtyRuleCombinations: ruleCombinationSignatures.size,
+    thirtyRuleDistributions: ruleDistributionSignatures.size,
+    thirtyCategoryCountRange: [minCategoryCount, maxCategoryCount],
+    thirtySarCounts: [...sarCounts].sort((a, b) => a - b),
     hundredUniqueSelections: hundredSelections.size,
     hundredUniqueOrders: hundredOrders.size,
     hundredSarCounts: [...hundredSarCounts].sort((a, b) => a - b),
@@ -249,6 +321,9 @@ function runBankTests(filename) {
 }
 
 assert(!appScript.includes('.sort(() => Math.random() - 0.5)'), 'Prohibited random sort remains in the app.');
+assert(!appScript.includes('REQUIRED_RULES_30'), 'Legacy fixed required-rule behavior remains in the app.');
+assert(!appScript.includes('THIRTY_MIN_DIFFICULT_ADDITIONAL'), 'Legacy hard difficult-question quota remains in the app.');
+assert(!appScript.includes('THIRTY_ADDITIONAL_COUNT'), 'Legacy required/additional split remains in the app.');
 assert(!appScript.includes('shuffledOptions'), 'Legacy answer-order storage remains in the app.');
 assert(appScript.includes('q.options.map((raw, optionIndex)'), 'Detailed reports must use the attempt-specific option order.');
 

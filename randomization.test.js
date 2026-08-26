@@ -150,7 +150,7 @@ function testThirtyCapFailure(context, bank) {
   assert(limitedUniqueCount >= 30, 'The cap-failure fixture must contain at least 30 unique raw questions.');
   assert.throws(
     () => evaluate(context, 'buildThirtyQuestionSet()'),
-    /hard maximum|cannot produce/i,
+    /hard .*limit|cannot produce/i,
     'The 30-question generator relaxed the category cap instead of failing clearly.'
   );
   setQuestionBank(context, bank);
@@ -211,6 +211,7 @@ function runBankTests(filename) {
   const ruleCombinationSignatures = new Set();
   const ruleDistributionSignatures = new Set();
   const sarCounts = new Set();
+  const specialRuleCounts = { 1: new Set(), 3: new Set() };
   const seenQuestionKeysByCategory = new Map();
   const formerRuleWasMissing = Object.fromEntries(formerRequiredRules.map(rule => [rule, false]));
   let minCategoryCount = Infinity;
@@ -224,8 +225,10 @@ function runBankTests(filename) {
     assert.strictEqual(audit.total, 30, 'The 30-question test returned the wrong number of questions.');
     assert.strictEqual(audit.keys.length, 30);
     assert.strictEqual(new Set(audit.keys).size, 30, 'The 30-question test contains duplicate questions.');
-    assert.strictEqual(audit.categoryCap, 3, 'The 30-question category cap is not 3.');
+    assert.strictEqual(audit.categoryCap, 3, 'The general 30-question category cap is not 3.');
     assert(Math.max(...counts) <= 3, 'A top-level rule/category exceeded the hard maximum of 3.');
+    assert((audit.categoryCounts.RULE_1 || 0) <= 1, 'Rule 1 exceeded its hard maximum of 1 question.');
+    assert((audit.categoryCounts.RULE_3 || 0) <= 1, 'Rule 3 exceeded its hard maximum of 1 question.');
 
     minCategoryCount = Math.min(minCategoryCount, categories.length);
     maxCategoryCount = Math.max(maxCategoryCount, categories.length);
@@ -234,6 +237,8 @@ function runBankTests(filename) {
     ruleCombinationSignatures.add(audit.numberedRules.join(','));
     ruleDistributionSignatures.add(categories.map(category => `${category}:${audit.categoryCounts[category]}`).join('|'));
     sarCounts.add(audit.sarCount);
+    specialRuleCounts[1].add(audit.categoryCounts.RULE_1 || 0);
+    specialRuleCounts[3].add(audit.categoryCounts.RULE_3 || 0);
 
     formerRequiredRules.forEach(rule => {
       if (!audit.numberedRules.includes(rule)) formerRuleWasMissing[rule] = true;
@@ -259,6 +264,12 @@ function runBankTests(filename) {
   assert(sarCounts.has(0), 'SAR questions became mandatory in the 30-question test.');
   assert([...sarCounts].some(count => count > 0), 'SAR questions never participated in the 30-question test.');
   assert(Math.max(...sarCounts) <= 3, 'SAR exceeded the same hard category cap of 3.');
+
+  for (const rule of [1, 3]) {
+    assert(specialRuleCounts[rule].has(0), `Rule ${rule} became mandatory in the 30-question test.`);
+    assert(specialRuleCounts[rule].has(1), `Rule ${rule} never appeared in the 30-question test.`);
+    assert(![...specialRuleCounts[rule]].some(count => count > 1), `Rule ${rule} exceeded its hard maximum of 1.`);
+  }
 
   Object.entries(sourceCountsByCategory).forEach(([category, sourceCount]) => {
     if (!category.startsWith('RULE_') || sourceCount < 4) return;
@@ -313,6 +324,8 @@ function runBankTests(filename) {
     thirtyRuleDistributions: ruleDistributionSignatures.size,
     thirtyCategoryCountRange: [minCategoryCount, maxCategoryCount],
     thirtySarCounts: [...sarCounts].sort((a, b) => a - b),
+    thirtyRule1Counts: [...specialRuleCounts[1]].sort((a, b) => a - b),
+    thirtyRule3Counts: [...specialRuleCounts[3]].sort((a, b) => a - b),
     hundredUniqueSelections: hundredSelections.size,
     hundredUniqueOrders: hundredOrders.size,
     hundredSarCounts: [...hundredSarCounts].sort((a, b) => a - b),
@@ -324,6 +337,8 @@ assert(!appScript.includes('.sort(() => Math.random() - 0.5)'), 'Prohibited rand
 assert(!appScript.includes('REQUIRED_RULES_30'), 'Legacy fixed required-rule behavior remains in the app.');
 assert(!appScript.includes('THIRTY_MIN_DIFFICULT_ADDITIONAL'), 'Legacy hard difficult-question quota remains in the app.');
 assert(!appScript.includes('THIRTY_ADDITIONAL_COUNT'), 'Legacy required/additional split remains in the app.');
+assert(appScript.includes('THIRTY_SINGLE_QUESTION_RULES = new Set([1, 3])'), 'Rule 1/3 one-question cap configuration is missing.');
+assert(appScript.includes('getThirtyQuestionCategoryLimit'), '30-question category-specific cap helper is missing.');
 assert(!appScript.includes('shuffledOptions'), 'Legacy answer-order storage remains in the app.');
 assert(appScript.includes('q.options.map((raw, optionIndex)'), 'Detailed reports must use the attempt-specific option order.');
 

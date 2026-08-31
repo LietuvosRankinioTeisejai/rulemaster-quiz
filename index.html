@@ -928,6 +928,7 @@
       en: ['./questions-en.json', './questions-en(1).json']
     };
     const PASS_PERCENT = 75;
+    const POINTS_PER_QUESTION = 5;
 
     const translations = {
       lt: {
@@ -1059,8 +1060,23 @@
         correct: 'Teisingai',
         incorrect: 'Neteisingai',
         detailsSectionTitle: 'Išsamūs atsakymai pagal taisykles',
+        questionType: 'Klausimo tipas',
+        singleAnswerType: 'Vienas teisingas atsakymas',
+        multipleAnswerType: 'Keli teisingi atsakymai',
+        pointsLabel: 'Taškai',
+        questionScorePercent: 'Klausimo įvertinimas',
         userAnswer: 'Tavo atsakymas',
-        correctAnswer: 'Teisingas atsakymas',
+        selectedCorrect: 'Teisingai pasirinkta',
+        selectedWrong: 'Neteisingai pasirinkta',
+        missingCorrect: 'Nepasirinkti teisingi atsakymai',
+        correctAnswer: 'Teisingas / geriausias sprendimas',
+        scoringExplanation: 'Vertinimo paaiškinimas',
+        exactMatchScore: 'Pasirinktas tikslus teisingų atsakymų rinkinys — skiriami visi 5 taškai.',
+        noCreditExtra: '0/5, nes pasirinktas bent vienas papildomas neteisingas atsakymas.',
+        noCreditMissing: '0/5, nes nepasirinktas bent vienas teisingas atsakymas.',
+        noCreditBoth: '0/5, nes trūksta teisingo atsakymo ir kartu pasirinktas neteisingas atsakymas.',
+        noCreditUnanswered: '0/5, nes į klausimą neatsakyta.',
+        noneLabel: 'Nėra',
         unanswered: 'Neatsakyta',
         safeFilenameDefault: 'Ataskaita',
         pdfLibMissing: 'PDF atsisiuntimo biblioteka neįsikėlė. Atsidarys spausdinimo langas - pasirinkite "Save as PDF" / "Išsaugoti kaip PDF".',
@@ -1196,8 +1212,23 @@
         correct: 'Correct',
         incorrect: 'Incorrect',
         detailsSectionTitle: 'Detailed answers by rule',
+        questionType: 'Question type',
+        singleAnswerType: 'Single-answer question',
+        multipleAnswerType: 'Multiple-answer question',
+        pointsLabel: 'Points',
+        questionScorePercent: 'Question score',
         userAnswer: 'Your answer',
-        correctAnswer: 'Correct answer',
+        selectedCorrect: 'Correct selections',
+        selectedWrong: 'Incorrect selections',
+        missingCorrect: 'Missing correct selections',
+        correctAnswer: 'Correct / Best Solution',
+        scoringExplanation: 'Scoring explanation',
+        exactMatchScore: 'The exact correct-answer set was selected — full 5 points awarded.',
+        noCreditExtra: '0/5 because at least one extra incorrect answer was selected.',
+        noCreditMissing: '0/5 because at least one correct answer was not selected.',
+        noCreditBoth: '0/5 because a correct answer is missing and an incorrect answer was also selected.',
+        noCreditUnanswered: '0/5 because the question was unanswered.',
+        noneLabel: 'None',
         unanswered: 'Unanswered',
         safeFilenameDefault: 'Report',
         pdfLibMissing: 'The PDF download library did not load. The print window will open - choose "Save as PDF".',
@@ -1419,43 +1450,56 @@
     }
 
     const ULTRAMARATHON_MODE = 'ultramarathon';
+    const SHORT_TEST_COUNT = 15;
     const THIRTY_QUESTION_COUNT = 30;
     const THIRTY_MAX_PER_CATEGORY = 3;
     const THIRTY_RULE_ONLY_CODES = new Map([[1, '1.4'], [3, '3.4']]);
-    const THIRTY_HISTORY_DEPTH = 12;
-    const THIRTY_HARD_BIAS_MIN = 4.2;
-    const THIRTY_HARD_BIAS_RANGE = 4.8;
     const EXTREME_TEST_COUNT = 100;
     const EXTREME_MIN_DIFFICULT = 70;
     const DIFFICULT_SCORE_PERCENTILE = 0.55;
+    const RANDOMIZATION_HISTORY_DEPTH = 16;
     const questionKeyCache = new WeakMap();
     const ruleCodeCache = new WeakMap();
     const scenarioCache = new WeakMap();
     const complexityScoreCache = new WeakMap();
-    let thirtyQuestionHistory = [];
-    let thirtyCategoryHistory = [];
-    let thirtyQuestionUsageCounts = new Map();
-    let thirtyCategoryUsageCounts = new Map();
-    let thirtyHistoryBankSignature = '';
-    let thirtyDifficultyThreshold = null;
+    const difficultStatusCache = new WeakMap();
+    let randomizationBankSignature = '';
+    let randomizationModeHistory = new Map();
+    let cachedDifficultyThreshold = null;
+    let secureRandomBuffer = new Uint32Array(0);
+    let secureRandomBufferIndex = 0;
 
     function getSecureRandomNumber() {
-      try {
-        const cryptoObject = globalThis.crypto;
-        if (cryptoObject && typeof cryptoObject.getRandomValues === 'function') {
-          const values = new Uint32Array(1);
-          cryptoObject.getRandomValues(values);
-          return values[0] / 0x100000000;
-        }
-      } catch (error) {
-        console.warn('Secure random source unavailable; using Math.random().', error);
+      const cryptoObject = globalThis.crypto;
+      if (!cryptoObject || typeof cryptoObject.getRandomValues !== 'function') {
+        throw new Error('Secure random generation requires crypto.getRandomValues().');
       }
-      return Math.random();
+      if (secureRandomBufferIndex >= secureRandomBuffer.length) {
+        secureRandomBuffer = new Uint32Array(128);
+        cryptoObject.getRandomValues(secureRandomBuffer);
+        secureRandomBufferIndex = 0;
+      }
+      const value = secureRandomBuffer[secureRandomBufferIndex];
+      secureRandomBufferIndex += 1;
+      return value / 0x100000000;
     }
 
     function getRandomInteger(maxExclusive) {
       if (!Number.isFinite(maxExclusive) || maxExclusive <= 0) return 0;
       return Math.floor(getSecureRandomNumber() * maxExclusive);
+    }
+
+    function getRandomNumberInRange(minimum, maximum) {
+      if (!Number.isFinite(minimum) || !Number.isFinite(maximum)) return 0;
+      if (maximum <= minimum) return minimum;
+      return minimum + (getSecureRandomNumber() * (maximum - minimum));
+    }
+
+    function getRandomIntegerInRange(minimum, maximumInclusive) {
+      const safeMinimum = Math.ceil(minimum);
+      const safeMaximum = Math.floor(maximumInclusive);
+      if (safeMaximum <= safeMinimum) return safeMinimum;
+      return safeMinimum + getRandomInteger((safeMaximum - safeMinimum) + 1);
     }
 
     function shuffleArray(array) {
@@ -1598,22 +1642,28 @@
     }
 
     function isDifficultOrLong(question, difficultyThreshold = getDifficultyThreshold()) {
-      const explicitDifficulty = String(question?.difficulty || '').toLowerCase();
-      if (question?.isDifficult === true || question?.isLong === true || /hard|difficult|long|extreme/.test(explicitDifficulty)) {
-        return true;
+      if (question && typeof question === 'object') {
+        const cached = difficultStatusCache.get(question);
+        if (cached && cached.threshold === difficultyThreshold) return cached.result;
       }
-
-      const textLength = String(question?.text || '').length;
-      const options = Array.isArray(question?.options) ? question.options : [];
-      const optionsLength = options.reduce((sum, option) => sum + String(option || '').length, 0);
-      const correctCount = Array.isArray(question?.correct) ? question.correct.length : 0;
-      const score = getQuestionComplexityScore(question);
-
-      return score >= difficultyThreshold
-        || textLength >= 230
-        || (textLength + optionsLength) >= 680
-        || (correctCount > 1 && score >= difficultyThreshold * 0.82)
-        || (isScenarioBased(question) && score >= difficultyThreshold * 0.85);
+      const explicitDifficulty = String(question?.difficulty || '').toLowerCase();
+      let result = false;
+      if (question?.isDifficult === true || question?.isLong === true || /hard|difficult|long|extreme/.test(explicitDifficulty)) {
+        result = true;
+      } else {
+        const textLength = String(question?.text || '').length;
+        const options = Array.isArray(question?.options) ? question.options : [];
+        const optionsLength = options.reduce((sum, option) => sum + String(option || '').length, 0);
+        const correctCount = Array.isArray(question?.correct) ? question.correct.length : 0;
+        const score = getQuestionComplexityScore(question);
+        result = score >= difficultyThreshold
+          || textLength >= 230
+          || (textLength + optionsLength) >= 680
+          || (correctCount > 1 && score >= difficultyThreshold * 0.82)
+          || (isScenarioBased(question) && score >= difficultyThreshold * 0.85);
+      }
+      if (question && typeof question === 'object') difficultStatusCache.set(question, { threshold: difficultyThreshold, result });
+      return result;
     }
 
     function getCategoryCounts(questions) {
@@ -1626,93 +1676,18 @@
     }
 
     function chooseWeightedCandidate(candidates, weights) {
-      const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
-      if (!(totalWeight > 0)) return candidates[getRandomInteger(candidates.length)];
-
+      if (!candidates.length) return null;
+      const safeWeights = weights.map(weight => Number.isFinite(weight) && weight > 0 ? weight : 0.0001);
+      const totalWeight = safeWeights.reduce((sum, weight) => sum + weight, 0);
       let target = getSecureRandomNumber() * totalWeight;
       for (let index = 0; index < candidates.length; index += 1) {
-        target -= weights[index];
+        target -= safeWeights[index];
         if (target < 0) return candidates[index];
       }
       return candidates[candidates.length - 1];
     }
 
-    function weightedRandomSelection(pool, count, options = {}) {
-      const requestedCount = Math.max(0, Math.floor(count));
-      if (!requestedCount) return [];
-
-      const existingQuestions = Array.isArray(options.existingQuestions) ? options.existingQuestions : [];
-      const excludedKeys = new Set(existingQuestions.map(getQuestionKey));
-      const categoryCounts = getCategoryCounts(existingQuestions);
-      const uniqueCandidates = getUniqueQuestionPool(pool).filter(question => !excludedKeys.has(getQuestionKey(question)));
-      const candidates = shuffleArray(uniqueCandidates);
-      const selected = [];
-      const preferComplexity = options.preferComplexity !== false;
-      const complexityBaseWeight = Number.isFinite(options.complexityBaseWeight)
-        ? Math.max(0.0001, options.complexityBaseWeight)
-        : 0.65;
-      const complexityBoost = Number.isFinite(options.complexityBoost)
-        ? Math.max(0, options.complexityBoost)
-        : 2.6;
-      const complexityExponent = Number.isFinite(options.complexityExponent)
-        ? Math.max(0.1, options.complexityExponent)
-        : 1.35;
-      let categoryCap = Number.isFinite(options.maxPerCategory) ? Math.max(1, options.maxPerCategory) : Infinity;
-      const allowCapRelaxation = options.allowCapRelaxation !== false;
-      const scores = candidates.map(getQuestionComplexityScore);
-      const minScore = scores.length ? Math.min(...scores) : 0;
-      const maxScore = scores.length ? Math.max(...scores) : 1;
-      const scoreRange = Math.max(1, maxScore - minScore);
-
-      while (selected.length < requestedCount && candidates.length) {
-        let eligible = candidates.filter(question => {
-          const category = getQuestionCategory(question);
-          return (categoryCounts.get(category) || 0) < categoryCap;
-        });
-
-        if (!eligible.length && allowCapRelaxation && categoryCap !== Infinity) {
-          categoryCap += 1;
-          continue;
-        }
-        if (!eligible.length) break;
-
-        eligible = shuffleArray(eligible);
-        const weights = eligible.map(question => {
-          const score = getQuestionComplexityScore(question);
-          const normalizedComplexity = (score - minScore) / scoreRange;
-          const complexityWeight = preferComplexity
-            ? complexityBaseWeight + (Math.pow(Math.max(0, normalizedComplexity), complexityExponent) * complexityBoost)
-            : 1;
-          const categoryCount = categoryCounts.get(getQuestionCategory(question)) || 0;
-          const balanceWeight = 1 / (1 + (categoryCount * 0.58));
-          return Math.max(0.0001, complexityWeight * balanceWeight);
-        });
-
-        const chosen = chooseWeightedCandidate(eligible, weights);
-        const chosenKey = getQuestionKey(chosen);
-        selected.push(chosen);
-        excludedKeys.add(chosenKey);
-        const category = getQuestionCategory(chosen);
-        categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
-
-        for (let index = candidates.length - 1; index >= 0; index -= 1) {
-          if (getQuestionKey(candidates[index]) === chosenKey) candidates.splice(index, 1);
-        }
-      }
-
-      return selected;
-    }
-
-    function selectUniqueQuestions(pool, count, existingQuestions = []) {
-      return weightedRandomSelection(pool, count, {
-        existingQuestions,
-        preferComplexity: false,
-        maxPerCategory: Infinity,
-        allowCapRelaxation: false
-      });
-    }
-
-    function getThirtyBankSignature(bank) {
+    function getBankSignature(bank) {
       if (!bank.length) return 'empty';
       const middleIndex = Math.floor(bank.length / 2);
       return [
@@ -1723,340 +1698,27 @@
       ].join('::');
     }
 
-    function syncThirtyRandomizationState(bank) {
-      const signature = getThirtyBankSignature(bank);
-      if (signature === thirtyHistoryBankSignature) return;
-      thirtyHistoryBankSignature = signature;
-      thirtyQuestionHistory = [];
-      thirtyCategoryHistory = [];
-      thirtyQuestionUsageCounts = new Map();
-      thirtyCategoryUsageCounts = new Map();
-      thirtyDifficultyThreshold = null;
+    function syncRandomizationState(bank) {
+      const signature = getBankSignature(bank);
+      if (signature === randomizationBankSignature) return;
+      randomizationBankSignature = signature;
+      randomizationModeHistory = new Map();
+      cachedDifficultyThreshold = null;
     }
 
-    function getThirtyCategoryFreshnessWeight(category) {
-      if (!thirtyCategoryHistory.length) return 1;
-      let recentUse = 0;
-      thirtyCategoryHistory.forEach((counts, index) => {
-        if (!counts.has(category)) return;
-        const recency = (index + 1) / thirtyCategoryHistory.length;
-        recentUse += recency * (counts.get(category) || 1);
-      });
-
-      const latestCounts = thirtyCategoryHistory[thirtyCategoryHistory.length - 1];
-      const latestUse = latestCounts?.get(category) || 0;
-      const immediateRepeatPenalty = latestUse ? 0.09 / Math.max(1, latestUse) : 1.24;
-      const lifetimeUse = thirtyCategoryUsageCounts.get(category) || 0;
-      const lifetimeBalance = 1 / Math.sqrt(1 + (lifetimeUse * 0.018));
-      return Math.max(0.0001, immediateRepeatPenalty * lifetimeBalance / (1 + (recentUse * 0.38)));
-    }
-
-    function chooseThirtyQuestionBuckets(buckets, targetCount) {
-      const available = [...buckets];
-      const selected = [];
-
-      while (selected.length < targetCount && available.length) {
-        const latestQuestionSet = thirtyQuestionHistory.length
-          ? thirtyQuestionHistory[thirtyQuestionHistory.length - 1]
-          : null;
-        const weights = available.map(bucket => {
-          const freshnessWeight = getThirtyCategoryFreshnessWeight(bucket.category);
-          const latestFreshCount = latestQuestionSet
-            ? bucket.questions.filter(question => !latestQuestionSet.has(getQuestionKey(question))).length
-            : bucket.questions.length;
-          const immediateQuestionWeight = latestFreshCount >= bucket.capacity
-            ? 1.3
-            : latestFreshCount > 0 ? 0.62 : 0.035;
-          const randomJitter = 0.55 + (getSecureRandomNumber() * 0.9);
-          return Math.max(0.0001, freshnessWeight * immediateQuestionWeight * randomJitter);
+    function getModeHistory(modeKey) {
+      if (!randomizationModeHistory.has(modeKey)) {
+        randomizationModeHistory.set(modeKey, {
+          questionSets: [],
+          categoryDistributions: [],
+          orderSignatures: [],
+          generation: 0,
+          lastSeenGeneration: new Map(),
+          questionUsageCounts: new Map(),
+          categoryUsageCounts: new Map()
         });
-        const chosen = chooseWeightedCandidate(available, weights);
-        selected.push(chosen);
-        available.splice(available.indexOf(chosen), 1);
       }
-
-      return { selected, available };
-    }
-
-    function getThirtyQuestionRecencyIndex(question) {
-      const key = getQuestionKey(question);
-      for (let index = thirtyQuestionHistory.length - 1; index >= 0; index -= 1) {
-        if (thirtyQuestionHistory[index].has(key)) return index;
-      }
-      return -1;
-    }
-
-    function getThirtyQuestionCandidatePool(questions, remainingCount) {
-      const available = [...questions];
-      if (!thirtyQuestionHistory.length || available.length <= remainingCount) return available;
-
-      // Exclude as much recent history as possible. If a rule has enough alternatives,
-      // questions from the immediately previous tests cannot compete for the same slots.
-      for (let recentDepth = thirtyQuestionHistory.length; recentDepth >= 1; recentDepth -= 1) {
-        const blocked = new Set();
-        for (let offset = 0; offset < recentDepth; offset += 1) {
-          const historyIndex = thirtyQuestionHistory.length - 1 - offset;
-          thirtyQuestionHistory[historyIndex].forEach(key => blocked.add(key));
-        }
-        const outsideRecentWindow = available.filter(question => !blocked.has(getQuestionKey(question)));
-        if (outsideRecentWindow.length >= remainingCount) return outsideRecentWindow;
-      }
-
-      return available;
-    }
-
-    function selectThirtyQuestionsFromPool(pool, count, difficultyThreshold, hardBias) {
-      const remainingQuestions = shuffleArray(pool);
-      const selected = [];
-      const complexityScores = remainingQuestions.map(getQuestionComplexityScore);
-      const minScore = complexityScores.length ? Math.min(...complexityScores) : 0;
-      const maxScore = complexityScores.length ? Math.max(...complexityScores) : 1;
-      const scoreRange = Math.max(1, maxScore - minScore);
-
-      while (selected.length < count && remainingQuestions.length) {
-        const remainingTarget = count - selected.length;
-        let candidates = getThirtyQuestionCandidatePool(remainingQuestions, remainingTarget);
-        if (!candidates.length) candidates = [...remainingQuestions];
-
-        const minUsage = Math.min(...candidates.map(question => thirtyQuestionUsageCounts.get(getQuestionKey(question)) || 0));
-        const weights = candidates.map(question => {
-          const key = getQuestionKey(question);
-          const usageCount = thirtyQuestionUsageCounts.get(key) || 0;
-          const usageGap = Math.max(0, usageCount - minUsage);
-          const usageWeight = 1 / Math.pow(1 + usageGap, 1.75);
-
-          const recencyIndex = getThirtyQuestionRecencyIndex(question);
-          const age = recencyIndex < 0 ? thirtyQuestionHistory.length + 2 : thirtyQuestionHistory.length - recencyIndex;
-          const recencyWeight = recencyIndex < 0
-            ? 1.4
-            : 0.055 + Math.pow(age / Math.max(2, thirtyQuestionHistory.length + 1), 2.35);
-
-          const complexity = (getQuestionComplexityScore(question) - minScore) / scoreRange;
-          const difficultWeight = isDifficultOrLong(question, difficultyThreshold) ? hardBias : 0.68;
-          const scenarioWeight = isScenarioBased(question) ? 1.34 : 1;
-          const multiAnswerWeight = Array.isArray(question?.correct) && question.correct.length > 1 ? 1.24 : 1;
-          const complexityWeight = 0.8 + (Math.pow(Math.max(0, complexity), 1.18) * 2.15);
-          const randomJitter = 0.56 + (getSecureRandomNumber() * 0.88);
-
-          return Math.max(0.0001,
-            usageWeight
-            * recencyWeight
-            * difficultWeight
-            * scenarioWeight
-            * multiAnswerWeight
-            * complexityWeight
-            * randomJitter
-          );
-        });
-
-        const chosen = chooseWeightedCandidate(candidates, weights);
-        selected.push(chosen);
-        const chosenKey = getQuestionKey(chosen);
-        for (let index = remainingQuestions.length - 1; index >= 0; index -= 1) {
-          if (getQuestionKey(remainingQuestions[index]) === chosenKey) remainingQuestions.splice(index, 1);
-        }
-      }
-
-      return selected;
-    }
-
-    function selectThirtyBucketQuestions(bucket, target, requiredDifficult, difficultyThreshold, hardBias) {
-      const difficultPool = bucket.questions.filter(question => isDifficultOrLong(question, difficultyThreshold));
-      const difficultQuestions = selectThirtyQuestionsFromPool(
-        difficultPool,
-        Math.min(requiredDifficult, target, difficultPool.length),
-        difficultyThreshold,
-        hardBias
-      );
-      const difficultKeys = new Set(difficultQuestions.map(getQuestionKey));
-      const remainingPool = bucket.questions.filter(question => !difficultKeys.has(getQuestionKey(question)));
-      const remainingQuestions = selectThirtyQuestionsFromPool(
-        remainingPool,
-        target - difficultQuestions.length,
-        difficultyThreshold,
-        1.65 + (getSecureRandomNumber() * 1.35)
-      );
-      return [...difficultQuestions, ...remainingQuestions];
-    }
-
-    function rememberThirtyQuestionSet(questions, categoryCounts) {
-      const questionKeys = new Set();
-      questions.forEach(question => {
-        const key = getQuestionKey(question);
-        questionKeys.add(key);
-        thirtyQuestionUsageCounts.set(key, (thirtyQuestionUsageCounts.get(key) || 0) + 1);
-      });
-      categoryCounts.forEach((count, category) => {
-        thirtyCategoryUsageCounts.set(category, (thirtyCategoryUsageCounts.get(category) || 0) + count);
-      });
-
-      thirtyQuestionHistory.push(questionKeys);
-      thirtyCategoryHistory.push(new Map(categoryCounts));
-      while (thirtyQuestionHistory.length > THIRTY_HISTORY_DEPTH) thirtyQuestionHistory.shift();
-      while (thirtyCategoryHistory.length > THIRTY_HISTORY_DEPTH) thirtyCategoryHistory.shift();
-    }
-
-    function buildThirtyQuestionSet() {
-      const bank = getUniqueQuestionPool(questionBank).filter(isEligibleForThirtyQuestionTest);
-      syncThirtyRandomizationState(bank);
-      if (bank.length < THIRTY_QUESTION_COUNT) {
-        throw new Error(`The question bank contains only ${bank.length} unique questions; ${THIRTY_QUESTION_COUNT} are required.`);
-      }
-
-      const bucketsByCategory = new Map();
-      bank.forEach(question => {
-        const category = getQuestionCategory(question);
-        if (!bucketsByCategory.has(category)) bucketsByCategory.set(category, []);
-        bucketsByCategory.get(category).push(question);
-      });
-
-      const allBuckets = shuffleArray([...bucketsByCategory.entries()].map(([category, questions]) => {
-        const categoryLimit = getThirtyQuestionCategoryLimit(category);
-        return {
-          category,
-          questions,
-          categoryLimit,
-          capacity: Math.min(categoryLimit, questions.length)
-        };
-      }));
-      const totalCapacity = allBuckets.reduce((sum, bucket) => sum + bucket.capacity, 0);
-      if (totalCapacity < THIRTY_QUESTION_COUNT) {
-        throw new Error(`The question bank can provide only ${totalCapacity} questions while respecting the hard 30-question category limits; ${THIRTY_QUESTION_COUNT} are required.`);
-      }
-
-      // SAR is independently optional whenever the numbered rules alone can still supply all 30 questions.
-      let eligibleBuckets = allBuckets;
-      const nonSarBuckets = allBuckets.filter(bucket => bucket.category !== 'SAR');
-      const nonSarCapacity = nonSarBuckets.reduce((sum, bucket) => sum + bucket.capacity, 0);
-      if (nonSarCapacity >= THIRTY_QUESTION_COUNT && getRandomInteger(2) === 0) {
-        eligibleBuckets = nonSarBuckets;
-      }
-
-      // Randomize how many rule families participate, then bias selection softly toward recently unused families.
-      const minimumCategoryCount = Math.ceil(THIRTY_QUESTION_COUNT / THIRTY_MAX_PER_CATEGORY);
-      const targetCategoryCount = Math.min(
-        eligibleBuckets.length,
-        minimumCategoryCount + getRandomInteger(Math.max(1, eligibleBuckets.length - minimumCategoryCount + 1))
-      );
-      const bucketChoice = chooseThirtyQuestionBuckets(eligibleBuckets, targetCategoryCount);
-      const selectedBuckets = bucketChoice.selected;
-      let selectedCapacity = selectedBuckets.reduce((sum, bucket) => sum + bucket.capacity, 0);
-
-      // If low-capacity categories such as Rule 1 or Rule 3 were drawn, add more randomized buckets until 30 is feasible.
-      while (selectedCapacity < THIRTY_QUESTION_COUNT && bucketChoice.available.length) {
-        const extraChoice = chooseThirtyQuestionBuckets(bucketChoice.available, 1);
-        if (!extraChoice.selected.length) break;
-        const extra = extraChoice.selected[0];
-        selectedBuckets.push(extra);
-        bucketChoice.available.splice(bucketChoice.available.indexOf(extra), 1);
-        selectedCapacity += extra.capacity;
-      }
-      if (selectedCapacity < THIRTY_QUESTION_COUNT) {
-        throw new Error(`The question bank cannot produce ${THIRTY_QUESTION_COUNT} questions without exceeding the hard 30-question category limits.`);
-      }
-
-      // Vary the per-rule distribution itself. Different runs can be broad, neutral, or more concentrated (still capped at 3).
-      const allocationProfile = getRandomInteger(3);
-      const previousCounts = thirtyCategoryHistory.length
-        ? thirtyCategoryHistory[thirtyCategoryHistory.length - 1]
-        : new Map();
-      const categoryTargets = new Map(selectedBuckets.map(bucket => [bucket.category, 1]));
-      let plannedTotal = selectedBuckets.length;
-      while (plannedTotal < THIRTY_QUESTION_COUNT) {
-        const expandableBuckets = selectedBuckets.filter(bucket => (categoryTargets.get(bucket.category) || 0) < bucket.capacity);
-        if (!expandableBuckets.length) {
-          throw new Error(`The question bank cannot produce ${THIRTY_QUESTION_COUNT} questions without exceeding the hard 30-question category limits.`);
-        }
-
-        const weights = expandableBuckets.map(bucket => {
-          const current = categoryTargets.get(bucket.category) || 0;
-          const proposed = current + 1;
-          let shapeWeight = 1;
-          if (allocationProfile === 0) shapeWeight = 1 / Math.pow(Math.max(1, current), 1.25);
-          if (allocationProfile === 2) shapeWeight = Math.pow(Math.max(1, current), 1.15);
-          const previous = previousCounts.get(bucket.category) || 0;
-          const distributionNovelty = proposed === previous ? 0.46 : 1.18;
-          const latestSet = thirtyQuestionHistory.length ? thirtyQuestionHistory[thirtyQuestionHistory.length - 1] : null;
-          const freshFromLatest = latestSet
-            ? bucket.questions.filter(question => !latestSet.has(getQuestionKey(question))).length
-            : bucket.questions.length;
-          const immediateOverlapWeight = proposed <= freshFromLatest ? 1.22 : 0.075;
-          const randomJitter = 0.62 + (getSecureRandomNumber() * 0.76);
-          return Math.max(0.0001, shapeWeight * distributionNovelty * immediateOverlapWeight * randomJitter);
-        });
-
-        const bucket = chooseWeightedCandidate(expandableBuckets, weights);
-        categoryTargets.set(bucket.category, (categoryTargets.get(bucket.category) || 0) + 1);
-        plannedTotal += 1;
-      }
-
-      const difficultyThreshold = thirtyDifficultyThreshold ?? (thirtyDifficultyThreshold = getDifficultyThreshold(bank));
-      const hardBias = THIRTY_HARD_BIAS_MIN + (getSecureRandomNumber() * THIRTY_HARD_BIAS_RANGE);
-      const latestQuestionSet = thirtyQuestionHistory.length ? thirtyQuestionHistory[thirtyQuestionHistory.length - 1] : null;
-      const hardTargets = new Map(selectedBuckets.map(bucket => [bucket.category, 0]));
-      const hardCapacities = new Map(selectedBuckets.map(bucket => {
-        const target = categoryTargets.get(bucket.category) || 0;
-        const difficultCount = bucket.questions.filter(question => isDifficultOrLong(question, difficultyThreshold)).length;
-        return [bucket.category, Math.min(target, difficultCount)];
-      }));
-      const totalHardCapacity = [...hardCapacities.values()].reduce((sum, count) => sum + count, 0);
-      const desiredHardMinimum = Math.min(totalHardCapacity, 20 + getRandomInteger(5));
-      let plannedHard = 0;
-      while (plannedHard < desiredHardMinimum) {
-        const expandableHardBuckets = selectedBuckets.filter(bucket =>
-          (hardTargets.get(bucket.category) || 0) < (hardCapacities.get(bucket.category) || 0)
-        );
-        if (!expandableHardBuckets.length) break;
-
-        const weights = expandableHardBuckets.map(bucket => {
-          const currentHard = hardTargets.get(bucket.category) || 0;
-          const proposedHard = currentHard + 1;
-          const freshHardCount = latestQuestionSet
-            ? bucket.questions.filter(question =>
-              isDifficultOrLong(question, difficultyThreshold)
-              && !latestQuestionSet.has(getQuestionKey(question))
-            ).length
-            : hardCapacities.get(bucket.category) || 0;
-          const freshnessWeight = proposedHard <= freshHardCount ? 1.3 : 0.11;
-          const spreadWeight = 1 / (1 + currentHard * 0.4);
-          const randomJitter = 0.65 + (getSecureRandomNumber() * 0.7);
-          return Math.max(0.0001, freshnessWeight * spreadWeight * randomJitter);
-        });
-        const bucket = chooseWeightedCandidate(expandableHardBuckets, weights);
-        hardTargets.set(bucket.category, (hardTargets.get(bucket.category) || 0) + 1);
-        plannedHard += 1;
-      }
-
-      const selectedQuestions = [];
-      selectedBuckets.forEach(bucket => {
-        const target = categoryTargets.get(bucket.category) || 0;
-        const selected = selectThirtyBucketQuestions(
-          bucket,
-          target,
-          hardTargets.get(bucket.category) || 0,
-          difficultyThreshold,
-          hardBias
-        );
-        if (selected.length !== target) {
-          throw new Error(`Not enough unique questions are available in ${bucket.category} for the 30-question test.`);
-        }
-        selectedQuestions.push(...selected);
-      });
-
-      const categoryCounts = getCategoryCounts(selectedQuestions);
-      if (selectedQuestions.length !== THIRTY_QUESTION_COUNT
-        || new Set(selectedQuestions.map(getQuestionKey)).size !== THIRTY_QUESTION_COUNT
-        || [...categoryCounts.entries()].some(([category, count]) => count > getThirtyQuestionCategoryLimit(category))) {
-        throw new Error('Unable to build a valid 30-question test while respecting uniqueness and the hard rule/category caps.');
-      }
-
-      const randomizedQuestions = shuffleArray(selectedQuestions);
-      rememberThirtyQuestionSet(randomizedQuestions, categoryCounts);
-      return {
-        questions: randomizedQuestions,
-        categoryCap: THIRTY_MAX_PER_CATEGORY,
-        difficultyThreshold
-      };
+      return randomizationModeHistory.get(modeKey);
     }
 
     function getExtremeCategoryCap(pool = questionBank) {
@@ -2065,63 +1727,555 @@
       return Math.max(8, Math.ceil((EXTREME_TEST_COUNT / categoryCount) * 1.8));
     }
 
-    function buildExtremeQuestionSet() {
-      const bank = getUniqueQuestionPool(questionBank);
-      if (bank.length < EXTREME_TEST_COUNT) {
-        throw new Error(`The question bank contains only ${bank.length} unique questions; ${EXTREME_TEST_COUNT} are required.`);
+    function getRandomizedModeConfig(numQuestions, bank) {
+      if (numQuestions === SHORT_TEST_COUNT) {
+        return {
+          modeKey: '15',
+          count: SHORT_TEST_COUNT,
+          categoryLimit: () => 2,
+          categoryTargetMin: 9,
+          categoryTargetMax: 15,
+          candidateCount: 2,
+          hardTargetMin: 8,
+          hardTargetMax: 12,
+          hardFloor: 0,
+          hardBiasMin: 2.8,
+          hardBiasMax: 5.8,
+          scenarioBiasMin: 1.08,
+          scenarioBiasMax: 1.52,
+          multiBiasMin: 1.04,
+          multiBiasMax: 1.38,
+          eligibleQuestion: () => true
+        };
       }
 
-      const difficultyThreshold = thirtyDifficultyThreshold ?? (thirtyDifficultyThreshold = getDifficultyThreshold(bank));
-      const difficultPool = bank.filter(question => isDifficultOrLong(question, difficultyThreshold));
-      if (difficultPool.length < EXTREME_MIN_DIFFICULT) {
-        throw new Error(`The question bank contains only ${difficultPool.length} difficult/long questions; ${EXTREME_MIN_DIFFICULT} are required.`);
+      if (numQuestions === THIRTY_QUESTION_COUNT) {
+        return {
+          modeKey: '30',
+          count: THIRTY_QUESTION_COUNT,
+          categoryLimit: getThirtyQuestionCategoryLimit,
+          categoryTargetMin: 11,
+          categoryTargetMax: 18,
+          candidateCount: 2,
+          hardTargetMin: 20,
+          hardTargetMax: 26,
+          hardFloor: 18,
+          hardBiasMin: 4.2,
+          hardBiasMax: 9.0,
+          scenarioBiasMin: 1.2,
+          scenarioBiasMax: 1.78,
+          multiBiasMin: 1.14,
+          multiBiasMax: 1.62,
+          eligibleQuestion: isEligibleForThirtyQuestionTest
+        };
       }
 
-      const categoryCap = getExtremeCategoryCap(bank);
-      const variableDifficultTarget = Math.min(
-        difficultPool.length,
-        EXTREME_MIN_DIFFICULT + getRandomInteger(9)
-      );
-      const difficultQuestions = weightedRandomSelection(difficultPool, variableDifficultTarget, {
-        preferComplexity: true,
-        maxPerCategory: categoryCap
-      });
-
-      if (difficultQuestions.length < EXTREME_MIN_DIFFICULT) {
-        throw new Error('Unable to satisfy the difficult/long quota for the 100-question test.');
+      if (numQuestions === EXTREME_TEST_COUNT) {
+        const cap = getExtremeCategoryCap(bank);
+        return {
+          modeKey: '100',
+          count: EXTREME_TEST_COUNT,
+          categoryLimit: () => cap,
+          categoryTargetMin: 13,
+          categoryTargetMax: 17,
+          candidateCount: 2,
+          hardTargetMin: 74,
+          hardTargetMax: 86,
+          hardFloor: EXTREME_MIN_DIFFICULT,
+          hardBiasMin: 5.2,
+          hardBiasMax: 9.8,
+          scenarioBiasMin: 1.22,
+          scenarioBiasMax: 1.86,
+          multiBiasMin: 1.18,
+          multiBiasMax: 1.68,
+          eligibleQuestion: () => true,
+          categoryCap: cap
+        };
       }
 
-      const remainingCount = EXTREME_TEST_COUNT - difficultQuestions.length;
-      const generalQuestions = weightedRandomSelection(bank, remainingCount, {
-        existingQuestions: difficultQuestions,
-        preferComplexity: true,
-        maxPerCategory: categoryCap
-      });
-      const selected = [...difficultQuestions, ...generalQuestions];
-
-      if (selected.length !== EXTREME_TEST_COUNT) {
-        throw new Error('Unable to select 100 unique balanced questions from the current question bank.');
-      }
-
+      const genericCap = Math.max(2, Math.ceil(numQuestions / 10));
       return {
-        difficultQuestions,
-        generalQuestions,
-        questions: shuffleArray(selected),
-        difficultyThreshold,
-        categoryCap
+        modeKey: `standard-${numQuestions}`,
+        count: numQuestions,
+        categoryLimit: () => genericCap,
+        categoryTargetMin: Math.min(10, numQuestions),
+        categoryTargetMax: Math.min(17, numQuestions),
+        candidateCount: 4,
+        hardTargetMin: Math.floor(numQuestions * 0.48),
+        hardTargetMax: Math.ceil(numQuestions * 0.68),
+        hardFloor: 0,
+        hardBiasMin: 1.8,
+        hardBiasMax: 3.6,
+        scenarioBiasMin: 1.02,
+        scenarioBiasMax: 1.35,
+        multiBiasMin: 1.02,
+        multiBiasMax: 1.28,
+        eligibleQuestion: () => true
       };
+    }
+
+    function buildCategoryBuckets(bank, config, difficultyThreshold, history = null) {
+      const bucketsByCategory = new Map();
+      bank.filter(config.eligibleQuestion).forEach(question => {
+        const category = getQuestionCategory(question);
+        if (!bucketsByCategory.has(category)) bucketsByCategory.set(category, []);
+        bucketsByCategory.get(category).push(question);
+      });
+
+      const latestSet = history?.questionSets?.length
+        ? history.questionSets[history.questionSets.length - 1]
+        : null;
+      return shuffleArray([...bucketsByCategory.entries()].map(([category, questions]) => {
+        const categoryLimit = Math.max(1, Math.floor(config.categoryLimit(category)));
+        const difficultQuestions = questions.filter(question => isDifficultOrLong(question, difficultyThreshold));
+        const immediateFreshCount = latestSet
+          ? questions.reduce((count, question) => count + (latestSet.has(getQuestionKey(question)) ? 0 : 1), 0)
+          : questions.length;
+        const immediateFreshHardCount = latestSet
+          ? difficultQuestions.reduce((count, question) => count + (latestSet.has(getQuestionKey(question)) ? 0 : 1), 0)
+          : difficultQuestions.length;
+        return {
+          category,
+          questions,
+          difficultQuestions,
+          hardRatio: questions.length ? difficultQuestions.length / questions.length : 0,
+          categoryLimit,
+          capacity: Math.min(categoryLimit, questions.length),
+          immediateFreshCount,
+          immediateFreshHardCount
+        };
+      }));
+    }
+
+    function getCategoryFreshnessWeight(category, history) {
+      const latestDistribution = history.categoryDistributions.length
+        ? history.categoryDistributions[history.categoryDistributions.length - 1]
+        : null;
+      const latestCount = latestDistribution?.get(category) || 0;
+      let recentUse = 0;
+      history.categoryDistributions.forEach((distribution, index) => {
+        const count = distribution.get(category) || 0;
+        if (!count) return;
+        const recency = (index + 1) / history.categoryDistributions.length;
+        recentUse += count * recency;
+      });
+      const lifetimeUse = history.categoryUsageCounts.get(category) || 0;
+      const immediateWeight = latestCount ? 0.28 / Math.max(1, latestCount) : 1.38;
+      const recentWeight = 1 / (1 + recentUse * 0.2);
+      const usageWeight = 1 / Math.sqrt(1 + lifetimeUse * 0.025);
+      return Math.max(0.0001, immediateWeight * recentWeight * usageWeight);
+    }
+
+
+    function getBucketImmediateFreshnessWeight(bucket, history) {
+      if (!history.questionSets.length || !bucket.questions.length) return 1;
+      const latestSet = history.questionSets[history.questionSets.length - 1];
+      const freshCount = Number.isFinite(bucket.immediateFreshCount)
+        ? bucket.immediateFreshCount
+        : bucket.questions.reduce(
+          (count, question) => count + (latestSet.has(getQuestionKey(question)) ? 0 : 1),
+          0
+        );
+      if (!freshCount) return 0.012;
+      const freshRatio = freshCount / bucket.questions.length;
+      return 0.18 + (Math.pow(freshRatio, 1.65) * 1.35);
+    }
+
+    function selectParticipatingBuckets(allBuckets, config, history) {
+      if (!allBuckets.length) return [];
+      const minimum = Math.min(allBuckets.length, Math.max(1, config.categoryTargetMin));
+      const maximum = Math.min(allBuckets.length, Math.max(minimum, config.categoryTargetMax));
+      const desiredCount = getRandomIntegerInRange(minimum, maximum);
+      const available = [...allBuckets];
+      const selected = [];
+
+      while (selected.length < desiredCount && available.length) {
+        const weights = available.map(bucket => {
+          const freshness = getCategoryFreshnessWeight(bucket.category, history) * getBucketImmediateFreshnessWeight(bucket, history);
+          const randomJitter = getRandomNumberInRange(0.62, 1.42);
+          return Math.max(0.0001, freshness * randomJitter);
+        });
+        const chosen = chooseWeightedCandidate(available, weights);
+        selected.push(chosen);
+        available.splice(available.indexOf(chosen), 1);
+      }
+
+      let selectedCapacity = selected.reduce((sum, bucket) => sum + bucket.capacity, 0);
+      while (selectedCapacity < config.count && available.length) {
+        const weights = available.map(bucket => getCategoryFreshnessWeight(bucket.category, history) * getBucketImmediateFreshnessWeight(bucket, history) * getRandomNumberInRange(0.7, 1.3));
+        const chosen = chooseWeightedCandidate(available, weights);
+        selected.push(chosen);
+        available.splice(available.indexOf(chosen), 1);
+        selectedCapacity += chosen.capacity;
+      }
+      return selected;
+    }
+
+    function allocateCategoryTargets(selectedBuckets, config, history, difficultyThreshold) {
+      const targets = new Map(selectedBuckets.map(bucket => [bucket.category, 1]));
+      let plannedTotal = selectedBuckets.length;
+      const profile = getRandomInteger(3);
+      const latestDistribution = history.categoryDistributions.length
+        ? history.categoryDistributions[history.categoryDistributions.length - 1]
+        : new Map();
+
+      while (plannedTotal < config.count) {
+        const expandable = selectedBuckets.filter(bucket => (targets.get(bucket.category) || 0) < bucket.capacity);
+        if (!expandable.length) return null;
+
+        const weights = expandable.map(bucket => {
+          const current = targets.get(bucket.category) || 0;
+          const proposed = current + 1;
+          let shapeWeight = 1;
+          if (profile === 0) shapeWeight = 1 / Math.pow(Math.max(1, current), 1.3);
+          if (profile === 2) shapeWeight = Math.pow(Math.max(1, current), 1.15);
+          const previousCount = latestDistribution.get(bucket.category) || 0;
+          const distributionNovelty = proposed === previousCount ? 0.5 : 1.22;
+          const freshFromLatest = Number.isFinite(bucket.immediateFreshCount)
+            ? bucket.immediateFreshCount
+            : bucket.questions.length;
+          const immediateQuestionWeight = proposed <= freshFromLatest ? 1.32 : 0.055;
+          const hardCapacityWeight = config.hardFloor > 0 ? 0.88 + (bucket.hardRatio * 0.72) : 1;
+          const fairnessWeight = 1 / Math.sqrt(1 + (history.categoryUsageCounts.get(bucket.category) || 0) * 0.012);
+          const randomJitter = getRandomNumberInRange(0.62, 1.4);
+          return Math.max(0.0001, shapeWeight * distributionNovelty * immediateQuestionWeight * hardCapacityWeight * fairnessWeight * randomJitter);
+        });
+
+        const chosen = chooseWeightedCandidate(expandable, weights);
+        targets.set(chosen.category, (targets.get(chosen.category) || 0) + 1);
+        plannedTotal += 1;
+      }
+
+      return targets;
+    }
+
+    function getQuestionRecencyAge(question, history) {
+      const key = getQuestionKey(question);
+      const lastSeen = history.lastSeenGeneration.get(key);
+      if (!Number.isFinite(lastSeen)) return -1;
+      return Math.max(0, history.generation - 1 - lastSeen);
+    }
+
+
+    function selectWeightedQuestions(pool, count, history, difficultyThreshold, biasProfile) {
+      const remaining = getUniqueQuestionPool(pool);
+      if (!count || !remaining.length) return [];
+
+      const scores = remaining.map(getQuestionComplexityScore);
+      const minScore = scores.length ? Math.min(...scores) : 0;
+      const maxScore = scores.length ? Math.max(...scores) : 1;
+      const scoreRange = Math.max(1, maxScore - minScore);
+      const selected = [];
+      const selectedKeys = new Set();
+      const recencyDepths = history.questionSets.length
+        ? [8, 4, 2, 1].filter(depth => depth <= history.questionSets.length).concat([0])
+        : [0];
+
+      const weightedOrder = candidates => {
+        if (!candidates.length) return [];
+        const minimumUsage = Math.min(...candidates.map(question =>
+          history.questionUsageCounts.get(getQuestionKey(question)) || 0
+        ));
+        return candidates.map(question => {
+          const key = getQuestionKey(question);
+          const usageCount = history.questionUsageCounts.get(key) || 0;
+          const usageGap = Math.max(0, usageCount - minimumUsage);
+          const usageWeight = usageGap === 0
+            ? 2.35
+            : 1 / Math.pow(1 + usageGap, 4.2);
+          const recencyAge = getQuestionRecencyAge(question, history);
+          const recencyWeight = recencyAge < 0
+            ? 1.52
+            : recencyAge === 0
+              ? 0.035
+              : 0.15 + Math.pow((recencyAge + 1) / Math.max(2, history.questionSets.length + 1), 2.15);
+          const normalizedComplexity = (getQuestionComplexityScore(question) - minScore) / scoreRange;
+          const difficultWeight = isDifficultOrLong(question, difficultyThreshold) ? biasProfile.hardBias : 0.72;
+          const complexityWeight = 0.78 + Math.pow(Math.max(0, normalizedComplexity), 1.2) * 2.05;
+          const scenarioWeight = isScenarioBased(question) ? biasProfile.scenarioBias : 1;
+          const multiAnswerWeight = Array.isArray(question?.correct) && question.correct.length > 1 ? biasProfile.multiBias : 1;
+          const randomJitter = getRandomNumberInRange(0.55, 1.48);
+          const weight = Math.max(0.0001,
+            usageWeight * recencyWeight * difficultWeight * complexityWeight * scenarioWeight * multiAnswerWeight * randomJitter
+          );
+          // Exponential-race weighted sampling gives an independently crypto-randomized
+          // order without repeatedly rescanning the same pool for every selected slot.
+          const randomUnit = Math.max(Number.EPSILON, getSecureRandomNumber());
+          return { question, rank: -Math.log(randomUnit) / weight };
+        }).sort((left, right) => left.rank - right.rank).map(item => item.question);
+      };
+
+      for (const depth of recencyDepths) {
+        if (selected.length >= count) break;
+        const tier = remaining.filter(question => {
+          const key = getQuestionKey(question);
+          if (selectedKeys.has(key)) return false;
+          if (depth === 0) return true;
+          const age = getQuestionRecencyAge(question, history);
+          return age < 0 || age >= depth;
+        });
+        if (!tier.length) continue;
+        const ordered = weightedOrder(tier);
+        const takeCount = Math.min(count - selected.length, ordered.length);
+        for (let index = 0; index < takeCount; index += 1) {
+          const question = ordered[index];
+          const key = getQuestionKey(question);
+          if (selectedKeys.has(key)) continue;
+          selected.push(question);
+          selectedKeys.add(key);
+        }
+      }
+      return selected;
+    }
+
+    function allocateHardTargets(selectedBuckets, categoryTargets, difficultyThreshold, desiredHardTarget, history) {
+      const hardTargets = new Map(selectedBuckets.map(bucket => [bucket.category, 0]));
+      const hardCapacities = new Map(selectedBuckets.map(bucket => {
+        const target = categoryTargets.get(bucket.category) || 0;
+        return [bucket.category, Math.min(target, bucket.difficultQuestions.length)];
+      }));
+      const totalHardCapacity = [...hardCapacities.values()].reduce((sum, count) => sum + count, 0);
+      const targetHardCount = Math.min(totalHardCapacity, desiredHardTarget);
+      let plannedHard = 0;
+
+      while (plannedHard < targetHardCount) {
+        const expandable = selectedBuckets.filter(bucket =>
+          (hardTargets.get(bucket.category) || 0) < (hardCapacities.get(bucket.category) || 0)
+        );
+        if (!expandable.length) break;
+        const weights = expandable.map(bucket => {
+          const current = hardTargets.get(bucket.category) || 0;
+          const freshHard = Number.isFinite(bucket.immediateFreshHardCount)
+            ? bucket.immediateFreshHardCount
+            : hardCapacities.get(bucket.category) || 0;
+          const freshness = current + 1 <= freshHard ? 1.28 : 0.18;
+          const spread = 1 / (1 + current * 0.42);
+          return Math.max(0.0001, freshness * spread * getRandomNumberInRange(0.65, 1.38));
+        });
+        const chosen = chooseWeightedCandidate(expandable, weights);
+        hardTargets.set(chosen.category, (hardTargets.get(chosen.category) || 0) + 1);
+        plannedHard += 1;
+      }
+
+      return { hardTargets, totalHardCapacity };
+    }
+
+    function selectQuestionsForDistribution(selectedBuckets, categoryTargets, hardTargets, history, difficultyThreshold, biasProfile) {
+      const selectedQuestions = [];
+      selectedBuckets.forEach(bucket => {
+        const target = categoryTargets.get(bucket.category) || 0;
+        const requiredHard = Math.min(target, hardTargets.get(bucket.category) || 0);
+        const difficultPool = bucket.questions.filter(question => isDifficultOrLong(question, difficultyThreshold));
+        const difficultQuestions = selectWeightedQuestions(
+          difficultPool,
+          requiredHard,
+          history,
+          difficultyThreshold,
+          biasProfile
+        );
+        const difficultKeys = new Set(difficultQuestions.map(getQuestionKey));
+        const remainingPool = bucket.questions.filter(question => !difficultKeys.has(getQuestionKey(question)));
+        const remainingQuestions = selectWeightedQuestions(
+          remainingPool,
+          target - difficultQuestions.length,
+          history,
+          difficultyThreshold,
+          biasProfile
+        );
+        selectedQuestions.push(...difficultQuestions, ...remainingQuestions);
+      });
+      return selectedQuestions;
+    }
+
+    function getCandidateDiversity(candidate, history) {
+      const keys = new Set(candidate.questions.map(getQuestionKey));
+      const latestSet = history.questionSets.length ? history.questionSets[history.questionSets.length - 1] : null;
+      const immediateOverlap = latestSet ? [...keys].filter(key => latestSet.has(key)).length : 0;
+      let weightedRecentOverlap = 0;
+      history.questionSets.forEach((set, index) => {
+        const recency = (index + 1) / history.questionSets.length;
+        keys.forEach(key => { if (set.has(key)) weightedRecentOverlap += recency; });
+      });
+      const latestDistribution = history.categoryDistributions.length
+        ? history.categoryDistributions[history.categoryDistributions.length - 1]
+        : null;
+      let distributionDistance = candidate.categoryCounts.size;
+      let categoryDifference = candidate.categoryCounts.size;
+      if (latestDistribution) {
+        const categories = new Set([...candidate.categoryCounts.keys(), ...latestDistribution.keys()]);
+        distributionDistance = 0;
+        categoryDifference = 0;
+        categories.forEach(category => {
+          const currentCount = candidate.categoryCounts.get(category) || 0;
+          const previousCount = latestDistribution.get(category) || 0;
+          distributionDistance += Math.abs(currentCount - previousCount);
+          if ((currentCount > 0) !== (previousCount > 0)) categoryDifference += 1;
+        });
+      }
+      const averageUsage = candidate.questions.reduce(
+        (sum, question) => sum + (history.questionUsageCounts.get(getQuestionKey(question)) || 0), 0
+      ) / Math.max(1, candidate.questions.length);
+      const diversityScore = (distributionDistance * 4.2)
+        + (categoryDifference * 5.4)
+        - (immediateOverlap * 95)
+        - (weightedRecentOverlap * 5.5)
+        - (averageUsage * 2.2)
+        + getRandomNumberInRange(0, 4.5);
+      return { immediateOverlap, weightedRecentOverlap, distributionDistance, categoryDifference, diversityScore };
+    }
+
+    function buildRandomizedCandidate(config, buckets, history, difficultyThreshold) {
+      const selectedBuckets = selectParticipatingBuckets(buckets, config, history);
+      const selectedCapacity = selectedBuckets.reduce((sum, bucket) => sum + bucket.capacity, 0);
+      if (selectedCapacity < config.count) return null;
+      const categoryTargets = allocateCategoryTargets(selectedBuckets, config, history, difficultyThreshold);
+      if (!categoryTargets) return null;
+
+      const desiredHardTarget = getRandomIntegerInRange(config.hardTargetMin, config.hardTargetMax);
+      const { hardTargets, totalHardCapacity } = allocateHardTargets(
+        selectedBuckets,
+        categoryTargets,
+        difficultyThreshold,
+        desiredHardTarget,
+        history
+      );
+      if (totalHardCapacity < config.hardFloor) return null;
+
+      const biasProfile = {
+        hardBias: getRandomNumberInRange(config.hardBiasMin, config.hardBiasMax),
+        scenarioBias: getRandomNumberInRange(config.scenarioBiasMin, config.scenarioBiasMax),
+        multiBias: getRandomNumberInRange(config.multiBiasMin, config.multiBiasMax)
+      };
+      const selectedQuestions = selectQuestionsForDistribution(
+        selectedBuckets,
+        categoryTargets,
+        hardTargets,
+        history,
+        difficultyThreshold,
+        biasProfile
+      );
+      if (selectedQuestions.length !== config.count) return null;
+      if (new Set(selectedQuestions.map(getQuestionKey)).size !== config.count) return null;
+
+      const categoryCounts = getCategoryCounts(selectedQuestions);
+      const hardCount = selectedQuestions.filter(question => isDifficultOrLong(question, difficultyThreshold)).length;
+      if (hardCount < config.hardFloor) return null;
+      for (const [category, count] of categoryCounts.entries()) {
+        if (count > config.categoryLimit(category)) return null;
+      }
+
+      const candidate = {
+        questions: selectedQuestions,
+        categoryCounts,
+        difficultyThreshold,
+        hardCount,
+        biasProfile
+      };
+      candidate.diversity = getCandidateDiversity(candidate, history);
+      return candidate;
+    }
+
+    function chooseDiverseCandidate(candidates) {
+      if (!candidates.length) return null;
+      const minimumOverlap = Math.min(...candidates.map(candidate => candidate.diversity.immediateOverlap));
+      const overlapBest = candidates.filter(candidate => candidate.diversity.immediateOverlap === minimumOverlap);
+      const ranked = [...overlapBest].sort((a, b) => b.diversity.diversityScore - a.diversity.diversityScore);
+      const shortlist = ranked.slice(0, Math.min(3, ranked.length));
+      if (shortlist.length === 1) return shortlist[0];
+      const minimumScore = Math.min(...shortlist.map(candidate => candidate.diversity.diversityScore));
+      const weights = shortlist.map(candidate => 1 + Math.max(0, candidate.diversity.diversityScore - minimumScore));
+      return chooseWeightedCandidate(shortlist, weights);
+    }
+
+    function shuffleFinalQuestionOrder(questions, history) {
+      const latestOrder = history.orderSignatures.length ? history.orderSignatures[history.orderSignatures.length - 1] : '';
+      let shuffled = [];
+      for (let attempt = 0; attempt < 8; attempt += 1) {
+        shuffled = shuffleArray(questions);
+        const signature = shuffled.map(getQuestionKey).join('\n');
+        if (!latestOrder || signature !== latestOrder) return shuffled;
+      }
+      return shuffled;
+    }
+
+    function rememberRandomizedTest(questions, categoryCounts, history) {
+      const keys = new Set();
+      questions.forEach(question => {
+        const key = getQuestionKey(question);
+        keys.add(key);
+        history.questionUsageCounts.set(key, (history.questionUsageCounts.get(key) || 0) + 1);
+      });
+      categoryCounts.forEach((count, category) => {
+        history.categoryUsageCounts.set(category, (history.categoryUsageCounts.get(category) || 0) + count);
+      });
+      keys.forEach(key => history.lastSeenGeneration.set(key, history.generation));
+      history.generation += 1;
+      history.questionSets.push(keys);
+      history.categoryDistributions.push(new Map(categoryCounts));
+      history.orderSignatures.push(questions.map(getQuestionKey).join('\n'));
+      while (history.questionSets.length > RANDOMIZATION_HISTORY_DEPTH) history.questionSets.shift();
+      while (history.categoryDistributions.length > RANDOMIZATION_HISTORY_DEPTH) history.categoryDistributions.shift();
+      while (history.orderSignatures.length > RANDOMIZATION_HISTORY_DEPTH) history.orderSignatures.shift();
+    }
+
+    function buildCategoryFirstQuestionSet(numQuestions) {
+      const fullBank = getUniqueQuestionPool(questionBank);
+      if (fullBank.length < numQuestions) {
+        throw new Error(`The question bank contains only ${fullBank.length} unique questions; ${numQuestions} are required.`);
+      }
+      syncRandomizationState(fullBank);
+      const config = getRandomizedModeConfig(numQuestions, fullBank);
+      const eligibleBank = fullBank.filter(config.eligibleQuestion);
+      if (eligibleBank.length < numQuestions) {
+        throw new Error(`The eligible question bank contains only ${eligibleBank.length} unique questions; ${numQuestions} are required.`);
+      }
+      const history = getModeHistory(config.modeKey);
+      const difficultyThreshold = cachedDifficultyThreshold ?? (cachedDifficultyThreshold = getDifficultyThreshold(fullBank));
+      const buckets = buildCategoryBuckets(eligibleBank, config, difficultyThreshold, history);
+      const totalCapacity = buckets.reduce((sum, bucket) => sum + bucket.capacity, 0);
+      if (totalCapacity < config.count) {
+        throw new Error(`The question bank can provide only ${totalCapacity} questions while respecting the hard category limits; ${config.count} are required.`);
+      }
+      const candidates = [];
+      const maximumAttempts = config.candidateCount * 4;
+      for (let attempt = 0; attempt < maximumAttempts && candidates.length < config.candidateCount; attempt += 1) {
+        const candidate = buildRandomizedCandidate(config, buckets, history, difficultyThreshold);
+        if (candidate) candidates.push(candidate);
+      }
+      const chosen = chooseDiverseCandidate(candidates);
+      if (!chosen) {
+        throw new Error(`Unable to build a valid ${numQuestions}-question test while respecting the configured hard constraints.`);
+      }
+      const randomizedQuestions = shuffleFinalQuestionOrder(chosen.questions, history);
+      rememberRandomizedTest(randomizedQuestions, chosen.categoryCounts, history);
+      return {
+        questions: randomizedQuestions,
+        difficultyThreshold,
+        categoryCap: numQuestions === THIRTY_QUESTION_COUNT
+          ? THIRTY_MAX_PER_CATEGORY
+          : (numQuestions === EXTREME_TEST_COUNT ? config.categoryCap : Math.max(...[...chosen.categoryCounts.keys()].map(config.categoryLimit))),
+        hardCount: chosen.hardCount,
+        categoryCounts: chosen.categoryCounts,
+        biasProfile: chosen.biasProfile
+      };
+    }
+
+    function buildThirtyQuestionSet() {
+      return buildCategoryFirstQuestionSet(THIRTY_QUESTION_COUNT);
+    }
+
+    function buildExtremeQuestionSet() {
+      const audit = buildCategoryFirstQuestionSet(EXTREME_TEST_COUNT);
+      if (audit.hardCount < EXTREME_MIN_DIFFICULT) {
+        throw new Error(`Unable to satisfy the ${EXTREME_MIN_DIFFICULT}-question difficult/long minimum for the 100-question test.`);
+      }
+      return audit;
     }
 
     function selectQuestionsForTest(numQuestions, mode = 'standard') {
       const bank = getUniqueQuestionPool(questionBank);
       if (mode === ULTRAMARATHON_MODE) return shuffleArray(bank);
-      if (numQuestions === 30) return buildThirtyQuestionSet().questions;
-      if (numQuestions === EXTREME_TEST_COUNT) return buildExtremeQuestionSet().questions;
-
-      if (bank.length < numQuestions) {
-        throw new Error(`The question bank contains only ${bank.length} unique questions; ${numQuestions} are required.`);
-      }
-      return shuffleArray(selectUniqueQuestions(bank, numQuestions));
+      return buildCategoryFirstQuestionSet(numQuestions).questions;
     }
 
     function shuffleQuestionAnswers(question) {
@@ -2429,25 +2583,71 @@
     }
 
     function isQuestionCorrect(question, userAnswers) {
-      const correct = Array.isArray(question.correct) ? [...question.correct].sort((a,b) => a-b) : [];
-      const user = [...(userAnswers || [])].sort((a,b) => a-b);
+      const correct = Array.isArray(question?.correct) ? [...new Set(question.correct)].sort((a, b) => a - b) : [];
+      const user = Array.isArray(userAnswers) ? [...new Set(userAnswers)].sort((a, b) => a - b) : [];
       return user.length === correct.length && user.every((answer, index) => answer === correct[index]);
+    }
+
+    function calculatePercentage(earnedPoints, maxPoints) {
+      if (!(maxPoints > 0)) return 0;
+      return Math.round(((earnedPoints / maxPoints) * 100) * 100) / 100;
+    }
+
+    function getQuestionEvaluation(question, userAnswers) {
+      const correctIndexes = Array.isArray(question?.correct) ? [...new Set(question.correct)].sort((a, b) => a - b) : [];
+      const userIndexes = Array.isArray(userAnswers) ? [...new Set(userAnswers)].sort((a, b) => a - b) : [];
+      const correctSet = new Set(correctIndexes);
+      const userSet = new Set(userIndexes);
+      const selectedCorrect = userIndexes.filter(index => correctSet.has(index));
+      const selectedWrong = userIndexes.filter(index => !correctSet.has(index));
+      const missingCorrect = correctIndexes.filter(index => !userSet.has(index));
+      const correct = selectedWrong.length === 0 && missingCorrect.length === 0 && userIndexes.length === correctIndexes.length;
+      let scoreReasonKey = 'exactMatchScore';
+      if (!userIndexes.length) scoreReasonKey = 'noCreditUnanswered';
+      else if (selectedWrong.length && missingCorrect.length) scoreReasonKey = 'noCreditBoth';
+      else if (selectedWrong.length) scoreReasonKey = 'noCreditExtra';
+      else if (missingCorrect.length) scoreReasonKey = 'noCreditMissing';
+      return {
+        correct,
+        selectedCorrect,
+        selectedWrong,
+        missingCorrect,
+        scoreReasonKey,
+        maxPoints: POINTS_PER_QUESTION,
+        earnedPoints: correct ? POINTS_PER_QUESTION : 0,
+        percentage: correct ? 100 : 0
+      };
+    }
+
+    function scoreQuestion(question, userAnswers) {
+      const evaluation = getQuestionEvaluation(question, userAnswers);
+      return {
+        correct: evaluation.correct,
+        maxPoints: evaluation.maxPoints,
+        earnedPoints: evaluation.earnedPoints,
+        percentage: evaluation.percentage
+      };
     }
 
     function calculateResult(timeExpired = false) {
       const items = currentQuestions.map((question, index) => {
         const userAnswers = answers[index] || [];
-        const correct = isQuestionCorrect(question, userAnswers);
-        const maxPoints = Array.isArray(question.correct) ? question.correct.length : 1;
-        const earnedPoints = correct ? maxPoints : 0;
-        return { question, index, userAnswers, correct, maxPoints, earnedPoints, ruleCode: getRuleCode(question) };
+        const evaluation = getQuestionEvaluation(question, userAnswers);
+        return {
+          question,
+          index,
+          userAnswers: [...userAnswers],
+          ruleCode: getRuleCode(question),
+          questionType: Array.isArray(question?.correct) && question.correct.length > 1 ? 'multiple' : 'single',
+          ...evaluation
+        };
       });
       const correctQuestions = items.filter(item => item.correct).length;
       const totalQuestions = items.length;
-      const earnedPoints = items.reduce((sum, item) => sum + item.earnedPoints, 0);
-      const maxPoints = items.reduce((sum, item) => sum + item.maxPoints, 0);
-      const percent = maxPoints > 0 ? Math.round((earnedPoints / maxPoints) * 10000) / 100 : 0;
-      const questionPercent = totalQuestions > 0 ? Math.round((correctQuestions / totalQuestions) * 10000) / 100 : 0;
+      const earnedPoints = correctQuestions * POINTS_PER_QUESTION;
+      const maxPoints = totalQuestions * POINTS_PER_QUESTION;
+      const percent = calculatePercentage(earnedPoints, maxPoints);
+      const questionPercent = calculatePercentage(correctQuestions, totalQuestions);
       const answeredQuestions = answers.filter(item => item && item.length > 0).length;
       const completedAll = answeredQuestions === totalQuestions;
       const passed = percent >= PASS_PERCENT;
@@ -2604,9 +2804,16 @@
     function buildSummaryHTML() {
       const rows = lastResult.items.map(item => {
         const status = item.correct ? `✓ ${t('correct')}` : `✕ ${t('incorrect')}`;
-        return `<div class="summary-item ${item.correct ? 'correct' : 'incorrect'}"><span class="num">${item.index + 1}. (${escapeHTML(item.ruleCode)})</span><span>${status}</span></div>`;
+        return `<div class="summary-item ${item.correct ? 'correct' : 'incorrect'}"><span class="num">${item.index + 1}. (${escapeHTML(item.ruleCode)})</span><span>${status} • ${item.earnedPoints}/${item.maxPoints}</span></div>`;
       }).join('');
       return `<h4 class="report-section-title">${t('summarySectionTitle')}</h4><div class="summary-grid">${rows}</div>`;
+    }
+
+    function getAnswerTexts(question, indexes) {
+      return (Array.isArray(indexes) ? indexes : [])
+        .map(index => question?.options?.[index])
+        .filter(value => value !== undefined)
+        .join(', ');
     }
 
     function buildDetailsHTML() {
@@ -2616,20 +2823,34 @@
           const selected = item.userAnswers.includes(optionIndex);
           const isCorrect = q.correct.includes(optionIndex);
           const classes = [selected ? 'selected' : '', isCorrect ? 'correct-answer' : '', selected && !isCorrect ? 'wrong-selected' : ''].filter(Boolean).join(' ');
-          return `<div class="option-review ${classes}"><span class="box">${selected ? '✓' : ''}</span><span>${escapeHTML(raw)}</span></div>`;
+          const marker = selected && isCorrect ? '✓' : selected && !isCorrect ? '✕' : isCorrect ? '•' : '';
+          return `<div class="option-review ${classes}"><span class="box">${marker}</span><span>${escapeHTML(raw)}</span></div>`;
         }).join('');
-        const userText = item.userAnswers.length ? item.userAnswers.map(idx => q.options[idx]).join(', ') : t('unanswered');
-        const correctText = q.correct.map(idx => q.options[idx]).join(', ');
+        const userText = item.userAnswers.length ? getAnswerTexts(q, item.userAnswers) : t('unanswered');
+        const selectedCorrectText = item.selectedCorrect.length ? getAnswerTexts(q, item.selectedCorrect) : t('noneLabel');
+        const selectedWrongText = item.selectedWrong.length ? getAnswerTexts(q, item.selectedWrong) : t('noneLabel');
+        const missingCorrectText = item.missingCorrect.length ? getAnswerTexts(q, item.missingCorrect) : t('noneLabel');
+        const correctText = getAnswerTexts(q, q.correct);
+        const typeText = item.questionType === 'multiple' ? t('multipleAnswerType') : t('singleAnswerType');
         return `
           <article class="detail-card">
             <div class="detail-head">
               <strong>${item.index + 1}. (${escapeHTML(item.ruleCode)}) ${escapeHTML(cleanQuestionText(q.text))}</strong>
-              <span class="mini-status ${item.correct ? 'ok' : 'bad'}">${item.correct ? t('correct') : t('incorrect')}</span>
+              <span class="mini-status ${item.correct ? 'ok' : 'bad'}">${item.correct ? t('correct') : t('incorrect')} • ${item.earnedPoints}/${item.maxPoints} • ${item.percentage}%</span>
+            </div>
+            <div class="answer-lines">
+              <div><strong>${t('questionType')}:</strong> ${escapeHTML(typeText)}</div>
+              <div><strong>${t('pointsLabel')}:</strong> ${item.earnedPoints} / ${item.maxPoints}</div>
+              <div><strong>${t('questionScorePercent')}:</strong> ${item.percentage}%</div>
             </div>
             ${optionRows}
             <div class="answer-lines">
               <div><strong>${t('userAnswer')}:</strong> ${escapeHTML(userText)}</div>
+              <div><strong>${t('selectedCorrect')}:</strong> <span style="color:#047857;font-weight:900;">${escapeHTML(selectedCorrectText)}</span></div>
+              <div><strong>${t('selectedWrong')}:</strong> <span style="color:#b91c1c;font-weight:900;">${escapeHTML(selectedWrongText)}</span></div>
+              <div><strong>${t('missingCorrect')}:</strong> ${escapeHTML(missingCorrectText)}</div>
               <div><strong>${t('correctAnswer')}:</strong> <span style="color:#047857;font-weight:950;">${escapeHTML(correctText)}</span></div>
+              <div><strong>${t('scoringExplanation')}:</strong> ${escapeHTML(t(item.scoreReasonKey))}</div>
             </div>
           </article>`;
       }).join('');
